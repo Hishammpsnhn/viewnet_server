@@ -1,0 +1,159 @@
+2025-01-29T06:17:22.312Z [info]: No messages available.
+2025-01-29T06:17:22.366Z [info]: No messages available.
+2025-01-29T06:17:42.622Z [info]: No messages available.
+2025-01-29T06:17:42.641Z [info]: No messages available.
+2025-01-29T06:18:02.881Z [info]: No messages available.
+2025-01-29T06:18:02.909Z [info]: No messages available.
+2025-01-29T06:19:20.883Z [info]: No messages available.
+2025-01-29T06:19:39.175Z [info]: Processing movie: jio10
+2025-01-29T06:19:39.289Z [info]: Transcoding status updated to processing
+2025-01-29T06:19:41.267Z [info]: Transcoding status updated to completed
+2025-01-29T06:19:41.288Z [error]: Error processing S3 event for movie jio10: MovieCatalog validation failed: metadataId: Cast to ObjectId failed for value "jio10" (type string) at path "metadataId" because of "BSONError"
+2025-01-29T06:20:01.787Z [info]: No messages available.
+2025-01-29T06:20:22.036Z [info]: No messages available.
+2025-01-29T06:20:42.308Z [info]: No messages available.
+2025-01-29T06:21:02.572Z [info]: No messages available.
+2025-01-29T06:21:22.823Z [info]: No messages available.
+2025-01-29T06:22:30.496Z [info]: No messages available.
+2025-01-29T06:22:32.014Z [info]: Processing movie: jio11
+2025-01-29T06:22:32.193Z [info]: Transcoding status updated to processing
+2025-01-29T06:22:37.754Z [info]: Transcoding status updated to completed
+2025-01-29T06:22:37.777Z [error]: Error processing S3 event for movie jio11: MovieCatalog validation failed: metadataId: Cast to ObjectId failed for value "jio11" (type string) at path "metadataId" because of "BSONError", _id: Cast to ObjectId failed for value "" (type string) at path "_id" because of "BSONError"
+2025-01-29T06:22:58.313Z [info]: No messages available.
+2025-01-29T06:23:18.596Z [info]: No messages available.
+2025-01-29T06:23:38.868Z [info]: No messages available.
+2025-01-29T06:23:59.143Z [info]: No messages available.
+2025-01-29T06:24:19.415Z [info]: No messages available.
+2025-01-29T06:24:39.684Z [info]: No messages available.
+2025-01-29T06:24:59.953Z [info]: No messages available.
+2025-01-29T06:25:20.230Z [info]: No messages available.
+2025-01-29T06:25:40.521Z [info]: No messages available.
+2025-01-29T06:26:00.813Z [info]: No messages available.
+2025-01-29T06:26:22.021Z [info]: No messages available.
+2025-01-29T06:26:42.306Z [info]: No messages available.
+2025-01-29T06:27:02.579Z [info]: No messages available.
+2025-01-29T06:27:22.851Z [info]: No messages available.
+2025-01-29T06:27:43.131Z [info]: No messages available.
+2025-01-29T06:28:57.030Z [info]: No messages available.
+2025-01-29T06:29:01.759Z [info]: Processing movie: jio12
+2025-01-29T06:29:01.870Z [info]: Transcoding status updated to processing
+2025-01-29T06:29:04.207Z [info]: Transcoding status updated to completed
+2025-01-29T06:29:04.232Z [error]: Error processing S3 event for movie jio12: MovieCatalog validation failed: metadataId: Cast to ObjectId failed for value "jio12" (type string) at path "metadataId" because of "BSONError", _id: Cast to ObjectId failed for value "" (type string) at path "_id" because of "BSONError"
+2025-01-29T06:29:24.876Z [info]: No messages available.
+2025-01-29T06:29:45.154Z [info]: No messages available.
+2025-01-29T06:30:05.429Z [info]: No messages available.
+2025-01-29T06:30:25.698Z [info]: No messages available.
+2025-01-29T06:30:45.982Z [info]: No messages available.
+2025-01-29T06:31:06.282Z [info]: No messages available.
+2025-01-29T06:31:26.535Z [info]: No messages available.
+2025-01-29T06:31:46.794Z [info]: No messages available.
+2025-01-29T06:32:07.046Z [info]: No messages available.
+2025-01-29T06:33:22.478Z [info]: No messages available.
+2025-01-29T06:33:27.596Z [info]: Processing movie: jio13
+2025-01-29T06:33:27.718Z [info]: Transcoding status updated to processing
+2025-01-29T06:33:29.786Z [info]: Transcoding status updated to completed
+2025-01-29T06:33:29.806Z [error]: Error processing S3 event for movie jio13: MovieCatalog validation failed: _id: Cast to ObjectId failed for value "" (type string) at path "_id" because of "BSONError"
+2025-01-29T06:33:50.344Z [info]: No messages available.
+2025-01-29T06:34:10.622Z [info]: No messages available.
+2025-01-29T06:34:30.892Z [info]: No messages available.
+2025-01-29T06:34:51.165Z [info]: No messages available.
+2025-01-29T06:35:11.437Z [info]: No messages available.
+2025-01-29T06:35:31.708Z [info]: No messages available.
+2025-01-29T06:35:51.985Z [info]: No messages available.
+2025-01-29T06:36:12.257Z [info]: No messages available.
+2025-01-29T06:37:49.699Z [info]: No messages available.
+2025-01-29T06:37:59.599Z [info]: Processing movie: jio14
+2025-01-29T06:37:59.753Z [info]: Transcoding status updated to processing
+2025-01-29T06:38:02.318Z [info]: Transcoding status updated to completed
+2025-01-29T06:38:02.346Z [error]: Error processing S3 event for movie jio14: MovieCatalog validation failed: _id: Cast to ObjectId failed for value "" (type string) at path "_id" because of "BSONError"
+2025-01-29T06:38:22.899Z [info]: No messages available.
+2025-01-29T06:38:43.217Z [info]: No messages available.
+2025-01-29T06:39:03.556Z [info]: No messages available.
+2025-01-29T06:39:23.945Z [info]: No messages available.
+2025-01-29T06:39:44.214Z [info]: No messages available.
+2025-01-29T06:40:04.459Z [info]: No messages available.
+2025-01-29T06:40:24.703Z [info]: No messages available.
+2025-01-29T06:40:44.945Z [info]: No messages available.
+2025-01-29T06:41:05.202Z [info]: No messages available.
+2025-01-29T06:41:25.442Z [info]: No messages available.
+2025-01-29T06:41:46.856Z [info]: No messages available.
+2025-01-29T06:42:07.125Z [info]: No messages available.
+2025-01-29T06:42:27.488Z [info]: No messages available.
+2025-01-29T06:42:47.970Z [info]: No messages available.
+2025-01-29T06:43:08.302Z [info]: No messages available.
+2025-01-29T06:44:44.874Z [info]: No messages available.
+2025-01-29T06:44:50.657Z [info]: Processing movie: jio15
+2025-01-29T06:44:50.884Z [info]: Transcoding status updated to processing
+2025-01-29T06:44:53.239Z [info]: Transcoding status updated to completed
+2025-01-29T06:44:53.272Z [error]: Error processing S3 event for movie jio15: MovieCatalog validation failed: _id: Cast to ObjectId failed for value "" (type string) at path "_id" because of "BSONError"
+2025-01-29T06:45:13.776Z [info]: No messages available.
+2025-01-29T06:45:34.190Z [info]: No messages available.
+2025-01-29T06:45:54.449Z [info]: No messages available.
+2025-01-29T06:46:14.700Z [info]: No messages available.
+2025-01-29T06:46:34.968Z [info]: No messages available.
+2025-01-29T06:46:55.234Z [info]: No messages available.
+2025-01-29T06:47:15.480Z [info]: No messages available.
+2025-01-29T06:47:35.742Z [info]: No messages available.
+2025-01-29T06:47:55.989Z [info]: No messages available.
+2025-01-29T06:48:16.235Z [info]: No messages available.
+2025-01-29T06:48:37.436Z [info]: No messages available.
+2025-01-29T06:48:57.686Z [info]: No messages available.
+2025-01-29T06:49:17.923Z [info]: No messages available.
+2025-01-29T06:49:38.181Z [info]: No messages available.
+2025-01-29T06:49:58.471Z [info]: No messages available.
+2025-01-29T06:50:18.744Z [info]: No messages available.
+2025-01-29T06:50:39.106Z [info]: No messages available.
+2025-01-29T06:50:59.360Z [info]: No messages available.
+2025-01-29T06:52:14.415Z [info]: Processing movie: jio16
+2025-01-29T06:52:14.539Z [info]: Transcoding status updated to processing
+2025-01-29T06:52:16.376Z [info]: Transcoding status updated to completed
+2025-01-29T06:52:16.377Z [info]: Created catalog entry for movie: jio16
+2025-01-29T06:52:36.925Z [info]: No messages available.
+2025-01-29T06:52:57.235Z [info]: No messages available.
+2025-01-29T06:53:17.541Z [info]: No messages available.
+2025-01-29T06:53:37.826Z [info]: No messages available.
+2025-01-29T06:53:58.126Z [info]: No messages available.
+2025-01-29T06:54:18.450Z [info]: No messages available.
+2025-01-29T06:55:53.950Z [info]: No messages available.
+2025-01-29T06:56:02.278Z [info]: Processing movie: jio17
+2025-01-29T06:56:02.514Z [info]: Transcoding status updated to processing
+2025-01-29T06:56:05.599Z [info]: Transcoding status updated to completed
+2025-01-29T06:56:05.730Z [info]: Created catalog entry for movie: jio17
+2025-01-29T06:56:26.321Z [info]: No messages available.
+2025-01-29T06:56:46.634Z [info]: No messages available.
+2025-01-29T06:57:06.947Z [info]: No messages available.
+2025-01-29T06:57:27.222Z [info]: No messages available.
+2025-01-29T06:57:47.474Z [info]: No messages available.
+2025-01-29T06:58:07.729Z [info]: No messages available.
+2025-01-29T06:58:28.003Z [info]: No messages available.
+2025-01-29T06:58:48.279Z [info]: No messages available.
+2025-01-29T06:59:08.531Z [info]: No messages available.
+2025-01-29T06:59:28.783Z [info]: No messages available.
+2025-01-29T06:59:50.000Z [info]: No messages available.
+2025-01-29T07:00:10.262Z [info]: No messages available.
+2025-01-29T07:00:30.534Z [info]: No messages available.
+2025-01-29T07:00:50.795Z [info]: No messages available.
+2025-01-29T07:01:11.054Z [info]: No messages available.
+2025-01-29T07:01:31.319Z [info]: No messages available.
+2025-01-29T07:01:51.576Z [info]: No messages available.
+2025-01-29T07:02:11.834Z [info]: No messages available.
+2025-01-29T07:02:32.094Z [info]: No messages available.
+2025-01-29T07:02:52.366Z [info]: No messages available.
+2025-01-29T07:03:12.628Z [info]: No messages available.
+2025-01-29T07:03:32.890Z [info]: No messages available.
+2025-01-29T07:03:54.051Z [info]: No messages available.
+2025-01-29T07:04:14.310Z [info]: No messages available.
+2025-01-29T07:04:34.565Z [info]: No messages available.
+2025-01-29T07:04:54.814Z [info]: No messages available.
+2025-01-29T07:05:15.069Z [info]: No messages available.
+2025-01-29T07:05:26.503Z [info]: Processing movie: jio18
+2025-01-29T07:05:26.615Z [info]: Transcoding status updated to processing
+2025-01-29T07:05:28.826Z [info]: Transcoding status updated to completed
+2025-01-29T07:05:28.949Z [info]: Created catalog entry for movie: jio18
+2025-01-29T07:05:49.491Z [info]: No messages available.
+2025-01-29T07:06:09.749Z [info]: No messages available.
+2025-01-29T07:06:30.001Z [info]: No messages available.
+2025-01-29T07:06:50.594Z [info]: No messages available.
+2025-01-29T07:07:10.855Z [info]: No messages available.
+2025-01-29T07:07:31.121Z [info]: No messages available.
+2025-01-29T07:07:52.300Z [info]: No messages available.

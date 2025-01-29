@@ -1,0 +1,115 @@
+version: "3.8"
+
+services:
+  # API Gateway Service
+  gateway:
+    build:
+      context: ./gateway-dev
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    # volumes:
+    #   - ./gateway-dev:/app
+    environment:
+      - PORT=4000
+      - USER_SERVICE_URL=http://user-service:5000
+      - SUBSCRIPTION_SERVICE_URL=http://payment-sub-service:5002
+      - UPLOADING_SERVICE_URL=http://uploading-service:5003
+    networks:
+      - app-network
+
+  # Prometheus Server
+  prom-server:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./gateway-dev/prometheus-config.yml:/etc/prometheus/prometheus.yml
+
+  # User Service
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    # volumes:
+    #   - ./user-service:/app
+    env_file:
+      - ./user-service/.env
+    networks:
+      - app-network
+    depends_on:
+      - redis
+
+  # RabbitMQ Service
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: my-rabbit
+    ports:
+      - "15672:15672" # Management UI
+      - "5672:5672" # RabbitMQ protocol
+    container_name: rabbitmq-container
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # Notification Service
+  notification-service:
+    build:
+      context: ./email-service
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./email-service:/app
+    environment:
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - EMAIL_ID=hishammpsn@gmail.com
+      - PASS_KEY=ghmxhowpegsdumkf
+    networks:
+      - app-network
+    depends_on:
+      - rabbitmq
+
+  # Payment and Subscription Service
+  payment-sub-service:
+    build:
+      context: ./payment-sub-service
+      dockerfile: Dockerfile
+    ports:
+      - "5002:5002"
+    # volumes:
+    #   - ./payment-sub-service:/app
+    env_file:
+      - ./payment-sub-service/.env
+    networks:
+      - app-network
+
+
+  uploading-service:
+    build:
+      context: ./uploading-service
+      dockerfile: Dockerfile
+    ports:
+      - "5003:5003"
+    volumes:
+      - ./uploading-service:/app
+    env_file:
+      - ./uploading-service/.env
+    networks:
+      - app-network
+
+  # Redis Service
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    container_name: redis-container
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
