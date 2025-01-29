@@ -8,6 +8,7 @@ const router = express.Router();
 
 // const upload = multer({ storage });
 router.get("/", VideoMetadataController.getAllMetadata);
+router.get("/latest-movies", VideoMetadataController.getAllMetadata);
 router.put('/:id',VideoController.updateVideoMetadataUseCase);
 router.get("/:id",VideoMetadataController.getMetadata);
 router.post("/", VideoMetadataController.createMetadata);

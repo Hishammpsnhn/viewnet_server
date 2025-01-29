@@ -1,4 +1,4 @@
-import { IVideoMetadataRepository } from "../domain/interface/IVideoMetadataRepository";
+import { IVideoMetadataRepository } from "../../domain/interface/IVideoMetadataRepository";
 
 export class GetVideoMetadata {
   private repository: IVideoMetadataRepository;
@@ -6,7 +6,7 @@ export class GetVideoMetadata {
     this.repository = repository;
   }
 
-  async execute(title:string) {
-    return await this.repository.findByTitle(title);
+  async execute(id:string) {
+    return await this.repository.findByIdNonBlock(id);
   }
 }

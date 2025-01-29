@@ -15,17 +15,22 @@ const generatePresignedUrlUseCase = new GeneratePresignedUrlUseCase(s3Service);
 
 const createVideoMetadata = new CreateVideoMetadata(repository);
 const updateVideoMetadata = new UpdateVideoMetadataUseCase(repository);
-
 export class VideoController {
   static async generatePresignedUrl(
     req: Request,
     res: Response
   ): Promise<void> {
     try {
+      const thumbnailKey = `uploads/thumbnail/${req.body.title.replace(/\s+/g, " ").trim()}_thumbnail.jpg`;
+      const thumbnailUrl = `https://s3.us-east-1.amazonaws.com/${env.AWS_BUCKET_NAME}/${thumbnailKey}`;
+      const metaData = await createVideoMetadata.execute({
+        ...req.body,
+        thumbnailUrl,
+      });
+
       const expiresIn = 60 * 5; // 5 minutes
       const contentType = "video/mp4";
-      const videoKey = `uploads/${req.body.title}_video.mp4`;
-      const thumbnailKey = `uploads/thumbnail/${req.body.title}_thumbnail.jpg`;
+      const videoKey = `uploads/${metaData._id}_video.mp4`;
       const paramsMovie: PresignedUrlParams = {
         Bucket: env.AWS_BUCKET_NAME as string,
         Key: videoKey,
@@ -39,13 +44,6 @@ export class VideoController {
         Expires: expiresIn,
         ContentType: req.body.thumbnailContentType || "image/jpeg",
       };
-      const movieUrl = `https://s3.us-east-1.amazonaws.com/${env.AWS_BUCKET_NAME}/${videoKey}`;
-      const thumbnailUrl = `https://s3.us-east-1.amazonaws.com/${env.AWS_BUCKET_NAME}/${thumbnailKey}`;
-      const metaData = await createVideoMetadata.execute({
-        ...req.body,
-        movieUrl,
-        thumbnailUrl,
-      });
 
       const movieSignedUrl = await generatePresignedUrlUseCase.execute(
         paramsMovie

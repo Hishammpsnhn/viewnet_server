@@ -8,7 +8,7 @@ import { processS3Event } from "../../use-cases/processS3Event";
 import { IEncodedFile, MovieCatalog } from "../../domain/entities/VideoCatalog";
 import { Types } from "mongoose";
 import { MovieCatalogRepository } from "../../infrastructure/repositories/MovieCatalog";
-import { GetVideoMetadata } from "../../use-cases/getMetaDataByName";
+import { GetVideoMetadata } from "../../use-cases/getMetaData";
 import { UpdateTranscodingStatusUseCase } from "../../use-cases/updateMovieTranscodeStatus";
 import { VideoMetadataRepository } from "../../infrastructure/repositories/VideoMetadataRepository";
 import { format } from "path";
@@ -22,14 +22,20 @@ const movieCatalogRepository = new MovieCatalogRepository();
 const getMovieMetadata = new GetVideoMetadata(repository);
 const updateTranscode = new UpdateTranscodingStatusUseCase(repository);
 
-async function updateMovieTranscodingStatus(movieId: string, status: TranscodingStatus) {
+async function updateMovieTranscodingStatus(
+  movieId: string,
+  status: TranscodingStatus
+) {
   try {
     const res = await updateTranscode.execute(movieId, { status });
     if (res) {
       logger.info(`Transcoding status updated to ${status}`);
+      logger.info(res);
     }
-  } catch (error:any) {
-    logger.error(`Error updating transcoding status for movie ID ${movieId}: ${error.message}`);
+  } catch (error: any) {
+    logger.error(
+      `Error updating transcoding status for movie ID ${movieId}: ${error.message}`
+    );
   }
 }
 
@@ -44,50 +50,78 @@ async function handleS3Event(record: any) {
   }
 
   const movieName = fileNameWithExtension.replace(/\.[^/.]+$/, "");
-  const ogMovieName = movieName.split("_")[0];
-  logger.info(`Processing movie: ${ogMovieName}`);
+  const movieId = movieName.split("_")[0];
+  logger.info(`Processing movie id: ${movieId}`);
+  logger.info(`Processing movie name : ${movieName}`);
 
-  const movieMetadata = await getMovieMetadata.execute(ogMovieName);
+  const movieMetadata = await getMovieMetadata.execute(movieId);
   if (!movieMetadata || !movieMetadata._id) {
-    logger.info(`Movie not found: ${ogMovieName}`);
+    logger.info(`Movie not found: ${movieId}`);
     return;
   }
 
-  await updateMovieTranscodingStatus(movieMetadata._id.toString(), "processing");
+  await updateMovieTranscodingStatus(
+    movieMetadata._id.toString(),
+    "processing"
+  );
 
   try {
-    await processS3Event(bucket.name, `uploads/${ogMovieName}_video.mp4`, ogMovieName);
-
-    const movieMetadataUpdate = {
-      transcoding: {
-        status: "completed" as TranscodingStatus,
-        availableResolutions: ["1080p", "720p", "480p", "360p"],
-        format: ["mp4"],
-      },
-    };
-
-    await updateMovieTranscodingStatus(movieMetadata._id.toString(), movieMetadataUpdate.transcoding.status);
-
-    const encodedFiles: IEncodedFile[] = [
-      { encodingStatus: "completed", fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${ogMovieName}/1080p/index.m3u8`, format: "mp4", resolution: "1080p" },
-      { encodingStatus: "completed", fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${ogMovieName}/master.m3u8`, format: "mp4", resolution: "auto" },
-      { encodingStatus: "completed", fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${ogMovieName}/720p/index.m3u8`, format: "mp4", resolution: "720p" },
-      { encodingStatus: "completed", fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${ogMovieName}/480p/index.m3u8`, format: "mp4", resolution: "480p" },
-      { encodingStatus: "completed", fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${ogMovieName}/360p/index.m3u8`, format: "mp4", resolution: "360p" },
-    ];
-
-    const newCatalog = new MovieCatalog(
-      new Types.ObjectId().toHexString(),
-      encodedFiles,
-      ogMovieName,
+    await processS3Event(
+      bucket.name,
+      `uploads/${movieId}_video.mp4`,
+      movieId,
       movieMetadata._id.toString(),
     );
 
-console.log(newCatalog);
-    await movieCatalogRepository.create(newCatalog);
-    logger.info(`Created catalog entry for movie: ${ogMovieName}`);
-  } catch (error:any) {
-    logger.error(`Error processing S3 event for movie ${ogMovieName}: ${error.message}`);
+
+
+    // const encodedFiles: IEncodedFile[] = [
+    //   {
+    //     encodingStatus: "completed",
+    //     fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${ogMovieName}/1080p/index.m3u8`,
+    //     format: "mp4",
+    //     resolution: "1080p",
+    //   },
+    //   {
+    //     encodingStatus: "completed",
+    //     fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${ogMovieName}/master.m3u8`,
+    //     format: "mp4",
+    //     resolution: "auto",
+    //   },
+    //   {
+    //     encodingStatus: "completed",
+    //     fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${ogMovieName}/720p/index.m3u8`,
+    //     format: "mp4",
+    //     resolution: "720p",
+    //   },
+    //   {
+    //     encodingStatus: "completed",
+    //     fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${ogMovieName}/480p/index.m3u8`,
+    //     format: "mp4",
+    //     resolution: "480p",
+    //   },
+    //   {
+    //     encodingStatus: "completed",
+    //     fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${ogMovieName}/360p/index.m3u8`,
+    //     format: "mp4",
+    //     resolution: "360p",
+    //   },
+    // ];
+
+    // const newCatalog = new MovieCatalog(
+    //   new Types.ObjectId().toHexString(),
+    //   encodedFiles,
+    //   ogMovieName,
+    //   movieMetadata._id.toString()
+    // );
+
+    // console.log(newCatalog);
+    // await movieCatalogRepository.create(newCatalog);
+    // logger.info(`Created catalog entry for movie: ${ogMovieName}`);
+  } catch (error: any) {
+    logger.error(
+      `Error processing S3 event for movie ${movieId}: ${error.message}`
+    );
   }
 }
 
@@ -131,7 +165,7 @@ async function consumeSqsMessages() {
         );
       }
     }
-  } catch (error:any) {
+  } catch (error: any) {
     logger.error(`Error in SQS consumer: ${error.message}`);
   }
 }

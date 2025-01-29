@@ -3,12 +3,14 @@ import { VideoMetadataRepository } from "../../infrastructure/repositories/Video
 import { CreateVideoMetadata } from "../../use-cases/createVideoMetadata";
 import { GetAllVideoMetadata } from "../../use-cases/getAllVideoMetadata";
 import { GetVideoMetadata } from "../../use-cases/getMetaData";
+import { GetLatestVideoMetadata } from "../../use-cases/user/LatestMovies";
 
 const repository = new VideoMetadataRepository();
 
 const getVideoMetadata = new GetVideoMetadata(repository);
 const createVideoMetadata = new CreateVideoMetadata(repository);
 const getAllVideoMetadata = new GetAllVideoMetadata(repository);
+const getLatestVideoMetadata = new GetLatestVideoMetadata(repository)
 
 export class VideoMetadataController {
   static async createMetadata(req: Request, res: Response): Promise<void> {
@@ -31,6 +33,15 @@ export class VideoMetadataController {
     try {
       const { id } = req.params;
       const metaData = await getVideoMetadata.execute(id);
+      res.status(201).json({ success: true, data: metaData });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
+  static async getLatestMetadata(req: Request, res: Response): Promise<void> {
+    try {
+      const metaData = await getLatestVideoMetadata.execute();
       res.status(201).json({ success: true, data: metaData });
     } catch (error: any) {
       res.status(500).json({ message: error.message });

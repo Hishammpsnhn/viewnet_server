@@ -25,16 +25,25 @@ const MovieCatalogSchema: Schema = new Schema({
   movieName: { type: String, required: true },
 });
 
+
+
+
+
+
+
+
+
+
+
 MovieCatalogSchema.methods.toDomain = function (): MovieCatalog {
-  // Ensure that _id and metadataId are valid ObjectIds
   const id = this._id && this._id.toString() !== '' ? this._id.toString() : null;
   const metadataId = this.metadataId && this.metadataId.toString() !== '' ? this.metadataId.toString() : null;
 
   return new MovieCatalog(
-    id || '', // Provide a default empty string if _id is invalid
+    id || '', 
     this.encodedFiles,
     this.movieName,
-    metadataId || '', // Provide a default empty string if metadataId is invalid
+    metadataId || '', 
   );
 };
 

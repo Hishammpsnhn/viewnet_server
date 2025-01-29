@@ -4,7 +4,6 @@ export interface VideoMetadata {
   _id?: ObjectId;
   title: string;
   thumbnailUrl: string;
-  movieUrl: string;
   //trailer: string;
   //cast: string[];
   //director: string;
