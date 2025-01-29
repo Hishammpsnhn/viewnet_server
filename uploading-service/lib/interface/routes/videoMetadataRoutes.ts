@@ -4,9 +4,6 @@ import { VideoController } from "../controller/videoController";
 
 const router = express.Router();
 
-
-
-// const upload = multer({ storage });
 router.get("/", VideoMetadataController.getAllMetadata);
 router.get("/latest-movies", VideoMetadataController.getAllMetadata);
 router.put('/:id',VideoController.updateVideoMetadataUseCase);
