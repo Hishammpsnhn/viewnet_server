@@ -14,10 +14,15 @@ class LoginUser {
     const planDetails = await this.subscriptionGateway.fetchSubscriptionDetails(
       user._id
     );
+    console.log("plan Details ++++++", planDetails);
     const activeSessions = await this.sessionRepository.getSessionsByEmail(
       email
     );
-    if (activeSessions.length >= planDetails?.sessionLimit) {
+    if (planDetails[0]?.status !== "active"){
+      throw new Error("Your subscription is not active.");
+    }
+      console.log("Active Details ++++++", activeSessions);
+    if (activeSessions.length >= planDetails[0]?.sessionLimit) {
       throw new Error("You have reached the maximum number of active devices.");
     }
     const newSession = await this.sessionRepository.save({

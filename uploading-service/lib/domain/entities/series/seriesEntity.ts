@@ -6,7 +6,7 @@ export class SeriesEntity {
       public releaseDate: Date,
       public rating: number,
       public posterImage: string,
-      public seasons: string[] // Array of season IDs
+      public seasons: string[] 
     ) {}
   }
   

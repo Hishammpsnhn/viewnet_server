@@ -1,9 +1,7 @@
 import { Schema, model, Document } from "mongoose";
 import { SeasonEntity } from "../../../../domain/entities/series/seasonEntity";
 
-export interface ISeasonDocument
-  extends Omit<Document, "id">,
-    SeasonEntity {}
+export interface ISeasonDocument extends SeasonEntity {}
 
 const seasonSchema = new Schema(
   {

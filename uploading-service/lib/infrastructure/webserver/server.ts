@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import videoMetadataRoutes from "../../interface/routes/videoMetadataRoutes";
+import seriesRoutes from "../../interface/routes/seriesRoutes";
 import { consumeSqsMessages } from "../../interface/consumers/sqsConsumer";
 
 dotenv.config();
@@ -29,6 +30,7 @@ const createServer = async () => {
 
   // Routes
   app.use("/", videoMetadataRoutes);
+  app.use("/", seriesRoutes);
 
   return app;
 };

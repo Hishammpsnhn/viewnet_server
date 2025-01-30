@@ -11,6 +11,7 @@ const router = express.Router();
 
 router.get("/", GetAllPlans);
 router.get("/:userId/plans", GetUserPlan);
+router.get("/:userId/active", GetUserPlan);
 router.put("/:id", EditPlan);
 router.post("/", CreateSubscriptionPlan);
 router.post("/payment-success", UserCreatePlan);

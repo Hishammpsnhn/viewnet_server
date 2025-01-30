@@ -1,9 +1,10 @@
 export class SeasonEntity {
     constructor(
-      public seriesId: string, // Reference to the series
+      public _id: string,
+      public seriesId: string, 
       public seasonNumber: number,
       public releaseDate: Date,
-      public episodes: string[] // Array of episode IDs
+      public episodes: string[] 
     ) {}
   }
   

@@ -1,4 +1,4 @@
-// src/routes/index.ts
+
 import express from "express";
 import { SeriesController } from "../controller/series/SeriesController";
 import { SeasonController } from "../controller/series/SeasonController";
@@ -12,6 +12,7 @@ const episodeController = new EpisodeController();
 
 // Series Routes
 router.post("/series", seriesController.createSeries);
+
 router.get("/series", seriesController.getAllSeries);
 router.get("/series/:id", seriesController.getSeriesById);
 router.put("/series/:id", seriesController.updateSeries);
