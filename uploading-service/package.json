@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/amqplib": "^0.10.6",
     "@types/aws-lambda": "^8.10.147",
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
@@ -27,6 +28,7 @@
     "@aws-sdk/client-ecs": "^3.734.0",
     "@aws-sdk/client-sqs": "^3.734.0",
     "@types/mongoose": "^5.11.96",
+    "amqplib": "^0.10.5",
     "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1692.0",
     "cookie-parser": "^1.4.7",

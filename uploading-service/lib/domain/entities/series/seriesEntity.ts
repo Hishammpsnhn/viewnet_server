@@ -1,3 +1,5 @@
+import { ObjectId } from "mongoose";
+
 export class SeriesEntity {
     constructor(
       public title: string,

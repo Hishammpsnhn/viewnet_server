@@ -18,14 +18,20 @@ export class EpisodeUseCase {
     return this.episodeRepository.findById(id);
   }
 
+    // Get episode by KEY
+  async getEpisodeByKey(key: string): Promise<EpisodeEntity | null> {
+    return this.episodeRepository.findByKey(key);
+  }
+
   // Get all episodes for a season
   async getEpisodesBySeasonId(seasonId: string): Promise<EpisodeEntity[]> {
     return this.episodeRepository.findBySeasonId(seasonId);
   }
 
   // Update episode by ID
-  async updateEpisode(id: string, data: Partial<EpisodeEntity>): Promise<EpisodeEntity | null> {
-    return this.episodeRepository.update(id, data);
+  
+  async updateEpisode(key: string, data: Partial<EpisodeEntity>): Promise<EpisodeEntity | null> {
+    return this.episodeRepository.updateByKey(key, data);
   }
 
   // Delete episode by ID

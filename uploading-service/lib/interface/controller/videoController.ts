@@ -7,14 +7,15 @@ import env from "../../infrastructure/config/environment";
 import { VideoMetadataRepository } from "../../infrastructure/repositories/VideoMetadataRepository";
 import { CreateVideoMetadata } from "../../use-cases/createVideoMetadata";
 import { UpdateVideoMetadataUseCase } from "../../use-cases/updateMetadata";
+import { MovieProducer } from "../../infrastructure/queue/MovieProducer";
 
 const s3Service = new S3Service();
 const repository = new VideoMetadataRepository();
 
 const generatePresignedUrlUseCase = new GeneratePresignedUrlUseCase(s3Service);
-
+const movieProducer = new MovieProducer();
 const createVideoMetadata = new CreateVideoMetadata(repository);
-const updateVideoMetadata = new UpdateVideoMetadataUseCase(repository);
+const updateVideoMetadata = new UpdateVideoMetadataUseCase(repository,movieProducer);
 export class VideoController {
   static async generatePresignedUrl(
     req: Request,
@@ -27,7 +28,7 @@ export class VideoController {
         ...req.body,
         thumbnailUrl,
       });
-
+console.log("after save metadata", metaData)
       const expiresIn = 60 * 5; // 5 minutes
       const contentType = "video/mp4";
       const videoKey = `uploads/${metaData._id}_video.mp4`;

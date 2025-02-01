@@ -11,25 +11,19 @@ const seasonController = new SeasonController();
 const episodeController = new EpisodeController();
 
 // Series Routes
-router.post("/series", seriesController.createSeries);
+router.post("/series", seriesController.createSeries); //using
 
-router.get("/series", seriesController.getAllSeries);
-router.get("/series/:id", seriesController.getSeriesById);
+// router.get("/series", seriesController.getAllSeries);
+router.get("/series/:id", seriesController.getSeriesById); //using
 router.put("/series/:id", seriesController.updateSeries);
-router.delete("/series/:id", seriesController.deleteSeries);
+// router.delete("/series/:id", seriesController.deleteSeries);
 
 // Season Routes
-router.post("/seasons", seasonController.createSeason);
-router.get("/seasons/:id", seasonController.getSeasonById);
-router.get("/seasons/series/:seriesId", seasonController.getSeasonsBySeriesId);
-router.put("/seasons/:id", seasonController.updateSeason);
-router.delete("/seasons/:id", seasonController.deleteSeason);
+router.post("/seasons/:seriesId", seasonController.createSeason);//using
+
 
 // Episode Routes
-router.post("/episodes", episodeController.createEpisode);
-router.get("/episodes/:id", episodeController.getEpisodeById);
-router.get("/episodes/season/:seasonId", episodeController.getEpisodesBySeasonId);
-router.put("/episodes/:id", episodeController.updateEpisode);
-router.delete("/episodes/:id", episodeController.deleteEpisode);
+router.post("/episode/generateSignedUrl",episodeController.generateSignedUrl);
+
 
 export default router;

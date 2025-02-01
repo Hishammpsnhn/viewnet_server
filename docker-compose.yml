@@ -15,6 +15,7 @@ services:
       - USER_SERVICE_URL=http://user-service:5000
       - SUBSCRIPTION_SERVICE_URL=http://payment-sub-service:5002
       - UPLOADING_SERVICE_URL=http://uploading-service:5003
+      - CONTENT_SERVICE_URL=http://content-service:5004
     networks:
       - app-network
 
@@ -86,7 +87,6 @@ services:
     networks:
       - app-network
 
-
   uploading-service:
     build:
       context: ./uploading-service
@@ -97,6 +97,19 @@ services:
       - ./uploading-service:/app
     env_file:
       - ./uploading-service/.env
+    networks:
+      - app-network
+  content-service:
+    build:
+      context: ./content-service
+      dockerfile: Dockerfile
+    ports:
+      - "5004:5004"
+    volumes:
+      - ./content-service/lib:/app/lib:delegated
+    env_file:
+      - ./content-service/.env
+    command: npm run dev
     networks:
       - app-network
 

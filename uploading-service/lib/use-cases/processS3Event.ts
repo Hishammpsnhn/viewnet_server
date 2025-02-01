@@ -10,12 +10,15 @@ import { Types } from "mongoose";
 import { VideoMetadataRepository } from "../infrastructure/repositories/VideoMetadataRepository";
 import { UpdateTranscodingStatusUseCase } from "./updateMovieTranscodeStatus";
 import { logger } from "../infrastructure/logger/logger";
+import { MovieProducer } from "../infrastructure/queue/MovieProducer";
+import { VideoMetadata } from "../domain/entities/VideoMetadata";
+
 type TranscodingStatus = "pending" | "processing" | "completed" | "failed";
 
 const repository = new VideoMetadataRepository();
 const updateTranscode = new UpdateTranscodingStatusUseCase(repository);
 const movieCatalogRepository = new MovieCatalogRepository();
-
+const movieProducer = new MovieProducer();
 async function updateMovieTranscodingStatus(
   movieId: string,
   status: TranscodingStatus
@@ -36,7 +39,8 @@ export async function processS3Event(
   bucketName: string,
   key: string,
   title: string,
-  metaDataId: string
+  metaDataId: string,
+  movieMetadata: VideoMetadata
 ) {
   const runTaskCommand = new RunTaskCommand({
     taskDefinition:
@@ -76,7 +80,8 @@ export async function processS3Event(
     console.log(`New task launched with ARN: ${taskArn}`);
 
     // Step 2: Monitor the status of the new task
-    if (taskArn) await monitorTaskStatus(taskArn, metaDataId, title);
+    if (taskArn)
+      await monitorTaskStatus(taskArn, metaDataId, title, movieMetadata);
   } else {
     console.error("Failed to launch task.");
   }
@@ -88,7 +93,8 @@ export async function processS3Event(
 async function monitorTaskStatus(
   taskArn: string,
   movieId: string,
-  title: string
+  title: string,
+  movieMetadata: VideoMetadata
 ) {
   try {
     const describeTasksCommand = new DescribeTasksCommand({
@@ -170,8 +176,9 @@ async function monitorTaskStatus(
         movieId
       );
       await movieCatalogRepository.create(newCatalog);
+      // await movieProducer.sendMovie( movieMetadata);
       logger.info(`Created catalog entry for movie: ${title}`);
-      // await movieCatalogRepository.updateMovieStatus(movieId, 'complete');
+      
     }
   } catch (error) {
     console.error("Error monitoring ECS task:", error);

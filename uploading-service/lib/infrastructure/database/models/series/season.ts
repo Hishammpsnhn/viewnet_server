@@ -3,9 +3,11 @@ import { SeasonEntity } from "../../../../domain/entities/series/seasonEntity";
 
 export interface ISeasonDocument extends SeasonEntity {}
 
+
+
 const seasonSchema = new Schema(
   {
-    series: { type: Schema.Types.ObjectId, ref: "Series", required: true },
+    seriesId: { type: Schema.Types.ObjectId, ref: "Series", required: true },
     seasonNumber: { type: Number, required: true },
     releaseDate: { type: Date, required: true },
     episodes: [{ type: Schema.Types.ObjectId, ref: "Episode" }],

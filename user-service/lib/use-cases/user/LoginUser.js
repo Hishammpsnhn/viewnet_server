@@ -18,13 +18,17 @@ class LoginUser {
     const activeSessions = await this.sessionRepository.getSessionsByEmail(
       email
     );
-    if (planDetails[0]?.status !== "active"){
-      throw new Error("Your subscription is not active.");
+    if (planDetails[0]?.status === "active") {
+      if (
+        activeSessions.length >= planDetails[0]?.sessionLimit &&
+        !user.isAdmin
+      ) {
+        throw new Error(
+          "You have reached the maximum number of active devices."
+        );
+      }
     }
-      console.log("Active Details ++++++", activeSessions);
-    if (activeSessions.length >= planDetails[0]?.sessionLimit) {
-      throw new Error("You have reached the maximum number of active devices.");
-    }
+
     const newSession = await this.sessionRepository.save({
       email,
       deviceId,

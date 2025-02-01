@@ -16,10 +16,10 @@ export class SeasonUseCase {
   // Create a new season
   async createSeason(seriesId: string, seasonData: any) {
     // Ensure series exists
-    const series = await this.seriesRepository.findById(seriesId);
-    if (!series) {
-      throw new Error("Series not found");
-    }
+    // const series = await this.seriesRepository.findById(seriesId);
+    // if (!series) {
+    //   throw new Error("Series not found");
+    // }
 
     // Create new season
     const season = await this.seasonRepository.create({
@@ -27,11 +27,11 @@ export class SeasonUseCase {
       seriesId,
     });
 
-    // Update series with new season
-    const updatedSeasons = series.seasons
-      ? [...series.seasons, season._id]
-      : [season._id];
-    await this.seriesRepository.update(seriesId, { seasons: updatedSeasons });
+    // // Update series with new season
+    // const updatedSeasons = series.seasons
+    //   ? [...series.seasons, season._id]
+    //   : [season._id];
+    // await this.seriesRepository.update(seriesId, { seasons: updatedSeasons });
 
     return season;
   }

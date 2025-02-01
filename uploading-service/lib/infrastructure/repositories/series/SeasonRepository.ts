@@ -1,12 +1,19 @@
 import { SeasonEntity } from "../../../domain/entities/series/seasonEntity";
 import { ISeasonRepository } from "../../../domain/interface/series/ISeasonRepository";
 import SeasonModel from "../../database/models/series/season";
+import SeriesModel from "../../database/models/series/series";
 
 
 export class SeasonRepository implements ISeasonRepository {
   async create(data: SeasonEntity): Promise<SeasonEntity> {
     const season = new SeasonModel(data);
+    const series = await SeriesModel.findById(data.seriesId);
+    if(!series){
+      throw new Error('Series not found');
+    }
+    series?.seasons.push(season.id);
     await season.save();
+    await series.save();
     return season.toObject();
   }
 

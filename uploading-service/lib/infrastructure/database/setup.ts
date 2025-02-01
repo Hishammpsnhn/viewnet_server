@@ -3,7 +3,8 @@
 import env from "../config/environment";
 
 import mongoose from "mongoose";
-
+import { MovieProducer } from "../queue/MovieProducer";
+const movieProducer = new MovieProducer();
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(env.DATABASE_URL as string);

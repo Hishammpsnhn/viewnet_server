@@ -5,14 +5,18 @@ import {
 import { sqsClient } from "../../infrastructure/aws/sqsClient";
 import { parseS3Event } from "../../infrastructure/aws/s3EventParser";
 import { processS3Event } from "../../use-cases/processS3Event";
+import { EpisodeProcessS3Event } from "../../use-cases/EpisodeprocessS3Event";
 import { IEncodedFile, MovieCatalog } from "../../domain/entities/VideoCatalog";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { MovieCatalogRepository } from "../../infrastructure/repositories/MovieCatalog";
 import { GetVideoMetadata } from "../../use-cases/getMetaData";
 import { UpdateTranscodingStatusUseCase } from "../../use-cases/updateMovieTranscodeStatus";
 import { VideoMetadataRepository } from "../../infrastructure/repositories/VideoMetadataRepository";
 import { format } from "path";
 import { logger } from "../../infrastructure/logger/logger"; // Assuming a logger is set up
+import { EpisodeUseCase } from "../../use-cases/series/EpisodeUseCase";
+import { EpisodeRepository } from "../../infrastructure/repositories/series/EpisodeRepository";
+import { EpisodeEntity } from "../../domain/entities/series/episodeEntity";
 
 const QUEUE_URL = "https://sqs.us-east-1.amazonaws.com/235494819343/tempQueeu";
 type TranscodingStatus = "pending" | "processing" | "completed" | "failed";
@@ -21,6 +25,7 @@ const repository = new VideoMetadataRepository();
 const movieCatalogRepository = new MovieCatalogRepository();
 const getMovieMetadata = new GetVideoMetadata(repository);
 const updateTranscode = new UpdateTranscodingStatusUseCase(repository);
+const episodeUseCase = new EpisodeUseCase(new EpisodeRepository());
 
 async function updateMovieTranscodingStatus(
   movieId: string,
@@ -35,6 +40,22 @@ async function updateMovieTranscodingStatus(
   } catch (error: any) {
     logger.error(
       `Error updating transcoding status for movie ID ${movieId}: ${error.message}`
+    );
+  }
+}
+async function updateEpisodeTranscodingStatus(
+  episodeId: string,
+  data: Partial<EpisodeEntity>
+) {
+  try {
+    const res = await episodeUseCase.updateEpisode(episodeId, data);
+    if (res) {
+      logger.info(`Transcoding status updated to ${status}`);
+      logger.info(res);
+    }
+  } catch (error: any) {
+    logger.error(
+      `Error updating transcoding status for movie ID ${episodeId}: ${error.message}`
     );
   }
 }
@@ -54,74 +75,62 @@ async function handleS3Event(record: any) {
   logger.info(`Processing movie id: ${movieId}`);
   logger.info(`Processing movie name : ${movieName}`);
 
-  const movieMetadata = await getMovieMetadata.execute(movieId);
-  if (!movieMetadata || !movieMetadata._id) {
-    logger.info(`Movie not found: ${movieId}`);
-    return;
-  }
+  if (movieId) {
+    if (mongoose.Types.ObjectId.isValid(movieId)) {
+      console.log("Valid MongoDB ObjectId");
+      const movieMetadata = await getMovieMetadata.execute(movieId);
+      if (!movieMetadata || !movieMetadata._id || !movieMetadata) {
+        logger.info(`Movie not found: ${movieId}`);
+        return;
+      }
 
-  await updateMovieTranscodingStatus(
-    movieMetadata._id.toString(),
-    "processing"
-  );
+      await updateMovieTranscodingStatus(
+        movieMetadata._id.toString(),
+        "processing"
+      );
 
-  try {
-    await processS3Event(
-      bucket.name,
-      `uploads/${movieId}_video.mp4`,
-      movieId,
-      movieMetadata._id.toString(),
-    );
-
-
-
-    // const encodedFiles: IEncodedFile[] = [
-    //   {
-    //     encodingStatus: "completed",
-    //     fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${ogMovieName}/1080p/index.m3u8`,
-    //     format: "mp4",
-    //     resolution: "1080p",
-    //   },
-    //   {
-    //     encodingStatus: "completed",
-    //     fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${ogMovieName}/master.m3u8`,
-    //     format: "mp4",
-    //     resolution: "auto",
-    //   },
-    //   {
-    //     encodingStatus: "completed",
-    //     fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${ogMovieName}/720p/index.m3u8`,
-    //     format: "mp4",
-    //     resolution: "720p",
-    //   },
-    //   {
-    //     encodingStatus: "completed",
-    //     fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${ogMovieName}/480p/index.m3u8`,
-    //     format: "mp4",
-    //     resolution: "480p",
-    //   },
-    //   {
-    //     encodingStatus: "completed",
-    //     fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${ogMovieName}/360p/index.m3u8`,
-    //     format: "mp4",
-    //     resolution: "360p",
-    //   },
-    // ];
-
-    // const newCatalog = new MovieCatalog(
-    //   new Types.ObjectId().toHexString(),
-    //   encodedFiles,
-    //   ogMovieName,
-    //   movieMetadata._id.toString()
-    // );
-
-    // console.log(newCatalog);
-    // await movieCatalogRepository.create(newCatalog);
-    // logger.info(`Created catalog entry for movie: ${ogMovieName}`);
-  } catch (error: any) {
-    logger.error(
-      `Error processing S3 event for movie ${movieId}: ${error.message}`
-    );
+      try {
+        await processS3Event(
+          bucket.name,
+          `uploads/${movieId}_video.mp4`,
+          movieId,
+          movieMetadata._id.toString(),
+          movieMetadata
+        );
+      } catch (error: any) {
+        logger.error(
+          `Error processing S3 event for movie ${movieId}: ${error.message}`
+        );
+      }
+    } else {
+      console.log("Not valid MongoDB ObjectId so it is episode");
+      const episode = await episodeUseCase.getEpisodeByKey(movieId);
+      console.log(episode);
+      if (!episode) {
+        logger.info(`Movie not found: ${movieId}`);
+        return;
+      }
+      updateEpisodeTranscodingStatus(episode.key, {
+        transcoding: "processing",
+      });
+      try {
+        await EpisodeProcessS3Event(
+          bucket.name,
+          `uploads/${movieId}_video.mp4`,
+          movieId,
+          episode
+          // movieMetadata._id.toString(),
+          // movieMetadata
+        );
+      } catch (error: any) {
+        logger.error(
+          `Error processing S3 event for movie ${movieId}: ${error.message}`
+        );
+        updateEpisodeTranscodingStatus(episode.key, { transcoding: "failed" });
+      }
+    }
+  } else {
+    console.log("movieId is not provided");
   }
 }
 

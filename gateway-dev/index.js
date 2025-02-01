@@ -4,9 +4,10 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 require("dotenv").config();
 const authenticate = require("./authenticateMiddleware");
 const metricsService = require("./monitor/metricsService.js")
+const morgan = require('morgan')
 
 const app = express();
-
+app.use(morgan('combined')); 
 app.use(
   cors({
     origin: true,
@@ -19,6 +20,7 @@ const services = {
   user: process.env.USER_SERVICE_URL,
   subscription: process.env.SUBSCRIPTION_SERVICE_URL,
   uploading: process.env.UPLOADING_SERVICE_URL,
+  content: process.env.CONTENT_SERVICE_URL,
 };
 
 // Public routes (no auth required)
@@ -32,6 +34,12 @@ const publicRoutes = [
   {
     context: "/api/subscription/public",
     target: services.subscription,
+    changeOrigin: true,
+    cookieDomainRewrite: "localhost",
+  },
+  {
+    context: "/api/content/public",
+    target: services.content,
     changeOrigin: true,
     cookieDomainRewrite: "localhost",
   },
@@ -77,10 +85,12 @@ const protectedRoutes = [
     isAdmin: true,
     cookieDomainRewrite: "localhost",
   },
+
 ];
 
 // public
 publicRoutes.forEach((route) => {
+  console.log("public route")
   app.use(
     route.context,
     createProxyMiddleware({
@@ -93,6 +103,7 @@ publicRoutes.forEach((route) => {
 
 //protect
 protectedRoutes.forEach((route) => {
+  console.log("private route")
   app.use(
     route.context,
     authenticate, 
