@@ -5,24 +5,25 @@ import SubscriptionPlanRepository from "../../../infrastructure/repository/subsc
 import paymentGateway from "../../../infrastructure/Stripe/paymentGateway.js";
 
 const userPlanRepository = new UserNewPlanRepository();
-const subscriptionPlanRepository = new SubscriptionPlanRepository();
-const PaymentGateway = new paymentGateway();
-export async function UserCreatePlan(req, res) {
-  console.log(req.body);
-  const { userId, planId ,paymentIntent} = req.body;
-  try {
-    const userPlan = await CreateNewUserSubscription(userId, planId,paymentIntent, {
-      createNewPlanRepository: userPlanRepository,
-      subscriptionPlanRepository: subscriptionPlanRepository,
-      paymentGateway: PaymentGateway,
+// const subscriptionPlanRepository = new SubscriptionPlanRepository();
+// const PaymentGateway = new paymentGateway();
+// // export async function UserCreatePlan(req, res) {
+// //   console.log("payment successed")
+// //   console.log(req.params);
+// //   const { userId, planId ,paymentIntent} = req.params;
+// //   try {
+// //     const userPlan = await CreateNewUserSubscription(userId, planId,paymentIntent, {
+// //       createNewPlanRepository: userPlanRepository,
+// //       subscriptionPlanRepository: subscriptionPlanRepository,
+// //       paymentGateway: PaymentGateway,
 
-    });
-    res.status(200).json({ message: true, userPlan });
-  } catch (err) {
-    console.error(err);
-    res.status(err.statusCode || 500).json({ message: err.message });
-  }
-}
+// //     });
+// //     res.status(200).json({ message: true, userPlan });
+// //   } catch (err) {
+// //     console.error(err);
+// //     res.status(err.statusCode || 500).json({ message: err.message });
+// //   }
+// // }
 export async function GetUserPlan(req, res) {
   const {userId} = req.params;
   console.log(userId);

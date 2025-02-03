@@ -6,18 +6,24 @@ import environment from "../../../infrastructure/config/environment";
 import { PresignedUrlParams } from "../../../infrastructure/types/s3Types";
 import { GeneratePresignedUrlUseCase } from "../../../use-cases/generatePresignedUrlUseCase";
 import { S3Service } from "../../../infrastructure/service/s3Service";
+import { ResolutionEntity } from "../../../domain/entities/series/episodeCatalog";
 
 const s3Service = new S3Service();
 const episodeUseCase = new EpisodeUseCase(new EpisodeRepository());
 const generatePresignedUrlUseCase = new GeneratePresignedUrlUseCase(s3Service);
 
 export class EpisodeController {
-  // Create a new episode
-  async createEpisode(req: Request, res: Response) {
+  async createEpisodeCatalog(req: Request, res: Response) {
+    console.log("createEpisodeCatalog",req.body)
+    const { key, episodeId, format } = req.body;
+   
     try {
-      const episodeData = req.body; // Assuming the request body contains episode data
-      const episode = await episodeUseCase.createEpisode(episodeData);
-      res.status(201).json({ success: true, episode });
+      const episodeCatalog = await episodeUseCase.createEpisodeCatalog(
+        episodeId,
+        key,
+        format
+      );
+      res.status(201).json({ success: true, data: episodeCatalog });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -26,13 +32,15 @@ export class EpisodeController {
   async generateSignedUrl(req: Request, res: Response) {
     try {
       const key = Date.now().toString();
-      const thumbnailKey = `uploads/thumbnail/${req.body.title.replace(/\s+/g, " ").trim()}_thumbnail.jpg`;
-       const thumbnailUrl = `https://s3.us-east-1.amazonaws.com/${environment.AWS_BUCKET_NAME}/${thumbnailKey}`;
+      const thumbnailKey = `uploads/thumbnail/${req.body.title
+        .replace(/\s+/g, " ")
+        .trim()}_thumbnail.jpg`;
+      const thumbnailUrl = `https://s3.us-east-1.amazonaws.com/${environment.AWS_BUCKET_NAME}/${thumbnailKey}`;
       const episodeData = req.body;
       const episode = await episodeUseCase.createEpisode({
         ...episodeData,
         key: key,
-        thumbnailUrl
+        thumbnailUrl,
       });
       console.log(episode);
 
@@ -57,13 +65,28 @@ export class EpisodeController {
       const thumbnailSignedUrl = await generatePresignedUrlUseCase.execute(
         paramsThumbnail
       );
-      res.status(200).json({ success: true, episode, movieSignedUrl, thumbnailSignedUrl});
+      res
+        .status(200)
+        .json({ success: true, episode,key, movieSignedUrl, thumbnailSignedUrl });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
   }
 
   // Get episode by ID
+  async getEpisodeCatalogById(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const episode = await episodeUseCase.getEpisodeCatalogById(id);
+      if (episode) {
+        res.status(200).json({ success: true, episode });
+      } else {
+        res.status(404).json({ message: "Episode not found" });
+      }
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  }
   async getEpisodeById(req: Request, res: Response) {
     try {
       const { id } = req.params;
@@ -100,23 +123,6 @@ export class EpisodeController {
       );
       if (updatedEpisode) {
         res.status(200).json({ success: true, updatedEpisode });
-      } else {
-        res.status(404).json({ message: "Episode not found" });
-      }
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
-    }
-  }
-
-  // Delete episode by ID
-  async deleteEpisode(req: Request, res: Response) {
-    try {
-      const { id } = req.params;
-      const success = await episodeUseCase.deleteEpisode(id);
-      if (success) {
-        res
-          .status(200)
-          .json({ success: true, message: "Episode deleted successfully" });
       } else {
         res.status(404).json({ message: "Episode not found" });
       }

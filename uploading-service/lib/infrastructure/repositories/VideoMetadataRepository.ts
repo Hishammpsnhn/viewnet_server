@@ -25,7 +25,7 @@ export class VideoMetadataRepository implements IVideoMetadataRepository {
   }
 
   async findAll(): Promise<VideoMetadata[]> {
-    return await VideoMetadataModel.find().lean();
+    return await VideoMetadataModel.find().sort({ createdAt: -1 }).lean();
   }
   async findLatest(): Promise<VideoMetadata[]> {
     return await VideoMetadataModel.find().limit(5).lean();

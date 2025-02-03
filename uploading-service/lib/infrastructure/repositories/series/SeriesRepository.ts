@@ -7,7 +7,7 @@ export class SeriesRepository implements ISeriesRepository {
   async create(data: SeriesEntity): Promise<SeriesEntity> {
     const series = new SeriesModel(data);
     await series.save();
-    return series.toObject(); // Convert Mongoose document to plain object
+    return series.toObject(); 
   }
 
   async findById(id: string): Promise<SeriesEntity | null> {
@@ -31,8 +31,10 @@ export class SeriesRepository implements ISeriesRepository {
   }
 
   async findAll(): Promise<SeriesEntity[]> {
-    const series = await SeriesModel.find().populate("seasons");
-    return series.map((s) => s.toObject());
+    console.log("find all")
+    const series = await SeriesModel.find({});
+    console.log(series)
+    return series;
   }
 
   async findByTitle(title: string): Promise<SeriesEntity | null> {

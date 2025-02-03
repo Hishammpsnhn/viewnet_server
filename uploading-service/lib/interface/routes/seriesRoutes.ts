@@ -11,11 +11,12 @@ const seasonController = new SeasonController();
 const episodeController = new EpisodeController();
 
 // Series Routes
-router.post("/series", seriesController.createSeries); //using
 
-// router.get("/series", seriesController.getAllSeries);
-router.get("/series/:id", seriesController.getSeriesById); //using
+router.get("/series", seriesController.getAllSeries);
+router.get("/series/:id", seriesController.getSeriesById); 
 router.put("/series/:id", seriesController.updateSeries);
+
+router.post("/series", seriesController.createSeries); //using
 // router.delete("/series/:id", seriesController.deleteSeries);
 
 // Season Routes
@@ -23,7 +24,9 @@ router.post("/seasons/:seriesId", seasonController.createSeason);//using
 
 
 // Episode Routes
+router.get("/episode/catalog/:id",episodeController.getEpisodeCatalogById);
 router.post("/episode/generateSignedUrl",episodeController.generateSignedUrl);
+router.post("/episode/catalog",episodeController.createEpisodeCatalog);
 
 
 export default router;

@@ -10,6 +10,7 @@ export class SeriesEntity {
     public releaseDate: Date,
     public rating: number,
     public posterImage: string,
+    public thumbnailUrl: string,
     public seasons: SeasonEntity[]
   ) {}
 

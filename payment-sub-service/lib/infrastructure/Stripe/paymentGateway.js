@@ -25,13 +25,7 @@ export default class paymentGateway {
     }
   }
 
-  /**
-   * Create a payment intent for later confirmation
-   * @param {Object} params - Payment parameters
-   * @param {number} params.amount - Amount to be charged (in smallest currency unit)
-   * @param {string} params.currency - Currency code (e.g., 'usd')
-   * @returns {Object} - Payment intent details
-   */
+
   async createPaymentIntent({ amount, currency }) {
     try {
       const paymentIntent = await stripe.paymentIntents.create({
@@ -49,25 +43,75 @@ export default class paymentGateway {
     }
   }
 
-  /**
-   * Retrieve a payment intent
-   * @param {string} paymentIntentId - ID of the payment intent
-   * @returns {Object} - Payment intent details
-   */
+
   async retrievePaymentIntent(paymentIntentId) {
     try {
       const paymentIntent = await stripe.paymentIntents.retrieve(
         paymentIntentId
       );
 
-      return paymentIntent
-      
+      return paymentIntent;
     } catch (error) {
       console.error("Stripe retrieve payment intent error:", error);
       return {
         success: false,
         error: error.message,
       };
+    }
+  }
+
+  async productGateway(userId, plan) {
+    console.log("ProductGateway")
+    console.log("userId", userId,plan)
+    try {
+      if (!plan || !plan.name || !plan.price) {
+        throw new Error("Invalid plan details provided");
+      }
+
+      // Create a product in Stripe
+      const planPayment = await stripe.products.create({
+        name: plan.name, // User-selected plan name
+      });
+
+      if (!planPayment) {
+        throw new Error("Failed to create product in Stripe");
+      }
+
+      // Create a price for the product
+      const price = await stripe.prices.create({
+        product: planPayment.id,
+        currency: "inr",
+        unit_amount: plan.price * 100, // Convert to paise (Stripe requires smallest unit)
+      });
+
+      if (!price.id) {
+        throw new Error("Failed to create price in Stripe");
+      }
+
+      // Create a checkout session
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price: price.id,
+            quantity: 1,
+          },
+        ],
+        mode: "payment", // Use "payment" for one-time purchase
+        success_url: `http://localhost:5173/payment-success?session_id={CHECKOUT_SESSION_ID}&amount=${plan.price}`,
+        cancel_url: `http://localhost:5173/cancel`,
+        metadata: {
+          userId: userId,
+          planId: plan.id.toString(),
+          planName: plan.name,
+          planPrice: plan.price,
+        },
+      });
+
+      return session;
+    } catch (error) {
+      console.error("Stripe Payment Error:", error.message);
+      throw new Error("Payment processing failed");
     }
   }
 }

@@ -12,6 +12,7 @@ export interface IEpisodeDocument extends Document {
   key: string;
   releaseDate: Date;
   videoUrl: string;
+  transcoding: "pending" | "completed" | "processing" | "failed";
 }
 
 const episodeSchema = new Schema<IEpisodeDocument>(
@@ -25,6 +26,10 @@ const episodeSchema = new Schema<IEpisodeDocument>(
     releaseDate: { type: Date, required: true },
     thumbnailUrl: { type: String, required: true },
     videoUrl: { type: String, required: true },
+    transcoding: {
+      type: String,
+      enum: ["pending", "processing", "completed", "failed"],
+    },
   },
   { timestamps: true }
 );

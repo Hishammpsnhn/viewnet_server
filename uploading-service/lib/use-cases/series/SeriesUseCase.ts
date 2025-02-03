@@ -22,6 +22,7 @@ export class SeriesUseCase {
 
   // Get all series
   async getAllSeries(): Promise<SeriesEntity[]> {
+    console.log("repository")
     return this.seriesRepository.findAll();
   }
 

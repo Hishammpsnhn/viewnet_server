@@ -3,7 +3,7 @@ import SubscriptionRepository from '../repository/userSubscription/userSubscipti
 import updateSubscriptions from '../../use-cases/userSubscription/updateSubscription.js'
 console.log("cron update subscriptions")
 function subscriptionCron() {
-    cron.schedule('* * * * *', async () => {
+    cron.schedule('0 * * * *', async () => {
         console.log('Cron Job: Checking subscription statuses...');
         const repository = new SubscriptionRepository();
 

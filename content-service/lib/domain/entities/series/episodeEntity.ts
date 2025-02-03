@@ -11,7 +11,8 @@ export class EpisodeEntity {
         public duration: number,
         public releaseDate: Date,
         public thumbnailUrl:string,
-        public videoUrl: string
+        public videoUrl: string,
+        public transcoding: "pending" | "completed" | "processing" | "failed"
     ) {}
   }
   

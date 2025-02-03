@@ -70,13 +70,14 @@ export async function EditPlan(req, res) {
 
 export async function Plan_Payment(req, res) {
   const { planId, userId } = req.body;
+  console.log("payment", planId, userId);
   try {
     const plan = await Payment(planId, userId, {
       subscriptionPlanRepository,
       paymentGateway,
       createNewPlanRepository
     });
-    res.status(200).json({ success: true, clientSecret: plan });
+    res.status(200).json({ success: true, data: plan });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: error.message });

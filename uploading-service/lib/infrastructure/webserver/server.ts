@@ -29,7 +29,7 @@ const createServer = async () => {
   main().catch((error) => console.error("Error in application:", error));
 
   // Routes
-  app.use("/", videoMetadataRoutes);
+  app.use("/movies", videoMetadataRoutes);
   app.use("/", seriesRoutes);
 
   return app;

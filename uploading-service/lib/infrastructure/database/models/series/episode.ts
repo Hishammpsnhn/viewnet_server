@@ -9,9 +9,7 @@ const episodeSchema = new Schema(
     episodeNumber: { type: Number, required: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
-    // duration: { type: Number, required: true },
     releaseDate: { type: Date, required: true },
-    // videoUrl: { type: String, required: true },
     thumbnailUrl: { type: String, required: true },
 
     transcoding: {
@@ -19,7 +17,7 @@ const episodeSchema = new Schema(
       enum: ["pending", "processing", "completed", "failed"],
       default: "pending",
     },
-    key: { type: String, required: true },
+    key: { type: String, required: true, unique: true },
   },
   { timestamps: true }
 );

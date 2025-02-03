@@ -3,10 +3,12 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import subscriptionTypeRoute from "../../interface/routes/subscriptionTypeRoutes.js";
-
-// import { isAuthenticated } from '../../interfaces/controllers/AuthMiddleware.js';
+import Stripe from "stripe";
+import environment from "../config/environment.js";
 
 dotenv.config();
+const endpointSecret = environment.STRIPE_WEBHOOK_KEY;
+const stripe = new Stripe(environment.STRIPE_SECRET_KEY);
 
 const createServer = async (metricsService) => {
   const app = express();
@@ -19,11 +21,13 @@ const createServer = async (metricsService) => {
   // Middleware setup
   app.use(cors(corsOptions));
   app.use(cookieParser());
-  app.use(express.json());
+
   app.use(express.urlencoded({ extended: true }));
 
-  // Metrics setup
-  // metricsService.setup(app);
+  app.use("/webhook", express.raw({ type: "application/json" }));
+
+  // Now apply express.json() globally
+  app.use(express.json());
 
   // Routes
   app.use("/", subscriptionTypeRoute);

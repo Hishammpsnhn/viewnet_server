@@ -12,6 +12,7 @@ export class SeriesRepository implements ISeriesRepository {
       const seriesData = await SeriesModel.find({})
         .sort({ releaseDate: -1 })
         .limit(limit);
+
       return seriesData.map((series) => {
         return new SeriesEntity(
           series._id,
@@ -21,6 +22,7 @@ export class SeriesRepository implements ISeriesRepository {
           series.releaseDate,
           series.rating,
           series.posterImage,
+          series.posterImage,
           series.seasons?.map(
             (season) =>
               new SeasonEntity(
@@ -28,21 +30,24 @@ export class SeriesRepository implements ISeriesRepository {
                 season.seriesId,
                 season.seasonNumber,
                 season.releaseDate,
-                season.episodes?.map(
-                  (episode) =>
-                    new EpisodeEntity(
-                      episode._id,
-                      episode.seasonId,
-                      episode.episodeNumber,
-                      episode.title,
-                      episode.description,
-                      episode.key,
-                      episode.duration,
-                      episode.releaseDate,
-                      episode.thumbnailUrl,
-                      episode.videoUrl
-                    )
-                )
+                season.episodes
+                  ?.filter((episode) => episode.transcoding === "completed")
+                  .map(
+                    (episode) =>
+                      new EpisodeEntity(
+                        episode._id,
+                        episode.seasonId,
+                        episode.episodeNumber,
+                        episode.title,
+                        episode.description,
+                        episode.key,
+                        episode.duration,
+                        episode.releaseDate,
+                        episode.thumbnailUrl,
+                        episode.videoUrl,
+                        episode.transcoding
+                      )
+                  )
               )
           )
         );
@@ -74,6 +79,7 @@ export class SeriesRepository implements ISeriesRepository {
         series.releaseDate,
         series.rating,
         series.posterImage,
+        series.posterImage,
         series.seasons.map(
           (season) =>
             new SeasonEntity(
@@ -81,21 +87,24 @@ export class SeriesRepository implements ISeriesRepository {
               season.seriesId,
               season.seasonNumber,
               season.releaseDate,
-              season.episodes.map(
-                (episode) =>
-                  new EpisodeEntity(
-                    episode._id,
-                    episode.seasonId,
-                    episode.episodeNumber,
-                    episode.title,
-                    episode.description,
-                    episode.key,
-                    episode.duration,
-                    episode.releaseDate,
-                    episode.thumbnailUrl,
-                    episode.videoUrl
-                  )
-              )
+              season.episodes
+                ?.filter((episode) => episode.transcoding === "completed")
+                .map(
+                  (episode) =>
+                    new EpisodeEntity(
+                      episode._id,
+                      episode.seasonId,
+                      episode.episodeNumber,
+                      episode.title,
+                      episode.description,
+                      episode.key,
+                      episode.duration,
+                      episode.releaseDate,
+                      episode.thumbnailUrl,
+                      episode.videoUrl,
+                      episode.transcoding
+                    )
+                )
             )
         )
       );

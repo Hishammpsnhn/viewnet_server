@@ -3,8 +3,7 @@ import UserSubscriptionType from "../../domain/entities/UserSubscription.js";
 export default async (
   userId,
   planId,
-  paymentIntent,
-  { createNewPlanRepository, subscriptionPlanRepository, paymentGateway }
+  { createNewPlanRepository, subscriptionPlanRepository }
 ) => {
   console.log(
     createNewPlanRepository,
@@ -15,16 +14,14 @@ export default async (
   if (!createNewPlanRepository || !subscriptionPlanRepository) {
     throw new Error("Missing  repository");
   }
+  if(!userId || !planId) {
+    throw new Error("User ID and Plan ID are required");
+  }
 
-  const paymentVerified = await paymentGateway.retrievePaymentIntent(
-    paymentIntent
-  );
+  
+    const latestSubscription = await createNewPlanRepository.latestPlan(userId);
 
-  if (paymentVerified) {
-    const { plan_id, user_id } = paymentVerified.metadata;
-    const latestSubscription = await createNewPlanRepository.latestPlan(user_id);
-
-    const planDetail = await subscriptionPlanRepository.findById(plan_id);
+    const planDetail = await subscriptionPlanRepository.findById(planId);
     const { name, sessionLimit, duration, ads, live, uhd } = planDetail;
 
 
@@ -51,5 +48,5 @@ export default async (
 
     const res = await createNewPlanRepository.persist(userSubscription);
     return res;
-  }
+  
 };

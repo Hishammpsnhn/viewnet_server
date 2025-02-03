@@ -80,8 +80,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5002:5002"
-    # volumes:
-    #   - ./payment-sub-service:/app
+    volumes:
+      - ./payment-sub-service:/app
     env_file:
       - ./payment-sub-service/.env
     networks:
