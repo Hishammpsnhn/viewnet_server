@@ -32,6 +32,16 @@ export class SeriesUseCase {
     return this.seriesRepository.update(id, data);
   }
 
+  async releaseSeries(currentDate = new Date()){
+    const series =await  this.seriesRepository.findSeriesToRelease(currentDate)
+    console.log("series gone for update",series)
+    for(const videoData of series){
+      if(videoData._id){
+        await this.seriesRepository.update(videoData._id.toString(),{isRelease:true})
+      }
+    }
+  }
+
   // Delete series by ID
   async deleteSeries(id: string): Promise<boolean> {
     return this.seriesRepository.delete(id);

@@ -3,8 +3,8 @@ import Redis from "ioredis";
 class RedisOtpRegistry {
   constructor() {
     this.client = new Redis({
-      host: "redis", 
-      port: 6379, 
+      host: "redis",
+      port: 6379,
     });
 
     this.client.on("error", (err) =>
@@ -26,6 +26,14 @@ class RedisOtpRegistry {
     await this.client.del(key);
   }
 
+  //store subscriptions details
+  async getSubscription(key) {
+    const sub = await this.client.get(key);
+    return JSON.parse(sub);
+  }
+  async saveSubscription(key, value) {
+    await this.client.set(key, JSON.stringify(value), "EX", 3600);
+  }
 }
 
 export default RedisOtpRegistry;

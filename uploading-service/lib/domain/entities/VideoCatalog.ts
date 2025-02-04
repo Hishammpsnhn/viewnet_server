@@ -19,7 +19,6 @@ export class MovieCatalog {
     movieName: string,
     metadataId: string,
   ) {
-    // Ensure that id and metadataId are valid ObjectId strings
    
     this._id = id;
     this.encodedFiles = encodedFiles;

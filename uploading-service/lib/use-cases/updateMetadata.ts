@@ -5,7 +5,7 @@ import { MovieProducer } from '../infrastructure/queue/MovieProducer';
 export class UpdateVideoMetadataUseCase {
   constructor(
     private videoMetadataRepository: IVideoMetadataRepository,
-    private movieProducer: MovieProducer // Explicitly type it
+   // private movieProducer: MovieProducer 
   ) {}
   async execute(id: string, data: Partial<VideoMetadata>): Promise<VideoMetadata | null> {
     if (!id) {
@@ -23,7 +23,7 @@ export class UpdateVideoMetadataUseCase {
     }
     const movieMetadata = { ...updatedMetadata }; 
 
-    await this.movieProducer.sendMovie(movieMetadata);
+   // await this.movieProducer.sendMovie(movieMetadata);
 
     return updatedMetadata;
   }

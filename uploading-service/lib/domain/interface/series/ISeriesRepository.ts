@@ -7,4 +7,6 @@ export interface ISeriesRepository {
   //findLatest(): Promise<SeriesEntity[]>;
   update(id: string, data: Partial<SeriesEntity>): Promise<SeriesEntity | null>;
   delete(id: string): Promise<boolean>;
+  findSeriesToRelease(date:Date): Promise<SeriesEntity[]>;
+  
 }

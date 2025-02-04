@@ -10,6 +10,7 @@ export class Movie {
     public uploadStatus: string,
     public releaseDateTime: Date,
     public block: boolean,
+    public isRelease:boolean,
     public uploadDate: Date,
     public createdAt: Date,
     public updatedAt: Date

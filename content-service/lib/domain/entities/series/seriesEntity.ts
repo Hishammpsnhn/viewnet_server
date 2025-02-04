@@ -8,6 +8,8 @@ export class SeriesEntity {
     public description: string,
     public genre: string,
     public releaseDate: Date,
+    public isBlock:boolean,
+    public isRelease:boolean,
     public rating: number,
     public posterImage: string,
     public thumbnailUrl: string,

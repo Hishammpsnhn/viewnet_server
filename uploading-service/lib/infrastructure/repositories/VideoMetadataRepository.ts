@@ -1,7 +1,7 @@
 import { VideoMetadataModel } from "../database/models/metaData";
 import { IVideoMetadataRepository } from "../../domain/interface/IVideoMetadataRepository";
 import { VideoMetadata } from "../../domain/entities/VideoMetadata";
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 export class VideoMetadataRepository implements IVideoMetadataRepository {
   async create(data: VideoMetadata): Promise<VideoMetadata> {
@@ -29,6 +29,15 @@ export class VideoMetadataRepository implements IVideoMetadataRepository {
   }
   async findLatest(): Promise<VideoMetadata[]> {
     return await VideoMetadataModel.find().limit(5).lean();
+  }
+  async findRelease(date: Date): Promise<VideoMetadata[]> {
+    const startOfDay = new Date(date.setHours(0, 0, 0, 0)); 
+    const endOfDay = new Date(date.setHours(23, 59, 59, 999));
+
+    return await VideoMetadataModel.find({
+      releaseDateTime: { $gte: startOfDay, $lt: endOfDay }, 
+      isRelease: false,
+    }).lean();
   }
 
   async update(

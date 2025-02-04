@@ -1,8 +1,13 @@
 class LoginUser {
-  constructor(userRepository, subscriptionGateway, sessionRepository) {
+  constructor(
+    userRepository,
+    subscriptionGateway,
+    sessionRepository
+  ) {
     this.userRepository = userRepository;
     this.subscriptionGateway = subscriptionGateway;
     this.sessionRepository = sessionRepository;
+    
   }
 
   async execute(email, deviceId, refreshToken) {
@@ -11,6 +16,8 @@ class LoginUser {
     if (user.isBlock) {
       throw new Error("User is blocked.");
     }
+
+
     const planDetails = await this.subscriptionGateway.fetchSubscriptionDetails(
       user._id
     );

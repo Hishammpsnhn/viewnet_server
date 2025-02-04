@@ -11,7 +11,7 @@ const episodeSchema = new Schema(
     description: { type: String, required: true },
     releaseDate: { type: Date, required: true },
     thumbnailUrl: { type: String, required: true },
-
+    // isBlock: { type: Boolean, required: true, default: true },
     transcoding: {
       type: String,
       enum: ["pending", "processing", "completed", "failed"],

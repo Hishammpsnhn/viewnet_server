@@ -8,7 +8,10 @@ export class SeriesEntity {
       public releaseDate: Date,
       public rating: number,
       public posterImage: string,
-      public seasons: string[] 
+      public seasons: string[] ,
+      public _id : ObjectId,
+      public isBlock: boolean,
+      public isRelease: boolean
     ) {}
   }
   

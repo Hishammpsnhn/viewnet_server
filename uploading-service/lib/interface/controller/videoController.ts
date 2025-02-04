@@ -15,7 +15,7 @@ const repository = new VideoMetadataRepository();
 const generatePresignedUrlUseCase = new GeneratePresignedUrlUseCase(s3Service);
 const movieProducer = new MovieProducer();
 const createVideoMetadata = new CreateVideoMetadata(repository);
-const updateVideoMetadata = new UpdateVideoMetadataUseCase(repository,movieProducer);
+const updateVideoMetadata = new UpdateVideoMetadataUseCase(repository);
 export class VideoController {
   static async generatePresignedUrl(
     req: Request,

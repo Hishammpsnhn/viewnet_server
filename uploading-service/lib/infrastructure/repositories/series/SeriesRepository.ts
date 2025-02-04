@@ -53,6 +53,24 @@ export class SeriesRepository implements ISeriesRepository {
     console.log("series after updatte", series);
     return series ? series.toObject() : null;
   }
+  async findSeriesToRelease(date: Date): Promise<SeriesEntity[]> {
+    console.log("Checking for series release...");
+
+    const startOfDay = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0, 0));
+    const endOfDay = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 23, 59, 59, 999));
+
+
+    const series = await SeriesModel.find({
+        releaseDate: { $gte: startOfDay, $lt: endOfDay },
+        isRelease: false,
+    });
+
+    console.log("Series found:", series);
+
+    return series;
+}
+
+
 
   async delete(id: string): Promise<boolean> {
     const result = await SeriesModel.findByIdAndDelete(id);

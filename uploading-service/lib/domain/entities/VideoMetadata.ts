@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongoose';
+import { ObjectId } from "mongoose";
 
 export interface VideoMetadata {
   _id?: ObjectId;
@@ -13,13 +13,14 @@ export interface VideoMetadata {
   genre: string;
   //rating: string;
   //likes: number;
-  uploadStatus: 'pending' | 'success' | 'failed';
+  uploadStatus: "pending" | "success" | "failed";
   releaseDateTime: Date;
   block: boolean;
- // uploadDate: Date;
- transcoding?: {
-  status: 'pending' | 'processing' | 'completed' | 'failed';
-  availableResolutions?: string[];  // Optional array of resolutions if needed
-  format?: string[];  // Optional array of formats if needed
-};
+  isRelease: boolean;
+  // uploadDate: Date;
+  transcoding?: {
+    status: "pending" | "processing" | "completed" | "failed";
+    availableResolutions?: string[]; // Optional array of resolutions if needed
+    format?: string[]; // Optional array of formats if needed
+  };
 }

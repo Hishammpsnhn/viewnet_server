@@ -9,5 +9,6 @@ export interface IVideoMetadataRepository {
   findLatest(): Promise<VideoMetadata[]>;
   update(id: string, data: Partial<VideoMetadata>): Promise<VideoMetadata | null>;
   delete(id: string): Promise<boolean>;
+  findRelease(currentDate:Date):Promise<VideoMetadata[] >;
 
 }

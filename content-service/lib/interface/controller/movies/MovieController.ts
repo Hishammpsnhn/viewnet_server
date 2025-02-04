@@ -5,11 +5,15 @@ import { MovieCatalogRepository } from "../../../infrastructure/repositories/Mov
 import { GetMovieCatalog } from "../../../use-case/getMovieCatalog";
 import { GetMovieMeta } from "../../../use-case/getMovieMeta";
 
-const latestSeriesUseCase = new GetLatestSeries(new MovieMetadataRepository());
+const movieCatalogRepository = new MovieCatalogRepository();
+const movieMetaRepository = new MovieMetadataRepository();
+
+const latestSeriesUseCase = new GetLatestSeries(movieMetaRepository);
+const getMovieMeta = new GetMovieMeta(movieMetaRepository);
 const getMovieCatalogUseCase = new GetMovieCatalog(
-  new MovieCatalogRepository()
+  movieCatalogRepository,
+  movieMetaRepository
 );
-const getMovieMeta = new GetMovieMeta(new MovieMetadataRepository());
 
 export class MovieController {
   async latestMovies(req: Request, res: Response): Promise<void> {
@@ -30,7 +34,7 @@ export class MovieController {
     }
   }
   async getMovieMeta(req: Request, res: Response): Promise<void> {
-    console.log("haiidi")
+    console.log("haiidi");
     const { id } = req.params;
     try {
       const data = await getMovieMeta.execute(id);
