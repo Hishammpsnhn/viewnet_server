@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import { SeriesEntity } from "../../../domain/entities/series/seriesEntity";
 import { ISeriesRepository } from "../../../domain/interface/series/ISeriesRepository";
 import SeriesModel from "../../database/models/series/series";
+import { invalidateMovieCache } from "../../cache/RedisRepository";
 
 export class SeriesRepository implements ISeriesRepository {
   async create(data: SeriesEntity): Promise<SeriesEntity> {
@@ -46,11 +47,11 @@ export class SeriesRepository implements ISeriesRepository {
     id: string,
     data: Partial<SeriesEntity>
   ): Promise<SeriesEntity | null> {
-    console.log("data to update", data);
+
     const series = await SeriesModel.findByIdAndUpdate(id, data, {
       new: true,
     }).populate("seasons");
-    console.log("series after updatte", series);
+      invalidateMovieCache(id);
     return series ? series.toObject() : null;
   }
   async findSeriesToRelease(date: Date): Promise<SeriesEntity[]> {

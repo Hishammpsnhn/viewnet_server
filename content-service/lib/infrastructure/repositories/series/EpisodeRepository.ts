@@ -8,7 +8,7 @@ import EpisodeCatalogModel from "../../database/models/series/episodeCatalog";
 export class EpisodeRepository implements IEpisodeRepository {
 
   async findByKey(id: string): Promise<EpisodeEntity | null> {
-    const episode = await EpisodeModel.findOne({key:id,transcoding:"completed"});
+    const episode = await EpisodeModel.findOne({seasonId:id,transcoding:"completed"});
     return episode ? episode.toObject() : null;
   }
 

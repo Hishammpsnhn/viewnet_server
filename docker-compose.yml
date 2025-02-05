@@ -34,8 +34,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5000:5000"
-    # volumes:
-    #   - ./user-service:/app
+    volumes:
+      - ./user-service:/app
     env_file:
       - ./user-service/.env
     networks:

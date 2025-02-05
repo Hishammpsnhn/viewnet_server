@@ -27,13 +27,13 @@ class RedisOtpRegistry {
   }
 
   //store subscriptions details
-  async getSubscription(key) {
-    const sub = await this.client.get(key);
-    return JSON.parse(sub);
-  }
-  async saveSubscription(key, value) {
-    await this.client.set(key, JSON.stringify(value), "EX", 3600);
-  }
+  // async getSubscription(key) {
+  //   const sub = await this.client.get(key);
+  //   return JSON.parse(sub);
+  // }
+  // async saveSubscription(key, value) {
+  //   await this.client.set(key, JSON.stringify(value), "EX", 3600);
+  // }
 }
 
 export default RedisOtpRegistry;

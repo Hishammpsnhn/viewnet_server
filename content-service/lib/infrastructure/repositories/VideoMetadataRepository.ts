@@ -51,7 +51,7 @@ export class MovieMetadataRepository implements IVideoMetadataRepository {
     return movies;
   }
   async findById(id: string): Promise<Movie> {
-    const movie = await MovieModel.findById(id);
+    const movie = await MovieModel.findById(id).select('title thumbnailUrl description ');
     if (!movie) {
       throw new Error("movie with this id not found");
     }

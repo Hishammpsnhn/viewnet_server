@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import seriesRoutes from "../../interface/routes/seriesRoutes";
 import movieRoutes from "../../interface/routes/movieRoutes";
+import historyRoute from "../../interface/routes/watchHistoryRoutes";
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ const createServer = async () => {
   // Routes
   app.use("/series", seriesRoutes);
   app.use("/movies", movieRoutes);
+  app.use("/history", historyRoute);
 
   return app;
 };
