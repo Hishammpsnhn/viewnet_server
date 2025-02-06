@@ -10,7 +10,7 @@ class GetUser {
     const planDetails = await this.subscriptionGateway.fetchSubscriptionDetails(
       user._id
     );
-
+    console.log(planDetails)
     return { user, planDetails };
   }
   async getByEmail(email) {

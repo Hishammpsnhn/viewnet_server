@@ -19,10 +19,7 @@ export class WatchHistoryController {
   async updateProgress(req: Request, res: Response): Promise<void> {
     const { profileId, videoCatalogId, progress } = req.body;
 
-    // Enhanced logging for debugging
-    console.log(
-      `Updating watch progress for profileId: ${profileId}, videoCatalogId: ${videoCatalogId}, progress: ${progress}`
-    );
+
 
     try {
       const updatedProgress = await updateWatchHistoryUseCase.execute({
@@ -80,10 +77,7 @@ export class WatchHistoryController {
       return;
     }
 
-    // Enhanced logging for debugging
-    console.log(
-      `Updating watch progress for profileId: ${profileId}, videoCatalogId: ${videoCatalogId}`
-    );
+
 
     try {
       const updatedProgress = await continueWatchingUseCase.execute({

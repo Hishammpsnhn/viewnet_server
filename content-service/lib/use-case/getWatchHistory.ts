@@ -7,7 +7,7 @@ interface WatchHistoryEntry {
   progress: number;
   completed: boolean;
   timestamp: Date;
-  metadata?: any; // Could be more specific depending on your content metadata structure
+  metadata?: any;
 }
 
 interface GetWatchHistoryPayload {

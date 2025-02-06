@@ -5,13 +5,19 @@ import { GetSeriesDetails } from "../../../use-case/getSeriesDetails";
 import { GetEpisodeDetails } from "../../../use-case/episodeDetails";
 import { EpisodeRepository } from "../../../infrastructure/repositories/series/EpisodeRepository";
 import { GetEpisodeCatalogDetails } from "../../../use-case/getEpisodeCatalog";
+import UpdateWatchHistoryUseCase from "../../../use-case/watchHistoryUseCase";
+import WatchHistoryRepository from "../../../infrastructure/repositories/WatchHistoryRepository";
 
 const latestSeriesUseCase = new GetLatestSeries(new SeriesRepository());
 const seriesDetailsUseCase = new GetSeriesDetails(new SeriesRepository());
 const episodeCatalogDetailsUseCase = new GetEpisodeCatalogDetails(
-  new EpisodeRepository()
+  new EpisodeRepository(),
+  new WatchHistoryRepository()
 );
-const episodeDetailsUseCase = new GetEpisodeDetails(new EpisodeRepository());
+const episodeDetailsUseCase = new GetEpisodeDetails(
+  new EpisodeRepository(),
+  new WatchHistoryRepository()
+);
 
 export class SeriesController {
   async latestSeries(req: Request, res: Response): Promise<void> {
@@ -25,8 +31,9 @@ export class SeriesController {
   async seriesDetails(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
+      const profileId = req.query.profileId as string;
       console.log("seriesDetails", id);
-      const series = await seriesDetailsUseCase.execute(id);
+      const series = await seriesDetailsUseCase.execute(id, profileId);
       res.status(200).json({ success: true, data: series });
     } catch (error) {
       res.status(500).json({ message: "Error fetching latest series", error });
@@ -35,8 +42,9 @@ export class SeriesController {
   async episodeDetails(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
+      const profileId = req.query.profileId as string;
       console.log("seriesDetails", id);
-      const series = await episodeDetailsUseCase.execute(id);
+      const series = await episodeDetailsUseCase.execute(id, profileId);
       res.status(200).json({ success: true, data: series });
     } catch (error) {
       res.status(500).json({ message: "Error fetching latest series", error });
@@ -45,8 +53,9 @@ export class SeriesController {
   async episodeCatalogDetails(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
+      const profileId = req.query.profileId as string;
       console.log("dfd", id);
-      const series = await episodeCatalogDetailsUseCase.execute(id);
+      const series = await episodeCatalogDetailsUseCase.execute(id, profileId);
       res.status(200).json({ success: true, data: series });
     } catch (error) {
       res.status(500).json({ message: "Error fetching latest series", error });

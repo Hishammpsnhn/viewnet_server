@@ -21,13 +21,13 @@ class LoginUser {
     const planDetails = await this.subscriptionGateway.fetchSubscriptionDetails(
       user._id
     );
-    console.log("plan Details ++++++", planDetails);
+    console.log("dd",planDetails)
     const activeSessions = await this.sessionRepository.getSessionsByEmail(
       email
     );
-    if (planDetails[0]?.status === "active") {
+    if (planDetails?.status === "active") {
       if (
-        activeSessions.length >= planDetails[0]?.sessionLimit &&
+        activeSessions.length >= planDetails?.sessionLimit &&
         !user.isAdmin
       ) {
         throw new Error(

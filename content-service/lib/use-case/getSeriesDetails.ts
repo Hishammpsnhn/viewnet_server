@@ -6,7 +6,7 @@ export class GetSeriesDetails {
     this.repository = repository;
   }
 
-  async execute(id:string) {
-    return await this.repository.findById(id);
+  async execute(id:string,profileId?:string) {
+    return await this.repository.findById(id,profileId);
   }
 }

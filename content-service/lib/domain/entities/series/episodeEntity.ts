@@ -12,7 +12,8 @@ export class EpisodeEntity {
         public releaseDate: Date,
         public thumbnailUrl:string,
         public videoUrl: string,
-        public transcoding: "pending" | "completed" | "processing" | "failed"
+        public transcoding: "pending" | "completed" | "processing" | "failed",
+        public progress?:number
     ) {}
   }
   
