@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import videoMetadataRoutes from "../../interface/routes/videoMetadataRoutes";
+import genreRoutes from "../../interface/routes/genreRoutes";
 import seriesRoutes from "../../interface/routes/seriesRoutes";
 import { consumeSqsMessages } from "../../interface/consumers/sqsConsumer";
 
@@ -29,8 +30,9 @@ const createServer = async () => {
   main().catch((error) => console.error("Error in application:", error));
 
   // Routes
-  app.use("/movies", videoMetadataRoutes);
   app.use("/", seriesRoutes);
+  app.use("/movies", videoMetadataRoutes);
+  app.use("/genre",genreRoutes );
 
   return app;
 };

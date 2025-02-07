@@ -13,6 +13,7 @@ export class Movie {
     public isRelease:boolean,
     public uploadDate: Date,
     public createdAt: Date,
-    public updatedAt: Date
+    public updatedAt: Date,
+    public posterImage?: string
   ) {}
 }

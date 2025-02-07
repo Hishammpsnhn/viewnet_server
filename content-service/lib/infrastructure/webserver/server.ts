@@ -5,7 +5,6 @@ import cors from "cors";
 import seriesRoutes from "../../interface/routes/seriesRoutes";
 import movieRoutes from "../../interface/routes/movieRoutes";
 import historyRoute from "../../interface/routes/watchHistoryRoutes";
-
 dotenv.config();
 
 const createServer = async () => {
