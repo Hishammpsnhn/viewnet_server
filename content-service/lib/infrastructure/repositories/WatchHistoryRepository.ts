@@ -45,8 +45,7 @@ class WatchHistoryRepository {
   }
 
   async getHistoryOfProfile(profileId: string): Promise<WatchHistoryDTO[]> {
-
-    const data = await HistoryModel.find({ profileId })
+    const data = await HistoryModel.find({ profileId, isHide: false })
       .populate<{
         videoCatalogId: Movie;
       }>({
@@ -65,8 +64,7 @@ class WatchHistoryRepository {
         title: item.videoCatalogId?.title.toString(),
         thumbnailUrl: item.videoCatalogId?.thumbnailUrl.toString(),
         description: item.videoCatalogId?.description,
-        genre:item.videoCatalogId?.genre,
-        
+        genre: item.videoCatalogId?.genre,
       },
       progress: item.progress,
       completed: item.completed,
@@ -74,6 +72,9 @@ class WatchHistoryRepository {
     }));
   }
 
+  async clearHistory(profileId: string): Promise<void> {
+    await HistoryModel.updateMany({ profileId }, { isHide: true });
+  }
 }
 
 export default WatchHistoryRepository;

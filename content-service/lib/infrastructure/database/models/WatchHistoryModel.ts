@@ -6,14 +6,20 @@ interface IWatchHistory extends Document {
   videoCatalogId: mongoose.Types.ObjectId;
   progress: number;
   completed: boolean;
+  isHide:boolean
   timestamp: Date;
 }
 
 // Define the schema for WatchHistory
 const historySchema = new Schema<IWatchHistory>(
   {
-    profileId: { type: Schema.Types.ObjectId, ref: 'Profile', required: true },
-    videoCatalogId: { type: Schema.Types.ObjectId, ref:"VideoMetadata", required: true },
+    profileId: { type: Schema.Types.ObjectId, ref: "Profile", required: true },
+    videoCatalogId: {
+      type: Schema.Types.ObjectId,
+      ref: "VideoMetadata",
+      required: true,
+    },
+    isHide: { type: Boolean, required: true, default: false },
     progress: { type: Number, required: true },
     completed: { type: Boolean, required: true },
   },
@@ -21,6 +27,9 @@ const historySchema = new Schema<IWatchHistory>(
 );
 
 // Create and export the model
-const HistoryModel = mongoose.model<IWatchHistory>("WatchHistory", historySchema);
+const HistoryModel = mongoose.model<IWatchHistory>(
+  "WatchHistory",
+  historySchema
+);
 
 export default HistoryModel;

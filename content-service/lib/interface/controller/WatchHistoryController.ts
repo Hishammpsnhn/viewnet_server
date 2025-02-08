@@ -1,6 +1,7 @@
 import UpdateWatchHistoryUseCase from "../../use-case/watchHistoryUseCase";
 import ContinueWatching from "../../use-case/continueWatching";
 import GetWatchHistoryUseCase from "../../use-case/getWatchHistory";
+import ClearWatchHistoryUseCase from "../../use-case/clearHistory";
 import WatchHistoryRepository from "../../infrastructure/repositories/WatchHistoryRepository";
 import { Request, Response } from "express";
 
@@ -13,13 +14,14 @@ const continueWatchingUseCase = new ContinueWatching(
 const getWatchHistoryUseCase = new GetWatchHistoryUseCase(
   new WatchHistoryRepository()
 );
+const clearWatchHistoryUseCase = new ClearWatchHistoryUseCase(
+  new WatchHistoryRepository()
+);
 
 export class WatchHistoryController {
   // Update progress
   async updateProgress(req: Request, res: Response): Promise<void> {
     const { profileId, videoCatalogId, progress } = req.body;
-
-
 
     try {
       const updatedProgress = await updateWatchHistoryUseCase.execute({
@@ -61,6 +63,27 @@ export class WatchHistoryController {
       res.status(400).json({ error: error.message });
     }
   }
+  async clearWatchHistory(req: Request, res: Response): Promise<void> {
+    const { profileId } = req.params;
+
+    if (!profileId) {
+      res
+        .status(400)
+        .json({ error: "profileId is required " });
+      return;
+    }
+
+    try {
+      await clearWatchHistoryUseCase.execute(profileId);
+      res.status(200).json({ success: true });
+    } catch (error: any) {
+      console.error(
+        `Error fetching watch history for profileId: ${profileId}`,
+        error
+      );
+      res.status(400).json({ error: error.message });
+    }
+  }
 
   async continueWatch(req: Request, res: Response): Promise<void> {
     const { profileId, videoCatalogId } = req.query;
@@ -76,8 +99,6 @@ export class WatchHistoryController {
         .json({ error: "profileId is required and must be a string" });
       return;
     }
-
-
 
     try {
       const updatedProgress = await continueWatchingUseCase.execute({
