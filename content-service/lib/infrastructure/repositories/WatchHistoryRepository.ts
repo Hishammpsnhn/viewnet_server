@@ -52,7 +52,7 @@ class WatchHistoryRepository {
       }>({
         path: "videoCatalogId",
         model: "VideoMetadata",
-        select: "title description duration thumbnailUrl",
+        select: "title description duration thumbnailUrl genre",
       })
       .sort({ updatedAt: -1 })
       .lean();
@@ -65,6 +65,7 @@ class WatchHistoryRepository {
         title: item.videoCatalogId?.title.toString(),
         thumbnailUrl: item.videoCatalogId?.thumbnailUrl.toString(),
         description: item.videoCatalogId?.description,
+        genre:item.videoCatalogId?.genre,
         
       },
       progress: item.progress,

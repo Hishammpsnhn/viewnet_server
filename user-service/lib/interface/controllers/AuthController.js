@@ -24,7 +24,8 @@ const loginUser = new EmailVerify(userRepository, notificationService);
 const getUser = new GetUser(
   userRepository,
   subscriptionGateway,
-  sessionRepository
+  sessionRepository,
+  redisOtpRegistry,
 );
 const userLogin = new LoginUser(
   userRepository,
@@ -137,10 +138,10 @@ class UserController {
   }
 
   static async getAllUsers(req, res) {
-    const { page, limit, search } = req.query;
+    const { page, limit, search,isBlock } = req.query;
     console.log("reqparams", req.query);
     try {
-      const users = await getAllUsers.execute(page, limit, search);
+      const users = await getAllUsers.execute(page, limit, search,isBlock);
       res.status(200).json({ success: true, users });
     } catch (error) {
       res.status(500).json({ message: error.message });

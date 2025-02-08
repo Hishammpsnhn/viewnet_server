@@ -5,6 +5,7 @@ export interface WatchHistoryDTO {
       title: string;
       description: string;
       thumbnailUrl: string;
+      genre:string;
     };
     progress: number;
     completed: boolean;

@@ -32,7 +32,7 @@ class UserRepository extends IUserRepository {
 
   async getAll(page, limit,search) {
     const skip = (page - 1) * limit;
-    return await UserModel.aggregate([
+    const data =  await UserModel.aggregate([
       {
         $match: {
           isAdmin: false,
@@ -60,6 +60,11 @@ class UserRepository extends IUserRepository {
         $limit: 5,
       },
     ]);
+    const totalItems = await UserModel.countDocuments();
+    return{
+      data,
+      totalPages: Math.ceil(totalItems / limit),
+    }
   }
 
   async updateById(id, updateData) {

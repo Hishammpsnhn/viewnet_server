@@ -9,7 +9,7 @@ const seriesSchema = new Schema(
   {
     title: { type: String, required: true },
     description: { type: String, required: true },
-    genre: { type: String, required: true },
+    genre: { type: Schema.Types.ObjectId, ref: "Genre", required: false },
     releaseDate: { type: Date, required: true },
     rating: { type: Number, required: true },
     isBlock:{type: Boolean, required: true,default:false},

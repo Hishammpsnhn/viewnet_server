@@ -9,6 +9,8 @@ const watchLaterController = new WatchLaterController();
 router.get("/", (req, res) => movieController.latestMovies(req, res));
 router.get("/catalog", (req, res) => movieController.getMovieCatalog(req, res));
 router.get("/meta/:id", (req, res) => movieController.getMovieMeta(req, res));
+router.get("/recommended/:id", (req, res) => movieController.recommendedMovies(req, res));
+router.get("/query", (req, res) => movieController.searchQuery(req, res));
 
 //watch later
 router.get("/watch-later/:id", (req, res) => watchLaterController.getWatchLater(req, res));

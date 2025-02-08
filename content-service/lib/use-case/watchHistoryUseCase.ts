@@ -2,9 +2,9 @@ import WatchHistory from '../domain/entities/WatchHistory';
 import WatchHistoryRepository from '../infrastructure/repositories/WatchHistoryRepository'; 
 
 interface UpdateProgressPayload {
-  profileId: string; // Profile ID should be a string
-  videoCatalogId: string; // Video catalog ID should be a string
-  progress: number; // Progress is a number (0-100)
+  profileId: string; 
+  videoCatalogId: string; 
+  progress: number; 
 }
 
 class UpdateWatchProgressUseCase {

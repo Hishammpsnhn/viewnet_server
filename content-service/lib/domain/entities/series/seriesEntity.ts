@@ -17,3 +17,13 @@ export class SeriesEntity {
   ) {}
 
 }
+export class SeriesMeta {
+  constructor(
+    public _id: Types.ObjectId,
+    public title: string,
+    public description: string,
+    public genre: string,
+    public thumbnailUrl: string,
+  ) {}
+
+}

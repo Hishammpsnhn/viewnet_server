@@ -12,14 +12,14 @@ const VideoMetadataSchema: Schema = new Schema(
     title: { type: String, required: true, unique: true },
     thumbnailUrl: { type: String, required: true },
     description: { type: String, required: true },
-    genre: { type: String, required: true },
+    genre: { type: Schema.Types.ObjectId, ref: "Genre", required: false },
     uploadStatus: {
       type: String,
       enum: ["pending", "success", "failed"],
       default: "pending",
     },
     releaseDateTime: { type: Date, required: true },
-    block: { type: Boolean, required: true, default: true },
+    block: { type: Boolean, required: true, default: false },
     uploadDate: { type: Date, required: true, default: Date.now },
     isRelease: { type: Boolean, required: true, default: false },
     transcoding: {
