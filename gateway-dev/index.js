@@ -21,6 +21,7 @@ const services = {
   subscription: process.env.SUBSCRIPTION_SERVICE_URL,
   uploading: process.env.UPLOADING_SERVICE_URL,
   content: process.env.CONTENT_SERVICE_URL,
+  liveStreaming: process.env.LIVE_STREAMING_SERVICE_URL,
 };
 
 // Public routes (no auth required)
@@ -43,6 +44,7 @@ const publicRoutes = [
     changeOrigin: true,
     cookieDomainRewrite: "localhost",
   },
+ 
 ];
 
 // Protected routes (authentication required)
@@ -65,6 +67,21 @@ const protectedRoutes = [
   {
     context: "/api/subscription/admin",
     target: services.subscription,
+    changeOrigin: true,
+    cookieDomainRewrite: "localhost",
+    auth: true,
+    isAdmin: true,
+  },
+  {
+    context: "/api/live/user",
+    target: services.liveStreaming,
+    changeOrigin: true,
+    cookieDomainRewrite: "localhost",
+    auth: true,
+  },
+  {
+    context: "/api/live",
+    target: services.liveStreaming,
     changeOrigin: true,
     cookieDomainRewrite: "localhost",
     auth: true,

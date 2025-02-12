@@ -16,6 +16,7 @@ services:
       - SUBSCRIPTION_SERVICE_URL=http://payment-sub-service:5002
       - UPLOADING_SERVICE_URL=http://uploading-service:5003
       - CONTENT_SERVICE_URL=http://content-service:5004
+      - LIVE_STREAMING_SERVICE_URL=http://live-streaming-service:5005
     networks:
       - app-network
 
@@ -109,6 +110,19 @@ services:
       - ./content-service/lib:/app/lib:delegated
     env_file:
       - ./content-service/.env
+    command: npm run dev
+    networks:
+      - app-network
+  live-streaming-service:
+    build:
+      context: ./live-streaming-service
+      dockerfile: Dockerfile
+    ports:
+      - "5005:5005"
+    volumes:
+      - ./live-streaming-service/lib:/app/lib:delegated
+    env_file:
+      - ./live-streaming-service/.env
     command: npm run dev
     networks:
       - app-network
