@@ -17,6 +17,7 @@ services:
       - UPLOADING_SERVICE_URL=http://uploading-service:5003
       - CONTENT_SERVICE_URL=http://content-service:5004
       - LIVE_STREAMING_SERVICE_URL=http://live-streaming-service:5005
+      - NOTIFICATION_SERVICE_URL=http://notification-service:5006
     networks:
       - app-network
 

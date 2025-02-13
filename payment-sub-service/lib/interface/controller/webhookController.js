@@ -4,7 +4,11 @@ import CreateNewUserSubscription from "../../use-cases/userSubscription/CreateNe
 import UserNewPlanRepository from "../../infrastructure/repository/userSubscription/userSubsciption.js";
 import SubscriptionPlanRepository from "../../infrastructure/repository/subscriptionPlan/subscriptionPlanRepository.js";
 import paymentGateway from "../../infrastructure/Stripe/paymentGateway.js";
+import LiveProducer from "../../infrastructure/queue/LiveStreamProducer.js";
 
+
+
+const liveProducer = new LiveProducer();
 // const userSubscriptionRepository = new CreateNewUserSubscription();
 const stripe = new Stripe(environment.STRIPE_SECRET_KEY);
 const userPlanRepository = new UserNewPlanRepository();
@@ -40,6 +44,7 @@ const handleStripeWebhook = async (req, res) => {
       console.log(`📌 User ID: ${userId}`);
       console.log(`📌 Plan ID: ${planId}`);
       console.log(`📌 Plan Price: ₹${planPrice}`);
+      liveProducer.sendLiveNotification({userId,planId,planPrice})
       const userPlan = await CreateNewUserSubscription(
         userId,
         planId,

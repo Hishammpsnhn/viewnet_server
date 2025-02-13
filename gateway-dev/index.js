@@ -22,6 +22,7 @@ const services = {
   uploading: process.env.UPLOADING_SERVICE_URL,
   content: process.env.CONTENT_SERVICE_URL,
   liveStreaming: process.env.LIVE_STREAMING_SERVICE_URL,
+  notification: process.env.NOTIFICATION_SERVICE_URL
 };
 
 // Public routes (no auth required)
@@ -86,6 +87,13 @@ const protectedRoutes = [
     cookieDomainRewrite: "localhost",
     auth: true,
     isAdmin: true,
+  },
+  {
+    context: "/api/notification",
+    target: services.notification,
+    changeOrigin: true,
+    cookieDomainRewrite: "localhost",
+    auth: true,
   },
   {
     context: "/api/subscription",
