@@ -2,16 +2,18 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import http from "http"; // Import HTTP to create a server for Socket.IO
+import http from "http";
 import { Server as SocketIOServer } from "socket.io";
 import liveStreamRoute from "../../interface/routes/liveStreamingRoutes";
 
 dotenv.config();
 
+// Create a global io instance that can be imported in other files
+let ioInstance: SocketIOServer;
+
 const createServer = async () => {
   const app = express();
 
-  // CORS configuration
   const corsOptions = {
     origin: ["http://localhost:4000", "http://localhost:5173"],
     methods: "GET,POST,PUT,DELETE",
@@ -23,10 +25,8 @@ const createServer = async () => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  // Routes
   app.use("/", liveStreamRoute);
 
-  // Create an HTTP server to integrate with Socket.IO
   const httpServer = http.createServer(app);
 
   // Initialize Socket.IO
@@ -38,39 +38,43 @@ const createServer = async () => {
     },
   });
 
-  const getRoomUserCount = (roomId:string) => {
+  // Store io instance globally
+  ioInstance = io;
+
+  const getRoomUserCount = (roomId: string) => {
     const room = io.sockets.adapter.rooms.get(roomId);
-    return room ? room.size : 0; // `room.size` gives the count of users in the room
+    return room ? room.size : 0;
   };
 
-  // Socket.IO event handling
   io.on("connection", (socket) => {
-    console.log("Client connected1:", socket.id);
+    console.log("Client connected:", socket.id);
 
-    // Handle custom events
+    // Subscribe to notifications
+    socket.on("subscribeToNotifications", () => {
+      socket.join("notifications");
+      console.log(`Client ${socket.id} subscribed to notifications`);
+    });
+
     socket.on("joinRoom", (room) => {
-      console.log("joind room")
-
+      console.log("join room",room)
       socket.join(room.streamId);
       const userCount = getRoomUserCount(room.streamId);
-      console.log(`Number of users in room ${room.streamId}: ${userCount}`);
-
-      io.to(room.streamId).emit("roomUserCount", { roomId: room.streamId, count: userCount });
-      console.log(`Client ${socket.id} joined room: ${room.streamId}`);
+      io.to(room.streamId).emit("roomUserCount", { 
+        roomId: room.streamId, 
+        count: userCount 
+      });
     });
 
     socket.on("leaveRoom", ({ streamId, userId }) => {
       socket.leave(streamId);
-      console.log(`Client ${socket.id} left room: ${streamId}`);
-  
-      // Update user count in the room
-      const roomUserCount = io.sockets.adapter.rooms.get(streamId)?.size || 0;
-      io.to(streamId).emit("roomUserCount", { roomId: streamId, count: roomUserCount });
+      const roomUserCount = getRoomUserCount(streamId);
+      io.to(streamId).emit("roomUserCount", { 
+        roomId: streamId, 
+        count: roomUserCount 
+      });
     });
 
     socket.on("sendMessage", (message) => {
-      console.log("Received message:", message);
-      // Broadcast the message to all clients in the same room
       io.to(message.streamId).emit("receiveMessage", message.message);
     });
 
@@ -79,7 +83,9 @@ const createServer = async () => {
     });
   });
 
-  return httpServer; // Return the HTTP server
+  return httpServer;
 };
+
+
 
 export default createServer;

@@ -1,11 +1,9 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
+import connectDB from "../database/setup";
 dotenv.config();
 
-// import connectDB from '../database/setup';
-
 async function init() {
-    // connectDB();
-  
+  connectDB();
 }
 
 export default { init };

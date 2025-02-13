@@ -1,9 +1,16 @@
 import { Request, Response } from "express";
 import * as LiveStreamService from "../../use-case/liveStreamingUsecase";
+import { LiveProducer } from "../../infrastructure/queue/LiveStreamProducer";
+const liveProducer = new LiveProducer();
 
 export const createLiveStream = async (req: Request, res: Response) => {
   try {
-    const stream = await LiveStreamService.createStream();
+    console.log(req.body);
+    const data = req.body.formData;
+    const stream = await LiveStreamService.createStream(data);
+    if (stream.metadata) {
+      liveProducer.sendLiveNotification(stream.metadata);
+    }
     res.status(200).json({ success: true, data: stream });
   } catch (error: any) {
     console.error("Error creating live stream:", error);
@@ -48,11 +55,24 @@ export const listAllStreams = async (_req: Request, res: Response) => {
 };
 export const getAssets = async (req: Request, res: Response) => {
   const { page } = req.query;
-  console.log(req.query)
+  console.log(req.query);
 
   try {
     const activeStreams = await LiveStreamService.getAssets(Number(page));
-    res.status(200).json({ success: true, data: activeStreams.data });
+    res.status(200).json({ success: true, data: activeStreams });
+  } catch (error: any) {
+    console.error("Error fetching stream list:", error);
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch stream details" });
+  }
+};
+export const getAssetDetails = async (req: Request, res: Response) => {
+  const { assetsId } = req.params;
+
+  try {
+    const activeStreams = await LiveStreamService.getAssetDetails(assetsId);
+    res.status(200).json({ success: true, data: activeStreams });
   } catch (error: any) {
     console.error("Error fetching stream list:", error);
     res

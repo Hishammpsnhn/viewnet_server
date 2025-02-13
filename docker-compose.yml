@@ -57,7 +57,7 @@ services:
       - app-network
 
   # Notification Service
-  notification-service:
+  email-service:
     build:
       context: ./email-service
       dockerfile: Dockerfile
@@ -126,6 +126,21 @@ services:
     command: npm run dev
     networks:
       - app-network
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    ports:
+      - "5006:5006"
+    volumes:
+      - ./notification-service/lib:/app/lib:delegated
+    env_file:
+      - ./notification-service/.env
+    command: npm run dev
+    networks:
+      - app-network
+    depends_on:
+      - rabbitmq
 
   # Redis Service
   redis:
