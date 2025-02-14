@@ -2,13 +2,17 @@ import * as amqp from "amqplib";
 import { NotifyUsersUseCase } from "../usecase/NotifyUsersUseCase";
 import { NotificationSender } from "../domain/interface/NotificationSender";
 import NotificationRepositoryImpl from "../infrastructure/repository/NotificationRepository";
+import UserGateway from "../gateway/userGateway";
+import axios from "axios";
+
+const userGateway  = new UserGateway(axios);
 
 export class RabbitMQConsumer {
   private useCase: NotifyUsersUseCase;
 
   constructor(notificationSender: NotificationSender) {
     const notificationRepository = new NotificationRepositoryImpl();
-    this.useCase = new NotifyUsersUseCase(notificationSender, notificationRepository);
+    this.useCase = new NotifyUsersUseCase(notificationSender, notificationRepository,userGateway);
   }
 
   async consume(): Promise<void> {

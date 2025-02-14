@@ -140,8 +140,9 @@ class UserController {
   static async getAllUsers(req, res) {
     const { page, limit, search,isBlock } = req.query;
     console.log("reqparams", req.query);
+    const numericLimit = parseInt(limit, 10);
     try {
-      const users = await getAllUsers.execute(page, limit, search,isBlock);
+      const users = await getAllUsers.execute(page, numericLimit, search,isBlock);
       res.status(200).json({ success: true, users });
     } catch (error) {
       res.status(500).json({ message: error.message });

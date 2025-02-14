@@ -57,7 +57,7 @@ class UserRepository extends IUserRepository {
       },
       { $skip: skip },
       {
-        $limit: 5,
+        $limit: limit,
       },
     ]);
     const totalItems = await UserModel.countDocuments();

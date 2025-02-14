@@ -1,27 +1,33 @@
 import { NotificationSender } from "../domain/interface/NotificationSender";
-import {  LiveStartedEvent } from "../domain/entity/LiveStartedEvent";
+import { LiveStartedEvent } from "../domain/entity/LiveStartedEvent";
 import NotificationRepositoryImpl from "../infrastructure/repository/NotificationRepository";
+import UserGateway from "../gateway/userGateway";
 
 export class NotifyUsersUseCase {
   private notificationSender: NotificationSender;
   private notificationRepository: NotificationRepositoryImpl;
-  constructor(notificationSender: NotificationSender,notificationRepository: NotificationRepositoryImpl) {
+  private userGateway: UserGateway;
+
+  constructor(
+    notificationSender: NotificationSender,
+    notificationRepository: NotificationRepositoryImpl,
+    userGateway: UserGateway
+  ) {
     this.notificationSender = notificationSender;
     this.notificationRepository = notificationRepository;
+    this.userGateway = userGateway;
   }
 
-  execute(eventType: string, data: any): void {
+  async execute(eventType: string, data: any): Promise<void> {
     let notificationMessage: string;
 
     switch (eventType) {
-      // case "movie_uploaded":
-      //   const movieData = data as MovieUploadedEvent;
-      //   notificationMessage = `New movie uploaded: ${movieData.title}`;
-      //   break;
+      case "movie_uploaded":
+        notificationMessage = `New movie uploaded: ${data.title}`;
+        break;
 
       case "plan_purchased":
-        const planData = data ;
-        notificationMessage = `New plan purchased by user: ${planData.userId}`;
+        notificationMessage = `Thank you for your purchase! We truly appreciate your support and look forward to serving you.`;
         break;
 
       case "live_started":
@@ -32,11 +38,52 @@ export class NotifyUsersUseCase {
       default:
         notificationMessage = "Unknown event received.";
     }
-    this.notificationRepository.create({
-      message: notificationMessage,
-      recipient: data.userId?data.userId : null
 
-    })
-    this.notificationSender.sendNotification(eventType, notificationMessage);
+    if (eventType === "movie_uploaded") {
+      console.log("new movie uploaded")
+      try {
+        console.log("Fetching all users...");
+        const users = await this.userGateway.fetchUser(); // Fetch all users
+        if (users && users.data && users.data.length > 0) {
+          console.log("Users fetched successfully:", users.data);
+
+          // Send notification to all users
+          for (const user of users.data) {
+            const userId = user.id || user._id; // Adjust based on user object structure
+            const userEmail = user.email;
+
+            console.log(
+              `Sending notification to User ID: ${userId}, Email: ${userEmail}`
+            );
+
+            // Save notification in the repository
+            await this.notificationRepository.create({
+              message: notificationMessage,
+              recipient: userId,
+            });
+
+            // Send the notification via the notification sender
+            await this.notificationSender.sendNotification(
+              userId,
+              notificationMessage
+            );
+          }
+        } else {
+          console.error("No users found to send notifications.");
+        }
+      } catch (error) {
+        console.error("Error while notifying users:", error);
+      }
+    } else {
+      this.notificationRepository.create({
+        message: notificationMessage,
+        recipient: data.userId ? data.userId : null,
+      });
+
+      this.notificationSender.sendNotification(
+        data.userId || null,
+        notificationMessage
+      );
+    }
   }
 }

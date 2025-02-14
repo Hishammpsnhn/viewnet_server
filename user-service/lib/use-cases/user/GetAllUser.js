@@ -4,7 +4,7 @@ class GetAllUsers {
     }
   
     async execute(page,limit,search,isBlock) {
-      return await this.userRepository.getAll(page,limit,search,{isBlock});
+      return await this.userRepository.getAll(page,limit ,search,{isBlock});
     }
   }
   

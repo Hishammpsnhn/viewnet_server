@@ -7,11 +7,14 @@ class NotificationRepositoryImpl implements NotificationRepositoryImpl {
 
   async getAllByRecipient(recipientId: string): Promise<any[]> {
     return await NotificationModel.find({
-      $or: [
-        { recipient: null },
-        { recipient: recipientId } 
-      ],
+      recipient: recipientId,
     }).sort({ createdAt: -1 });
+    // return await NotificationModel.find({
+    //   $or: [
+    //     { recipient: null },
+    //     { recipient: recipientId }
+    //   ],
+    // }).sort({ createdAt: -1 });
   }
 }
 

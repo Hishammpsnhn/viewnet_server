@@ -9,22 +9,31 @@ import mongoose from "mongoose";
 export class MovieMetadataRepository implements IVideoMetadataRepository {
   private CACHE_KEY = "latest_movies";
   private CACHE_EXPIRATION = 3600;
-  async findLatest(limit: number = 10): Promise<Movie[]> {
+  async findLatest(page: number, limit: number = 5): Promise<Movie[]> {
+    const offset = (page - 1) * limit;
+
+    // Check if the full dataset is cached
     const cachedMovies = await redisClient.get(this.CACHE_KEY);
+
     if (cachedMovies) {
       console.log("Cache Hit - Returning cached data");
-      return JSON.parse(cachedMovies);
+      const allMovies = JSON.parse(cachedMovies);
+
+      // Paginate the cached data
+      return allMovies.slice(offset, offset + limit);
     }
 
     console.log("Cache Miss - Fetching from DB");
+
+    // Fetch all movies from the database (without pagination)
     const moviesData = await MovieModel.find({
       block: false,
       isRelease: true,
       uploadStatus: "success",
       "transcoding.status": "completed",
-    })
-      .sort({ releaseDate: -1 })
-      .limit(limit);
+    }).sort({ releaseDate: -1 });
+
+    // Map the database results to Movie objects
     const movies = moviesData.map((movie) => {
       return new Movie(
         movie._id,
@@ -42,14 +51,14 @@ export class MovieMetadataRepository implements IVideoMetadataRepository {
       );
     });
 
-    // Store fetched data in Redis cache
     await redisClient.set(
       this.CACHE_KEY,
       JSON.stringify(movies),
       "EX",
       this.CACHE_EXPIRATION
     );
-    return movies;
+
+    return movies.slice(offset, offset + limit);
   }
   async searchQuery(query: string): Promise<Movie[]> {
     const moviesData = await MovieModel.find({
@@ -59,8 +68,8 @@ export class MovieMetadataRepository implements IVideoMetadataRepository {
       uploadStatus: "success",
       "transcoding.status": "completed",
     })
-    .select("title description genre thumbnailUrl")
-    .limit(10);
+      .select("title description genre thumbnailUrl")
+      .limit(10);
     const movies = moviesData.map((movie) => {
       return new Movie(
         movie._id,
@@ -77,7 +86,6 @@ export class MovieMetadataRepository implements IVideoMetadataRepository {
         movie.updatedAt
       );
     });
-
 
     return movies;
   }

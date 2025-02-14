@@ -3,11 +3,13 @@ import { ReleaseMovie } from "../../use-cases/releseMovie";
 import { SeriesUseCase } from "../../use-cases/series/SeriesUseCase";
 import { VideoMetadataRepository } from "../repositories/VideoMetadataRepository";
 import { SeriesRepository } from "../repositories/series/SeriesRepository";
-console.log("cron update subscriptions");
+import { LiveProducer } from "../../infrastructure/queue/NotificationProducer";
+const liveProducer = new LiveProducer();
+
 function movieReleaseCron() {
   cron.schedule("* * * * *", async () => {
     console.log("Cron Job: Checking Release statuses...");
-    const repo = new ReleaseMovie(new VideoMetadataRepository());
+    const repo = new ReleaseMovie(new VideoMetadataRepository(),liveProducer);
     
     const seriesUseCase = new SeriesUseCase(new SeriesRepository());
 

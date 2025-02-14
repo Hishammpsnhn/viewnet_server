@@ -6,7 +6,7 @@ export class GetLatestSeries {
     this.repository = repository;
   }
 
-  async execute() {
-    return await this.repository.findLatest();
+  async execute(page: number,limit:number) {
+    return await this.repository.findLatest(page,limit);
   }
 }

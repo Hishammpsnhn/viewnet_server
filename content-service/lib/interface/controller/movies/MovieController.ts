@@ -29,8 +29,11 @@ const getMovieCatalogUseCase = new GetMovieCatalog(
 
 export class MovieController {
   async latestMovies(req: Request, res: Response): Promise<void> {
+    const {page,limit} = req.query;
+    const pageNum = parseInt(page as string, 10);
+    const limitNum = parseInt(limit as string, 10);
     try {
-      const data = await latestSeriesUseCase.execute();
+      const data = await latestSeriesUseCase.execute(pageNum,limitNum);
       res.status(200).json({ success: true, data });
     } catch (error) {
       res.status(500).json({ message: "Error fetching latest series", error });

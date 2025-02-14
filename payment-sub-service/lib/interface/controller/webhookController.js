@@ -44,7 +44,7 @@ const handleStripeWebhook = async (req, res) => {
       console.log(`📌 User ID: ${userId}`);
       console.log(`📌 Plan ID: ${planId}`);
       console.log(`📌 Plan Price: ₹${planPrice}`);
-      liveProducer.sendLiveNotification({userId,planId,planPrice})
+      liveProducer.sendLiveNotification({userId,planName,planPrice})
       const userPlan = await CreateNewUserSubscription(
         userId,
         planId,
