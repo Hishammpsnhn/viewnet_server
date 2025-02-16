@@ -105,3 +105,18 @@ export const removeLiveStream = async (req: Request, res: Response) => {
       .json({ success: false, error: "Failed to delete the stream." });
   }
 };
+// export const webhookLiveStream = async (req: Request, res: Response) => {
+//   try {
+//     const signature = req.headers['mux-signature'];
+//     console.log("sinnature",signature)
+//     console.log("helllo.................. webhook");
+//     const data = req.body;
+//     console.log("data", data);
+//   } catch (error: any) {
+//     console.error("Error delete the stream:", error);
+//     res
+//       .status(500)
+//       .json({ success: false, error: "Failed to delete the stream." });
+//   }
+// };
+

@@ -69,10 +69,10 @@ export async function EditPlan(req, res) {
 }
 
 export async function Plan_Payment(req, res) {
-  const { planId, userId } = req.body;
+  const { planId, userId,email } = req.body;
   console.log("payment", planId, userId);
   try {
-    const plan = await Payment(planId, userId, {
+    const plan = await Payment(planId, userId,email, {
       subscriptionPlanRepository,
       paymentGateway,
       createNewPlanRepository

@@ -3,13 +3,14 @@ import UserSubscriptionType from "../../domain/entities/UserSubscription.js";
 export default async function (
   planId,
   userId,
+  email,
   { subscriptionPlanRepository, paymentGateway, createNewPlanRepository }
 ) {
   const plan = await subscriptionPlanRepository.findById(planId);
   if (!plan) throw new Error("No subscription plans in this Id");
   
   //kdfjkd
-  const paymentVerified = await paymentGateway.productGateway(userId,plan);
+  const paymentVerified = await paymentGateway.productGateway(userId,plan,email);
   console.log(paymentVerified)
   return paymentVerified
 

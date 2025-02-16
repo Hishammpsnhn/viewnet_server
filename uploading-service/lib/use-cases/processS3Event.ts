@@ -138,31 +138,31 @@ async function monitorTaskStatus(
       const encodedFiles: IEncodedFile[] = [
         {
           encodingStatus: "completed",
-          fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${title}/1080p/index.m3u8`,
+          fileUrl: `https://d1l6zjp27xxl39.cloudfront.net/hls/${title}/1080p/index.m3u8`,
           format: "mp4",
           resolution: "1080p",
         },
         {
           encodingStatus: "completed",
-          fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${title}/master.m3u8`,
+          fileUrl: `https://d1l6zjp27xxl39.cloudfront.net/hls/${title}/master.m3u8`,
           format: "mp4",
           resolution: "auto",
         },
         {
           encodingStatus: "completed",
-          fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${title}/720p/index.m3u8`,
+          fileUrl: `https://d1l6zjp27xxl39.cloudfront.net/hls/${title}/720p/index.m3u8`,
           format: "mp4",
           resolution: "720p",
         },
         {
           encodingStatus: "completed",
-          fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${title}/480p/index.m3u8`,
+          fileUrl: `https://d1l6zjp27xxl39.cloudfront.net/hls/${title}/480p/index.m3u8`,
           format: "mp4",
           resolution: "480p",
         },
         {
           encodingStatus: "completed",
-          fileUrl: `https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls/${title}/360p/index.m3u8`,
+          fileUrl: `https://d1l6zjp27xxl39.cloudfront.net/hls/${title}/360p/index.m3u8`,
           format: "mp4",
           resolution: "360p",
         },

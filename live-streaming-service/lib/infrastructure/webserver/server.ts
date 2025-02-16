@@ -24,7 +24,8 @@ const createServer = async () => {
   app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-
+  
+;
   app.use("/", liveStreamRoute);
 
   const httpServer = http.createServer(app);

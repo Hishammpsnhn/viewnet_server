@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import notificationRoute from '../../interface/routes/NotificationRoutes'
+import watchTimeRoute from '../../interface/routes/WatchTimeRoute'
 import cors from "cors";
 dotenv.config();
 
@@ -19,7 +20,7 @@ const createServer = async () => {
   app.use(express.urlencoded({ extended: true }));
 
   async function main() {
-    console.log("main")
+    app.use("/watchTime", watchTimeRoute);
     app.use("/", notificationRoute);
   }
 

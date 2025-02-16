@@ -5,7 +5,7 @@ import {
 import { sqsClient } from "../../infrastructure/aws/sqsClient";
 import { parseS3Event } from "../../infrastructure/aws/s3EventParser";
 import { processS3Event } from "../../use-cases/processS3Event";
-import { EpisodeProcessS3Event } from "../../use-cases/EpisodeprocessS3Event";
+import { EpisodeProcessS3Event } from "../../use-cases/EpisodeProcessS3Event";
 import { IEncodedFile, MovieCatalog } from "../../domain/entities/VideoCatalog";
 import mongoose, { Types } from "mongoose";
 import { MovieCatalogRepository } from "../../infrastructure/repositories/MovieCatalog";

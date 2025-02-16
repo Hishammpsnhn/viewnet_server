@@ -25,7 +25,6 @@ export default class paymentGateway {
     }
   }
 
-
   async createPaymentIntent({ amount, currency }) {
     try {
       const paymentIntent = await stripe.paymentIntents.create({
@@ -43,7 +42,6 @@ export default class paymentGateway {
     }
   }
 
-
   async retrievePaymentIntent(paymentIntentId) {
     try {
       const paymentIntent = await stripe.paymentIntents.retrieve(
@@ -60,11 +58,11 @@ export default class paymentGateway {
     }
   }
 
-  async productGateway(userId, plan) {
-    console.log("ProductGateway")
-    console.log("userId", userId,plan)
+  async productGateway(userId, plan, email) {
+    console.log("ProductGateway");
+    console.log("userId", userId, plan, email);
     try {
-      if (!plan || !plan.name || !plan.price) {
+      if (!plan || !plan.name || !plan.price || !email) {
         throw new Error("Invalid plan details provided");
       }
 
@@ -81,7 +79,8 @@ export default class paymentGateway {
       const price = await stripe.prices.create({
         product: planPayment.id,
         currency: "inr",
-        unit_amount: plan.price * 100, // Convert to paise (Stripe requires smallest unit)
+
+        unit_amount: plan.price * 100, 
       });
 
       if (!price.id) {
@@ -91,6 +90,7 @@ export default class paymentGateway {
       // Create a checkout session
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
+        customer_email: email,
         line_items: [
           {
             price: price.id,
@@ -105,6 +105,7 @@ export default class paymentGateway {
           planId: plan.id.toString(),
           planName: plan.name,
           planPrice: plan.price,
+          email,
         },
       });
 

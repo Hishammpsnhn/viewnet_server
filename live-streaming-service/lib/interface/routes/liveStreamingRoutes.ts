@@ -10,6 +10,7 @@ router.get("/assets", LiveStreamController.getAssets);
 router.get("/assets-details/:assetsId", LiveStreamController.getAssetDetails);
 router.get("/list/all", LiveStreamController.listAllStreams);
 router.post("/stop-stream", LiveStreamController.stopLiveStream);
+// router.post("/webhook", LiveStreamController.liveStreamMetrics);
 router.delete(
   "/remove-stream/:streamId",
   LiveStreamController.removeLiveStream

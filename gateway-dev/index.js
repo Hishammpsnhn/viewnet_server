@@ -45,6 +45,12 @@ const publicRoutes = [
     changeOrigin: true,
     cookieDomainRewrite: "localhost",
   },
+  {
+    context: "/api/live/public",
+    target: services.liveStreaming,
+    changeOrigin: true,
+    cookieDomainRewrite: "localhost",
+  },
  
 ];
 

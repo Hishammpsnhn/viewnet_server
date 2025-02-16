@@ -95,10 +95,13 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5003:5003"
-    volumes:
-      - ./uploading-service:/app
+    # volumes:
+    #   - ./uploading-service:/app
     env_file:
       - ./uploading-service/.env
+  
+    volumes:
+        - ./uploading-service:/app/logs
     networks:
       - app-network
   content-service:
@@ -143,6 +146,38 @@ services:
     depends_on:
       - rabbitmq
 
+
+  # elasticsearch:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
+  #   ports:
+  #     - "9200:9200"
+  #   environment:
+  #     - discovery.type=single-node
+  #   networks:
+  #     - app-network
+
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:7.15.0
+  #   ports:
+  #     - "5601:5601"
+  #   depends_on:
+  #     - elasticsearch
+  #   networks:
+  #     - app-network
+
+  # filebeat:
+  #   build:
+  #       context: ./filebeat
+  #   container_name: filebeat
+  #   command: filebeat -e -strict.perms=false
+  #   volumes:
+  #       - ./uploading-service/logs:/app/logs
+  #   depends_on:
+  #       - elasticsearch
+  #       - kibana
+  #   networks:
+  #     - app-network
+
   # Redis Service
   redis:
     image: redis:7-alpine
@@ -156,3 +191,9 @@ services:
 networks:
   app-network:
     driver: bridge
+
+
+
+# volumes:
+#     elasticsearch_data:
+#         driver: local
