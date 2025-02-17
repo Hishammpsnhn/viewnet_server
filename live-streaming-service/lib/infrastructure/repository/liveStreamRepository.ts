@@ -7,11 +7,11 @@ export const createLiveStream = async (formData: any) => {
     new_asset_settings: { playback_policy: ["public"] },
   });
   
-  // const res = await MuxSchema.insertOne(data);
   const res = await MuxMetaSchema.insertOne({
     title: formData.title,
     description: formData.descrption,
     genre: formData.genre,
+    thumbnailUrl: formData.thumbnailUrl,
     streamId: data.id,
   });
 
@@ -29,8 +29,8 @@ export const listLiveStreams = async () => {
       const metadata = await MuxMetaSchema.findOne({ streamId: stream.id });
    
       return {
-        stream, // Include the stream details
-        metadata, // Include the corresponding metadata
+        stream, 
+        metadata, 
       };
     })
   );
@@ -57,8 +57,8 @@ export const getAssets = async (page: number, limit: number = 5) => {
   const res = await MuxMetaSchema.find(
     { assetsId: { $exists: true } }, 
   )
-    .skip((page - 1) * limit) // Skip documents for pagination
-    .limit(limit); // Limit the number of documents
+    .skip((page - 1) * limit) 
+    .limit(limit); 
 
   return res;
 };

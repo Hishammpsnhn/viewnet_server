@@ -11,6 +11,12 @@ export class WebSocketServer implements NotificationSender {
   private io: SocketServer;
   private connectedUsers: Map<string, Socket> = new Map();
   private watchParties: Map<string, WatchParty> = new Map();
+  private emitActiveUsers() {
+    const activeUsers = Array.from(this.connectedUsers.keys()).length; // Get all user IDs
+    console.log("activeusers: " , activeUsers)
+    this.io.emit("activeUsers", activeUsers); // Send to all admins
+  }
+  
 
   constructor(httpServer: HttpServer) {
     this.io = new SocketServer(httpServer, {
@@ -27,7 +33,10 @@ export class WebSocketServer implements NotificationSender {
       socket.on("register", (userId: string) => {
         this.connectedUsers.set(userId, socket);
         console.log(`User registered: ${userId}`);
+        //this.io.emit("userCount", this.connectedUsers.size);
+        this.emitActiveUsers();
       });
+      
 
       socket.on("update_watch_time", async ({ profileId, watchTime }) => {
         console.log("profile id", profileId, watchTime);
@@ -37,7 +46,6 @@ export class WebSocketServer implements NotificationSender {
 
       // Join watch party
       socket.on("joinParty", ({ partyId, profileId }) => {
-        console.log("Join party:", partyId, profileId);
         socket.join(partyId);
         if (!this.watchParties.has(partyId)) {
           this.watchParties.set(partyId, {
