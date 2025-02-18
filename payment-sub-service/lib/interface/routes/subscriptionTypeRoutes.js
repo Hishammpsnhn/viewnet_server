@@ -8,6 +8,8 @@ import {
 } from "../controller/SubscriptionTypeControllers/SubscriptionTypeController.js";
 import {
   GetUserPlan,
+  GetUserPlanCount,
+  
 } from "../controller/userSubscription/UserSubscriptionController.js";
 import environment from "../../infrastructure/config/environment.js";
 import webhookController from "../controller/webhookController.js";
@@ -19,7 +21,9 @@ const router = express.Router();
 
 router.get("/", GetAllPlans);
 router.get("/:userId/plans", GetUserPlan);
+router.get("/pie_chart", GetUserPlanCount);
 router.get("/:userId/active", GetUserPlan);
+router.get("/transactions", transactionController.getAllTransactions);
 router.get("/transactions", transactionController.getAllTransactions);
 router.put("/:id", EditPlan);
 router.post("/payment", Plan_Payment);

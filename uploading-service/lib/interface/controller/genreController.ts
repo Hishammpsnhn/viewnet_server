@@ -3,6 +3,7 @@ import { CreateGenreUseCase } from "../../use-cases/genre/createGenre";
 import { GetAllGenreUseCase } from "../../use-cases/genre/getAllGenre";
 import { genreRepository } from "../../infrastructure/repositories/genreRepository";
 import { Genre } from "../../domain/entities/genre";
+import { HttpStatus } from "../HttpStatus";
 
 export class GenreController {
   private createGenreUseCase: CreateGenreUseCase;
@@ -22,24 +23,23 @@ export class GenreController {
         description,
         isActive,
       });
-      res.status(201).json({ success: true, data:createdGenre });
+      res.status(HttpStatus.Created).json({ success: true, data:createdGenre });
     } catch (error: any) {
-      res.status(400).json({ message: error.message });
+      res.status(HttpStatus.InternalServerError).json({ message: error.message });
     }
   }
 
   async getAllGenre(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
       const genre = await this.getGenreByIdUseCase.execute();
 
       if (!genre) {
-        res.status(404).json({ message: "Genre not found" });
+        res.status(HttpStatus.BadRequest).json({ message: "Genre not found" });
       }
 
-      res.status(200).json({ success: true, data:genre });
+      res.status(HttpStatus.OK).json({ success: true, data:genre });
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      res.status(HttpStatus.InternalServerError).json({ message: error.message });
     }
   }
 }

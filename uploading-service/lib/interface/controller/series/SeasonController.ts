@@ -4,6 +4,7 @@ import { SeasonRepository } from "../../../infrastructure/repositories/series/Se
 import { SeasonUseCase } from "../../../use-cases/series/SeasonUseCase";
 import { SeriesRepository } from "../../../infrastructure/repositories/series/SeriesRepository";
 import { SeriesUseCase } from "../../../use-cases/series/SeriesUseCase";
+import { HttpStatus } from "../../HttpStatus";
 
 const seasonUseCase = new SeasonUseCase(
   new SeasonRepository(),
@@ -21,10 +22,10 @@ export class SeasonController {
       }
       const season = await seasonUseCase.createSeason(seriesId, seasonData);
       res
-        .status(201)
+        .status(HttpStatus.Created)
         .json({ success: true, message: "Season added successfully", season });
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 
@@ -34,12 +35,12 @@ export class SeasonController {
       const { id } = req.params;
       const season = await seasonUseCase.getSeasonById(id);
       if (season) {
-        res.status(200).json(season);
+        res.status(HttpStatus.OK).json(season);
       } else {
-        res.status(404).json({ success: true, message: "Season not found" });
+        res.status(HttpStatus.BadRequest).json({ success: true, message: "Season not found" });
       }
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 
@@ -48,9 +49,9 @@ export class SeasonController {
     try {
       const { seriesId } = req.params;
       const seasons = await seasonUseCase.getSeasonsBySeriesId(seriesId);
-      res.status(200).json({ success: true, data: seasons });
+      res.status(HttpStatus.OK).json({ success: true, data: seasons });
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 
@@ -61,12 +62,12 @@ export class SeasonController {
       const seasonData = req.body;
       const updatedSeason = await seasonUseCase.updateSeason(id, seasonData);
       if (updatedSeason) {
-        res.status(200).json(updatedSeason);
+        res.status(HttpStatus.OK).json(updatedSeason);
       } else {
-        res.status(404).json({ success: true, message: "Season not found" });
+        res.status(HttpStatus.BadRequest).json({  message: "Season not found" });
       }
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 
@@ -77,13 +78,13 @@ export class SeasonController {
       const success = await seasonUseCase.deleteSeason(id);
       if (success) {
         res
-          .status(200)
+          .status(HttpStatus.OK)
           .json({ success: true, message: "Season deleted successfully" });
       } else {
-        res.status(404).json({ message: "Season not found" });
+        res.status(HttpStatus.BadRequest).json({ message: "Season not found" });
       }
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 }

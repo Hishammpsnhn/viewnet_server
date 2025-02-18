@@ -2,6 +2,9 @@ import { Server as SocketServer, Socket } from "socket.io";
 import { Server as HttpServer } from "http";
 import { NotificationSender } from "../domain/interface/NotificationSender";
 import WatchTimeService from "../domain/interface/IWatchTime";
+import ActiveUserController from "../interface/controller/ActiveUsersController";
+
+const activeUserController = new ActiveUserController();
 interface WatchParty {
   host: string;
   participants: string[];
@@ -11,12 +14,12 @@ export class WebSocketServer implements NotificationSender {
   private io: SocketServer;
   private connectedUsers: Map<string, Socket> = new Map();
   private watchParties: Map<string, WatchParty> = new Map();
+
   private emitActiveUsers() {
     const activeUsers = Array.from(this.connectedUsers.keys()).length; // Get all user IDs
-    console.log("activeusers: " , activeUsers)
+    console.log("activeusers: ", activeUsers);
     this.io.emit("activeUsers", activeUsers); // Send to all admins
   }
-  
 
   constructor(httpServer: HttpServer) {
     this.io = new SocketServer(httpServer, {
@@ -31,12 +34,15 @@ export class WebSocketServer implements NotificationSender {
       console.log("A user connected:", socket.id);
 
       socket.on("register", (userId: string) => {
+        console.log("on register");
+        if (!this.connectedUsers.get(userId)) {
+          activeUserController.updateActiveUsers(1);
+        }
         this.connectedUsers.set(userId, socket);
+
         console.log(`User registered: ${userId}`);
-        //this.io.emit("userCount", this.connectedUsers.size);
         this.emitActiveUsers();
       });
-      
 
       socket.on("update_watch_time", async ({ profileId, watchTime }) => {
         console.log("profile id", profileId, watchTime);
@@ -67,18 +73,21 @@ export class WebSocketServer implements NotificationSender {
         console.log("link", link, partyId);
         this.io.to(partyId).emit("selectedMovie", link);
       });
-      socket.on("sync-action", ({ partyId, videoState,time }) => {
-        console.log("videioStateUpdate", partyId, videoState,time);
+      socket.on("sync-action", ({ partyId, videoState, time }) => {
+        console.log("videioStateUpdate", partyId, videoState, time);
         const party = this.watchParties.get(partyId);
         if (party) {
           party.videoState = videoState;
           this.watchParties.set(partyId, party);
-          socket.to(partyId).emit("sync-action", {action:videoState,time});
+          socket.to(partyId).emit("sync-action", { action: videoState, time });
         }
       });
       socket.on("disconnect", () => {
         this.connectedUsers.forEach((value, key) => {
-          if (value === socket) this.connectedUsers.delete(key);
+          if (value === socket) {
+            this.connectedUsers.delete(key);
+            activeUserController.updateActiveUsers(-1);
+          }
         });
         console.log(`User disconnected: ${socket.id}`);
       });

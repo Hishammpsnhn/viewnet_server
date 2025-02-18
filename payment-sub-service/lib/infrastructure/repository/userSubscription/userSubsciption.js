@@ -78,6 +78,22 @@ export default class UserSubscriptionPlanRepository extends IUserSubscriptionPla
   async updateStatus(id, status) {
     return MongooseUserSubscriptionPlan.findByIdAndUpdate(id, { status });
   }
+
+  async SubscriptionCount() {
+  const data =   MongooseUserSubscriptionPlan.aggregate([
+      [
+        {
+          $group: {
+            _id: "$plan",
+            value: {
+              $sum: 1,
+            },
+          },
+        },
+      ],
+    ]);
+    return data;
+  }
 }
 
 function mapToUserSubscriptionEntity(mongooseUserSubscription) {

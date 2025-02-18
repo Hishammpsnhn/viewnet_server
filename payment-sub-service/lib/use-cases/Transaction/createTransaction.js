@@ -6,7 +6,6 @@ export default class CreateTransactionUseCase {
   }
 
   async execute(transactionData) {
-    console.log(transactionData)
     const transaction = new Transaction(transactionData);
     return await this.transactionRepository.create(transaction);
   }

@@ -5,6 +5,7 @@ import { GetAllVideoMetadata } from "../../use-cases/getAllVideoMetadata";
 import { GetVideoMetadata } from "../../use-cases/getMetaData";
 import { GetLatestVideoMetadata } from "../../use-cases/user/LatestMovies";
 import { MovieProducer } from "../../infrastructure/queue/MovieProducer";
+import { HttpStatus } from "../HttpStatus";
 
 const repository = new VideoMetadataRepository();
 
@@ -18,35 +19,35 @@ export class VideoMetadataController {
   static async createMetadata(req: Request, res: Response): Promise<void> {
     try {
       const video = await createVideoMetadata.execute(req.body);
-      res.status(201).json(video);
+      res.status(HttpStatus.Created).json(video);
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      res.status(HttpStatus.InternalServerError).json({ message: error.message });
     }
   }
   static async getAllMetadata(req: Request, res: Response): Promise<void> {
     try {
       const metaData = await getAllVideoMetadata.execute();
-      res.status(201).json({ success: true, data: metaData });
+      res.status(HttpStatus.OK).json({ success: true, data: metaData });
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      res.status(HttpStatus.InternalServerError).json({ message: error.message });
     }
   }
   static async getMetadata(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const metaData = await getVideoMetadata.execute(id);
-      res.status(201).json({ success: true, data: metaData });
+      res.status(HttpStatus.OK).json({ success: true, data: metaData });
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      res.status(HttpStatus.InternalServerError).json({ message: error.message });
     }
   }
 
   static async getLatestMetadata(req: Request, res: Response): Promise<void> {
     try {
       const metaData = await getLatestVideoMetadata.execute();
-      res.status(201).json({ success: true, data: metaData });
+      res.status(HttpStatus.OK).json({ success: true, data: metaData });
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      res.status(HttpStatus.InternalServerError).json({ message: error.message });
     }
   }
 }

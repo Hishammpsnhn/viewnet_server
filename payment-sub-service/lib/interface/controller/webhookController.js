@@ -3,13 +3,17 @@ import environment from "../../infrastructure/config/environment.js";
 import CreateNewUserSubscription from "../../use-cases/userSubscription/CreateNewUserSubscription.js";
 import UserNewPlanRepository from "../../infrastructure/repository/userSubscription/userSubsciption.js";
 import SubscriptionPlanRepository from "../../infrastructure/repository/subscriptionPlan/subscriptionPlanRepository.js";
-import paymentGateway from "../../infrastructure/Stripe/paymentGateway.js";
 import LiveProducer from "../../infrastructure/queue/LiveStreamProducer.js";
 import TransactionRepository from "../../infrastructure/repository/Transaction/TransactionHistory.js";
 import CreateTransactionUseCase from "../../use-cases/Transaction/createTransaction.js";
 
+const paymentStatus = {
+  pending: "Pending",
+  completed: "Completed",
+  failed: "Failed",
+};
+
 const liveProducer = new LiveProducer();
-// const userSubscriptionRepository = new CreateNewUserSubscription();
 const stripe = new Stripe(environment.STRIPE_SECRET_KEY);
 const userPlanRepository = new UserNewPlanRepository();
 const subscriptionPlanRepository = new SubscriptionPlanRepository();
@@ -33,42 +37,63 @@ const handleStripeWebhook = async (req, res) => {
       environment.STRIPE_WEBHOOK_KEY
     );
 
-    console.log(`Received event: ${event}`,event);
+    console.log("🔹 Stripe Event Received:", event.type);
+
+    const session = event.data.object;
+    let status = paymentStatus.pending;
 
     if (event.type === "checkout.session.completed") {
-      const session = event.data.object;
+      status = paymentStatus.completed;
+    } else if (
+      event.type === "checkout.session.async_payment_failed" ||
+      event.type === "invoice.payment_failed"
+    ) {
+      status = paymentStatus.failed;
+    } else if (event.type === "checkout.session.async_payment_succeeded") {
+      status = paymentStatus.pending;
+    }
 
-      // Extract metadata (userId, planName, planPrice)
+    if (
+      event.type.startsWith("checkout.session") ||
+      event.type.startsWith("invoice.payment")
+    ) {
       const userId = session.metadata?.userId || "N/A";
       const planId = session.metadata?.planId || "N/A";
       const planName = session.metadata?.planName || "N/A";
       const planPrice = session.metadata?.planPrice || "N/A";
       const email = session.metadata?.email || "N/A";
+      const transactionId = session.metadata?.transactionId || "N/A";
 
-      console.log("✅ Checkout session completed:");
-      console.log(`📌 User ID: ${userId}`);
-      console.log(`📌 Plan ID: ${planId}`);
-      console.log(`📌 Plan Price: ₹${planPrice}`);
-      console.log(`📌 Email: ₹${email}`);
+      console.log("✅ Transaction Status:", status);
+      console.log("🔹 Metadata:", {
+        userId,
+        planId,
+        planName,
+        planPrice,
+        email,
+        transactionId,
+      });
+
       liveProducer.sendLiveNotification({ userId, planName, planPrice });
 
-      const userPlan = await CreateNewUserSubscription(userId, planId, {
+      await CreateNewUserSubscription(userId, planId, {
         createNewPlanRepository: userPlanRepository,
         subscriptionPlanRepository: subscriptionPlanRepository,
       });
 
-      const res = await createTransactionUseCase.execute({
+      await createTransactionUseCase.execute({
+        transactionId,
         userId,
+        status,
         planId,
-        amount:planPrice,
-        email
+        amount: planPrice,
+        email,
       });
-      console.log("res",res);
     }
 
     res.json({ received: true });
   } catch (err) {
-    console.error("Webhook signature verification failed:", err.message);
+    console.error("❌ Webhook Error:", err.message);
     return res.status(401).send(`Webhook Error: ${err.message}`);
   }
 };

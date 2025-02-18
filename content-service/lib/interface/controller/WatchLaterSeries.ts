@@ -3,6 +3,7 @@ import WatchLaterSeriesRepository from "../../infrastructure/repositories/WatchL
 import GetWatchLaterUseCase from "../../use-case/watch-later/getSeriesWatchLater";
 import RemoveWatchLaterUseCase from "../../use-case/watch-later/removeWatchLaterSeries";
 import AddWatchLaterUseCase from "../../use-case/watch-later/addSeriesWatchLater";
+import { HttpStatus } from "../HttpStatus";
 
 const getWatchLaterUseCase = new GetWatchLaterUseCase(
   new WatchLaterSeriesRepository()
@@ -23,13 +24,13 @@ export class WatchLaterSeriesController {
         profileId as string,
         catalogId as string
       );
-      res.status(200).json({ success: true });
+      res.status(HttpStatus.OK).json({ success: true });
     } catch (error: any) {
       console.error(
         `Error fetching watch history for profileId: ${profileId}`,
         error
       );
-      res.status(400).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 
@@ -40,13 +41,13 @@ export class WatchLaterSeriesController {
 
     try {
       const movies = await getWatchLaterUseCase.execute(id);
-      res.status(200).json({ success: true, data: movies });
+      res.status(HttpStatus.OK).json({ success: true, data: movies });
     } catch (error: any) {
       console.error(
         `Error fetching watch history for profileId: ${id}`,
         error
       );
-      res.status(400).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
   async removeMovie(req: Request, res: Response): Promise<void> {
@@ -57,13 +58,13 @@ export class WatchLaterSeriesController {
         profileId as string,
         catalogId as string
       );
-      res.status(200).json({ success: true });
+      res.status(HttpStatus.OK).json({ success: true });
     } catch (error: any) {
       console.error(
         `Error fetching watch history for profileId: ${profileId}`,
         error
       );
-      res.status(400).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 }

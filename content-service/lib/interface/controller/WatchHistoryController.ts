@@ -4,6 +4,7 @@ import GetWatchHistoryUseCase from "../../use-case/getWatchHistory";
 import ClearWatchHistoryUseCase from "../../use-case/clearHistory";
 import WatchHistoryRepository from "../../infrastructure/repositories/WatchHistoryRepository";
 import { Request, Response } from "express";
+import { HttpStatus } from "../HttpStatus";
 
 const updateWatchHistoryUseCase = new UpdateWatchHistoryUseCase(
   new WatchHistoryRepository()
@@ -30,13 +31,13 @@ export class WatchHistoryController {
         progress,
       });
 
-      res.status(200).json({ success: true, data: updatedProgress });
+      res.status(HttpStatus.OK).json({ success: true, data: updatedProgress });
     } catch (error: any) {
       console.error(
         `Error updating watch progress for profileId: ${profileId}`,
         error
       );
-      res.status(400).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 
@@ -47,20 +48,20 @@ export class WatchHistoryController {
 
     if (!profileId || typeof profileId !== "string") {
       res
-        .status(400)
+        .status(HttpStatus.BadRequest)
         .json({ error: "profileId is required and must be a string" });
       return;
     }
 
     try {
       const history = await getWatchHistoryUseCase.execute(profileId);
-      res.status(200).json({ success: true, data: history });
+      res.status(HttpStatus.OK).json({ success: true, data: history });
     } catch (error: any) {
       console.error(
         `Error fetching watch history for profileId: ${profileId}`,
         error
       );
-      res.status(400).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
   async clearWatchHistory(req: Request, res: Response): Promise<void> {
@@ -68,20 +69,20 @@ export class WatchHistoryController {
 
     if (!profileId) {
       res
-        .status(400)
+        .status(HttpStatus.BadRequest)
         .json({ error: "profileId is required " });
       return;
     }
 
     try {
       await clearWatchHistoryUseCase.execute(profileId);
-      res.status(200).json({ success: true });
+      res.status(HttpStatus.OK).json({ success: true });
     } catch (error: any) {
       console.error(
         `Error fetching watch history for profileId: ${profileId}`,
         error
       );
-      res.status(400).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 
@@ -95,7 +96,7 @@ export class WatchHistoryController {
       !videoCatalogId
     ) {
       res
-        .status(400)
+        .status(HttpStatus.BadRequest)
         .json({ error: "profileId is required and must be a string" });
       return;
     }
@@ -106,13 +107,13 @@ export class WatchHistoryController {
         videoCatalogId,
       });
 
-      res.status(200).json({ success: true, data: updatedProgress });
+      res.status(HttpStatus.OK).json({ success: true, data: updatedProgress });
     } catch (error: any) {
       console.error(
         `Error updating watch progress for profileId: ${profileId}`,
         error
       );
-      res.status(400).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 }

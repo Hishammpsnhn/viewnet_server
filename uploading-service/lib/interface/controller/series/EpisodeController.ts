@@ -6,7 +6,7 @@ import environment from "../../../infrastructure/config/environment";
 import { PresignedUrlParams } from "../../../infrastructure/types/s3Types";
 import { GeneratePresignedUrlUseCase } from "../../../use-cases/generatePresignedUrlUseCase";
 import { S3Service } from "../../../infrastructure/service/s3Service";
-import { ResolutionEntity } from "../../../domain/entities/series/episodeCatalog";
+import { HttpStatus } from "../../HttpStatus";
 
 const s3Service = new S3Service();
 const episodeUseCase = new EpisodeUseCase(new EpisodeRepository());
@@ -14,7 +14,6 @@ const generatePresignedUrlUseCase = new GeneratePresignedUrlUseCase(s3Service);
 
 export class EpisodeController {
   async createEpisodeCatalog(req: Request, res: Response) {
-    console.log("createEpisodeCatalog",req.body)
     const { key, episodeId, format } = req.body;
    
     try {
@@ -25,7 +24,7 @@ export class EpisodeController {
       );
       res.status(201).json({ success: true, data: episodeCatalog });
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 
@@ -42,7 +41,6 @@ export class EpisodeController {
         key: key,
         thumbnailUrl,
       });
-      console.log(episode);
 
       const expiresIn = 60 * 5; // 5 minutes
       const contentType = "video/mp4";
@@ -66,10 +64,10 @@ export class EpisodeController {
         paramsThumbnail
       );
       res
-        .status(200)
+        .status(HttpStatus.OK)
         .json({ success: true, episode,key, movieSignedUrl, thumbnailSignedUrl });
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 
@@ -79,12 +77,12 @@ export class EpisodeController {
       const { id } = req.params;
       const episode = await episodeUseCase.getEpisodeCatalogById(id);
       if (episode) {
-        res.status(200).json({ success: true, episode });
+        res.status(HttpStatus.OK).json({ success: true, episode });
       } else {
-        res.status(404).json({ message: "Episode not found" });
+        res.status(HttpStatus.BadRequest).json({ message: "Episode not found" });
       }
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
   async getEpisodeById(req: Request, res: Response) {
@@ -92,12 +90,12 @@ export class EpisodeController {
       const { id } = req.params;
       const episode = await episodeUseCase.getEpisodeById(id);
       if (episode) {
-        res.status(200).json({ success: true, episode });
+        res.status(HttpStatus.OK).json({ success: true, episode });
       } else {
-        res.status(404).json({ message: "Episode not found" });
+        res.status(HttpStatus.BadRequest).json({ message: "Episode not found" });
       }
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 
@@ -106,9 +104,9 @@ export class EpisodeController {
     try {
       const { seasonId } = req.params;
       const episodes = await episodeUseCase.getEpisodesBySeasonId(seasonId);
-      res.status(200).json({ success: true, episodes });
+      res.status(HttpStatus.OK).json({ success: true, episodes });
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 
@@ -122,12 +120,12 @@ export class EpisodeController {
         episodeData
       );
       if (updatedEpisode) {
-        res.status(200).json({ success: true, updatedEpisode });
+        res.status(HttpStatus.OK).json({ success: true, updatedEpisode });
       } else {
-        res.status(404).json({ message: "Episode not found" });
+        res.status(HttpStatus.BadRequest).json({ message: "Episode not found" });
       }
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 }

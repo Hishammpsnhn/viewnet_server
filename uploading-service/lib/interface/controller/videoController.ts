@@ -8,6 +8,7 @@ import { VideoMetadataRepository } from "../../infrastructure/repositories/Video
 import { CreateVideoMetadata } from "../../use-cases/createVideoMetadata";
 import { UpdateVideoMetadataUseCase } from "../../use-cases/updateMetadata";
 import { MovieProducer } from "../../infrastructure/queue/MovieProducer";
+import { HttpStatus } from "../HttpStatus";
 
 const s3Service = new S3Service();
 const repository = new VideoMetadataRepository();
@@ -28,7 +29,6 @@ export class VideoController {
         ...req.body,
         thumbnailUrl,
       });
-console.log("after save metadata", metaData)
       const expiresIn = 60 * 5; // 5 minutes
       const contentType = "video/mp4";
       const videoKey = `uploads/${metaData._id}_video.mp4`;
@@ -53,13 +53,13 @@ console.log("after save metadata", metaData)
         paramsThumbnail
       );
 
-      res.status(200).json({
+      res.status(HttpStatus.OK).json({
         success: true,
         data: metaData,
         signedUrls: { movieSignedUrl, thumbnailSignedUrl },
       });
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      res.status(HttpStatus.InternalServerError).json({ message: error.message });
     }
   }
 
@@ -70,7 +70,7 @@ console.log("after save metadata", metaData)
 
       // Generate a new pre-signed URL for the thumbnail upload
       const expiresIn = 60 * 5; // 5 minutes
-      const thumbnailKey = `uploads/thumbnail/${title}_thumbnail.jpg`; // Thumbnail key based on the title
+      const thumbnailKey = `uploads/thumbnail/${title}_thumbnail.jpg`; 
       const paramsThumbnail: PresignedUrlParams = {
         Bucket: env.AWS_BUCKET_NAME as string,
         Key: thumbnailKey,
@@ -86,22 +86,22 @@ console.log("after save metadata", metaData)
       // Update the movie metadata with the new thumbnail URL
       const newThumbnailUrl = `https://s3.us-east-1.amazonaws.com/${env.AWS_BUCKET_NAME}/${thumbnailKey}`;
       const updatedVideo = await updateVideoMetadata.execute(id, {
-        thumbnailUrl: newThumbnailUrl, // Update the thumbnail URL in the metadata
+        thumbnailUrl: newThumbnailUrl, 
       });
 
       if (!updatedVideo) {
-        res.status(404).json({ message: "Video not found" });
+        res.status(HttpStatus.BadRequest).json({ message: "Video not found" });
         return;
       }
 
-      res.status(200).json({
+      res.status(HttpStatus.Created).json({
         success: true,
         message: "Thumbnail updated successfully",
         data: updatedVideo,
-        signedUrl: thumbnailSignedUrl, // R
+        signedUrl: thumbnailSignedUrl, 
       });
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      res.status(HttpStatus.InternalServerError).json({ message: error.message });
     }
   }
 
@@ -115,11 +115,11 @@ console.log("after save metadata", metaData)
 
       const updatedVideo = await updateVideoMetadata.execute(id, data);
       if (!updatedVideo) {
-        res.status(404).json({ message: "Video not found" });
+        res.status(HttpStatus.BadRequest).json({ message: "Video not found" });
       }
-      res.status(200).json({ success: true, data: updatedVideo });
+      res.status(HttpStatus.OK).json({ success: true, data: updatedVideo });
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      res.status(HttpStatus.InternalServerError).json({ message: error.message });
     }
   }
 }

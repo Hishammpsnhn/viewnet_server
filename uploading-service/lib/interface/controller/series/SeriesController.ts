@@ -6,6 +6,7 @@ import environment from "../../../infrastructure/config/environment";
 import { PresignedUrlParams } from "../../../infrastructure/types/s3Types";
 import { S3Service } from "../../../infrastructure/service/s3Service";
 import { GeneratePresignedUrlUseCase } from "../../../use-cases/generatePresignedUrlUseCase";
+import { HttpStatus } from "../../HttpStatus";
 
 const seriesUseCase = new SeriesUseCase(new SeriesRepository());
 const generatePresignedUrlUseCase = new GeneratePresignedUrlUseCase(
@@ -34,9 +35,9 @@ export class SeriesController {
         ...seriesData,
         posterImage: thumbnailUrl,
       });
-      res.status(201).json({ success: true, data: series, thumbnailSignedUrl });
+      res.status(HttpStatus.Created).json({ success: true, data: series, thumbnailSignedUrl });
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 
@@ -46,12 +47,12 @@ export class SeriesController {
       const { id } = req.params;
       const series = await seriesUseCase.getSeriesById(id);
       if (series) {
-        res.status(201).json({ success: true, data: series });
+        res.status(HttpStatus.OK).json({ success: true, data: series });
       } else {
-        res.status(404).json({ message: "Series not found" });
+        res.status(HttpStatus.BadRequest).json({ message: "Series not found" });
       }
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 
@@ -60,9 +61,9 @@ export class SeriesController {
     console.log("get all series")
     try {
       const series = await seriesUseCase.getAllSeries();
-      res.status(201).json({ success: true, data: series });
+      res.status(HttpStatus.OK).json({ success: true, data: series });
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 
@@ -73,12 +74,12 @@ export class SeriesController {
       const seriesData = req.body;
       const updatedSeries = await seriesUseCase.updateSeries(id, seriesData);
       if (updatedSeries) {
-        res.status(201).json({ success: true, data: updatedSeries });
+        res.status(HttpStatus.OK).json({ success: true, data: updatedSeries });
       } else {
-        res.status(404).json({ message: "Series not found" });
+        res.status(HttpStatus.BadRequest).json({ message: "Series not found" });
       }
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 
@@ -88,12 +89,12 @@ export class SeriesController {
       const { id } = req.params;
       const success = await seriesUseCase.deleteSeries(id);
       if (success) {
-        res.status(201).json({ success: true });
+        res.status(HttpStatus.OK).json({ success: true });
       } else {
-        res.status(404).json({ message: "Series not found" });
+        res.status(HttpStatus.BadRequest).json({ message: "Series not found" });
       }
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
 }

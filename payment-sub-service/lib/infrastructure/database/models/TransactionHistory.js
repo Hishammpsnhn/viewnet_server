@@ -13,6 +13,7 @@ const transactionSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
+
     currency: {
       type: String,
       required: true,
@@ -27,15 +28,10 @@ const transactionSchema = new mongoose.Schema(
         type: String,
         required: true,
     },
-    // paymentMethod: {
-    //   type: String,
-    //   enum: ["Credit Card", "Debit Card", "PayPal", "Bank Transfer", "Cash"],
-    //   required: true,
-    // },
     status: {
       type: String,
-      enum: ["Pending", "Completed", "Failed", "Refunded"],
-      default: "Completed",
+      enum: ["Pending", "Completed", "Failed"],
+      default: "Pending",
     },
   },
   { timestamps: true }

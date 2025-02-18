@@ -8,6 +8,7 @@ import { GetMovieCatalog } from "../../../use-case/getMovieCatalog";
 import { GetRecommendedMoviesUseCase } from "../../../use-case/RecommedMovies";
 import { GetMovieMeta } from "../../../use-case/getMovieMeta";
 import { GetSearchQuery } from "../../../use-case/searchQuery";
+import { HttpStatus } from "../../HttpStatus";
 
 const movieCatalogRepository = new MovieCatalogRepository();
 const movieMetaRepository = new MovieMetadataRepository();
@@ -34,9 +35,9 @@ export class MovieController {
     const limitNum = parseInt(limit as string, 10);
     try {
       const data = await latestSeriesUseCase.execute(pageNum,limitNum);
-      res.status(200).json({ success: true, data });
+      res.status(HttpStatus.OK).json({ success: true, data });
     } catch (error) {
-      res.status(500).json({ message: "Error fetching latest series", error });
+      res.status(HttpStatus.InternalServerError).json({ message: "Error fetching latest series", error });
     }
   }
   async getMovieCatalog(req: Request, res: Response): Promise<void> {
@@ -50,9 +51,9 @@ export class MovieController {
         id,
         profileId as string | undefined
       );
-      res.status(200).json({ success: true, data });
+      res.status(HttpStatus.OK).json({ success: true, data });
     } catch (error) {
-      res.status(500).json({ message: "Error fetching latest series", error });
+      res.status(HttpStatus.InternalServerError).json({ message: "Error fetching latest series", error });
     }
   }
   async getMovieMeta(req: Request, res: Response): Promise<void> {
@@ -60,27 +61,27 @@ export class MovieController {
     const { id } = req.params;
     try {
       const data = await getMovieMeta.execute(id);
-      res.status(200).json({ success: true, data });
+      res.status(HttpStatus.OK).json({ success: true, data });
     } catch (error) {
-      res.status(500).json({ message: "Error fetching latest series", error });
+      res.status(HttpStatus.InternalServerError).json({ message: "Error fetching latest series", error });
     }
   }
   async recommendedMovies(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     try {
       const recommendedMovies = await getRecommendedMovie.execute(id);
-      res.status(200).json({ success: true, data: recommendedMovies });
+      res.status(HttpStatus.OK).json({ success: true, data: recommendedMovies });
     } catch (error) {
-      res.status(500).json({ message: "Error fetching latest series", error });
+      res.status(HttpStatus.InternalServerError).json({ message: "Error fetching latest series", error });
     }
   }
   async searchQuery(req: Request, res: Response): Promise<void> {
     const query = req.query.q || "";
     try {
       const recommendedMovies = await getQuery.execute(query as string);
-      res.status(200).json({ success: true, data: recommendedMovies });
+      res.status(HttpStatus.OK).json({ success: true, data: recommendedMovies });
     } catch (error) {
-      res.status(500).json({ message: "Error fetching latest series", error });
+      res.status(HttpStatus.InternalServerError).json({ message: "Error fetching latest series", error });
     }
   }
 }

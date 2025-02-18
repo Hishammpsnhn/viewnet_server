@@ -3,6 +3,7 @@ import NotificationRepositoryImpl from "../../infrastructure/repository/Notifica
 import GetNotificationsUseCase from "../../usecase/NotificationUseCase";
 import GetNotificationsCountUseCase from "../../usecase/GetNotificationCountUsecase";
 import DeleteNotificationUseCase from "../../usecase/DeleteNotificationUseCase";
+import { HttpStatus } from "../HttpStatus";
 
 
 export class NotificationController {
@@ -19,11 +20,10 @@ export class NotificationController {
 
   async getNotification(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
-    console.log("get notification", id);
     try {
       // Validate input
       if (!id) {
-        res.status(400).json({ success: false, message: "Profile ID is required." });
+        res.status(HttpStatus.NotFound).json({ success: false, message: "Profile ID is required." });
         return;
       }
 
@@ -31,10 +31,10 @@ export class NotificationController {
       const notifications = await this.getNotificationsUseCase.execute(id as string);
 
       // Return response
-      res.status(200).json({ success: true, data: notifications });
+      res.status(HttpStatus.OK).json({ success: true, data: notifications });
     } catch (error: any) {
       console.error(`Error fetching notifications for profileId: ${id}`, error);
-      res.status(500).json({ success: false, message: "Failed to fetch notifications", error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ success: false, message: "Failed to fetch notifications", error: error.message });
     }
   }
   async getNotificationCount(req: Request, res: Response): Promise<void> {
@@ -42,34 +42,32 @@ export class NotificationController {
     try {
       // Validate input
       if (!id) {
-        res.status(400).json({ success: false, message: "Profile ID is required." });
+        res.status(HttpStatus.NotFound).json({ success: false, message: "Profile ID is required." });
         return;
       }
 
-      // Use case to fetch notifications
       const notifications = await this.getNotificationsCountUseCase.execute(id as string);
 
-      // Return response
-      res.status(200).json({ success: true, data: notifications });
+      res.status(HttpStatus.OK).json({ success: true, data: notifications });
     } catch (error: any) {
       console.error(`Error fetching notifications count for profileId: ${id}`, error);
-      res.status(500).json({ success: false, message: "Failed to fetch notifications count", error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ success: false, message: "Failed to fetch notifications count", error: error.message });
     }
   }
   async deleteNotification(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     try {
       if (!id) {
-        res.status(400).json({ success: false, message: "Profile ID is required." });
+        res.status(HttpStatus.NotFound).json({ success: false, message: "Profile ID is required." });
         return;
       }
 
       const notifications = await this.deleteNotificationUseCase.execute(id as string);
 
-      res.status(200).json({ success: true, data: notifications });
+      res.status(HttpStatus.OK).json({ success: true, data: notifications });
     } catch (error: any) {
       console.error(`Error fetching notifications count for profileId: ${id}`, error);
-      res.status(500).json({ success: false, message: "Failed to fetch notifications count", error: error.message });
+      res.status(HttpStatus.InternalServerError).json({ success: false, message: "Failed to fetch notifications count", error: error.message });
     }
   }
 }

@@ -1,19 +1,38 @@
+import mongoose from "mongoose";
 import TransactionModel from "../../database/models/TransactionHistory.js";
 
 export default class TransactionRepository {
   async create(transactionData) {
-    return await TransactionModel.create(transactionData);
+    console.log("data", transactionData);
+    if (transactionData.transactionId) {
+      const existingTransaction = await TransactionModel.findById(
+        new mongoose.Types.ObjectId(transactionData.transactionId) 
+      );
+      if (!existingTransaction) {
+        throw new Error(
+          `Transaction not found ${transactionData.transactionId}`
+        );
+      }
+
+      console.log("update existing", existingTransaction);
+      return await TransactionModel.findOneAndUpdate(
+        { _id: existingTransaction._id },
+        { $set: { status: transactionData.status } },
+
+      );
+    } else {
+      return await TransactionModel.create(transactionData);
+    }
   }
 
   async getAllTransactions({ page = 1, limit = 10 }) {
     const skip = (page - 1) * limit;
 
-    const transactions = await TransactionModel
-      .find()
-      .populate({path:"planId",select:"name"})
+    const transactions = await TransactionModel.find()
+      .populate({ path: "planId", select: "name" })
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 }); 
+      .sort({ createdAt: -1 });
 
     const totalTransactions = await TransactionModel.countDocuments();
 
