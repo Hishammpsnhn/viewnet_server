@@ -1,26 +1,30 @@
 import winston from "winston";
-import LokiTransport from "winston-loki";
 
 // Define log levels and formats
-// const logFormat = winston.format.combine(
-//   winston.format.timestamp(),
-//   winston.format.printf(({ timestamp, level, message }) => {
-//     return `${timestamp} [${level}]: ${message}`;
-//   })
-// );
+const logFormat = winston.format.combine(
+  winston.format.timestamp(),
+  winston.format.printf(({ timestamp, level, message }) => {
+    return `${timestamp} [${level}]: ${message}`;
+  })
+);
 
 // Create the logger instance
 const logger = winston.createLogger({
-   //level: "info", 
-  // format: logFormat,
+  level: "info", // Default log level (can be changed to "debug" for more detailed logs)
+  format: logFormat,
   transports: [
-    // new winston.transports.Console(),
-      new LokiTransport({
-        host: "http://loki:3100",
-        labels: { app: "my-app", env: "development" },
-        // json: true,
-        // batching: true,
-      })
+    // Console transport
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize(),
+        logFormat
+      ),
+    }),
+    // File transport (optional, for production logging)
+    new winston.transports.File({
+      filename: "logs/app.log", // Log file location
+      level: "info", // Log level for file transport
+    }),
   ],
 });
 

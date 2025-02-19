@@ -29,7 +29,7 @@ const createServer = async () => {
   }
 
   main().catch((error) => console.error("Error in application:", error));
-  app.use(morgan("combined", { stream: { write: (message) => logger.info(message.trim()) } }));
+  app.use(morgan("dev", { stream: { write: (message) => logger.info(message.trim()) } }));
   logger.info("Starting ...");
   // Routes
   app.use("/series", seriesRoutes);

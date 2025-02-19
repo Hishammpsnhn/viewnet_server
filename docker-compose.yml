@@ -12,6 +12,7 @@ services:
     #   - ./gateway-dev:/app
     environment:
       - PORT=4000
+      - CLIENT_URL=http://localhost:5173
       - USER_SERVICE_URL=http://user-service:5000
       - SUBSCRIPTION_SERVICE_URL=http://payment-sub-service:5002
       - UPLOADING_SERVICE_URL=http://uploading-service:5003
@@ -117,6 +118,8 @@ services:
     command: npm run dev
     networks:
       - app-network
+    depends_on:
+      - loki
   live-streaming-service:
     build:
       context: ./live-streaming-service
@@ -177,6 +180,25 @@ services:
   #       - kibana
   #   networks:
   #     - app-network
+
+
+  loki:
+    image: grafana/loki:2.8.0 
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+      - ./wal:/wal 
+    command: -config.file=/etc/loki/local-config.yaml
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - loki
 
   # Redis Service
   redis:

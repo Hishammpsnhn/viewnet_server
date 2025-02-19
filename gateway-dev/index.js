@@ -10,7 +10,7 @@ const app = express();
 app.use(morgan('combined')); 
 app.use(
   cors({
-    origin: true,
+    origin: [process.env.CLIENT_URL],
     credentials: true,
   })
 );
@@ -121,7 +121,6 @@ const protectedRoutes = [
 
 // public
 publicRoutes.forEach((route) => {
-  console.log("public route")
   app.use(
     route.context,
     createProxyMiddleware({
@@ -134,7 +133,6 @@ publicRoutes.forEach((route) => {
 
 //protect
 protectedRoutes.forEach((route) => {
-  console.log("private route")
   app.use(
     route.context,
     authenticate, 
@@ -157,7 +155,7 @@ protectedRoutes.forEach((route) => {
   );
 });
 
-app.get("/", (req, res) => {
+app.get("/test", (req, res) => {
   res.send("API Gateway is running");
 });
 

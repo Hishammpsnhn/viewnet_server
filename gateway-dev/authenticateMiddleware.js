@@ -14,7 +14,6 @@ async function authenticate(req, res, next) {
   }
 
   try {
-    console.log("Valid token:", token);
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
 
@@ -37,7 +36,6 @@ async function authenticate(req, res, next) {
 
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
-      console.log("Token expired");
       return res.status(401).json({ message: "Token expired, please login again" });
     } else if (error.response) {
       console.error("Error from user service:", error.response.data);
