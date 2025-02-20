@@ -57,7 +57,6 @@ export class MovieController {
     }
   }
   async getMovieMeta(req: Request, res: Response): Promise<void> {
-    console.log("request meta of movie", req.params.id);
     const { id } = req.params;
     try {
       const data = await getMovieMeta.execute(id);

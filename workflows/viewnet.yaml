@@ -25,34 +25,34 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/view_net/gateway-dev:latest ./gateway-dev
           docker push ${{ secrets.DOCKER_USERNAME }}/view_net/gateway-dev:latest
 
-      - name: Build and Push API user-service Image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/view_net/user-service:latest ./user-service
-          docker push ${{ secrets.DOCKER_USERNAME }}/view_net/user-service:latest
+      # - name: Build and Push API user-service Image
+      #   run: |
+      #     docker build -t ${{ secrets.DOCKER_USERNAME }}/view_net/user-service:latest ./user-service
+      #     docker push ${{ secrets.DOCKER_USERNAME }}/view_net/user-service:latest
 
-      - name: Build and Push content Image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/view_net/content-service:latest ./content-service
-          docker push ${{ secrets.DOCKER_USERNAME }}/view_net/content-service:latest
+      # - name: Build and Push content Image
+      #   run: |
+      #     docker build -t ${{ secrets.DOCKER_USERNAME }}/view_net/content-service:latest ./content-service
+      #     docker push ${{ secrets.DOCKER_USERNAME }}/view_net/content-service:latest
 
-      - name: Build and Push uploading Image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/view_net/uploading-service:latest ./uploading-service
-          docker push ${{ secrets.DOCKER_USERNAME }}/view_net/uploading-service:latest
+      # - name: Build and Push uploading Image
+      #   run: |
+      #     docker build -t ${{ secrets.DOCKER_USERNAME }}/view_net/uploading-service:latest ./uploading-service
+      #     docker push ${{ secrets.DOCKER_USERNAME }}/view_net/uploading-service:latest
 
-      - name: Build and Push payment-subscription Image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/view_net/payment-sub-service:latest ./payment-sub-service
-          docker push ${{ secrets.DOCKER_USERNAME }}/view_net/payment-sub-service:latest
+      # - name: Build and Push payment-subscription Image
+      #   run: |
+      #     docker build -t ${{ secrets.DOCKER_USERNAME }}/view_net/payment-sub-service:latest ./payment-sub-service
+      #     docker push ${{ secrets.DOCKER_USERNAME }}/view_net/payment-sub-service:latest
 
-      - name: Build and Push  notification-service Image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/view_net/notification-service:latest ./notification-service
-          docker push ${{ secrets.DOCKER_USERNAME }}/view_net/notification-service:latest
+      # - name: Build and Push  notification-service Image
+      #   run: |
+      #     docker build -t ${{ secrets.DOCKER_USERNAME }}/view_net/notification-service:latest ./notification-service
+      #     docker push ${{ secrets.DOCKER_USERNAME }}/view_net/notification-service:latest
           
-      - name: Build and Push  live-streaming-service Image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/view_net/live-streaming-service:latest ./live-streaming-service
-          docker push ${{ secrets.DOCKER_USERNAME }}/view_net/live-streaming-service:latest
+      # - name: Build and Push  live-streaming-service Image
+      #   run: |
+      #     docker build -t ${{ secrets.DOCKER_USERNAME }}/view_net/live-streaming-service:latest ./live-streaming-service
+      #     docker push ${{ secrets.DOCKER_USERNAME }}/view_net/live-streaming-service:latest
 
       

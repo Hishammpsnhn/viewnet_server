@@ -1,5 +1,3 @@
-// import { WatchHistoryDTO } from "../infrastructure/data/WatchHistoryDto";
-import { WatchLaterDTO } from "../../infrastructure/data/WatchLaterDto";
 import WatchLaterRepository from "../../infrastructure/repositories/WatchLaterSeriesRepository";
 
 class AddWatchLaterUseCase {

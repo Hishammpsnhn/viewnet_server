@@ -1,5 +1,4 @@
 import { Schema, model, Document, Types } from "mongoose";
-import { SeasonEntity } from "../../../../domain/entities/series/seasonEntity";
 import { IEpisodeDocument } from "./episode";
 
 

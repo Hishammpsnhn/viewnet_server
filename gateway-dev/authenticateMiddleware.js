@@ -1,5 +1,6 @@
 const { default: axios } = require("axios");
 const jwt = require("jsonwebtoken");
+const environment = require("./config/environment");
 
 async function authenticate(req, res, next) {
   const authHeader = req.headers["authorization"];
@@ -14,13 +15,13 @@ async function authenticate(req, res, next) {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, environment.jwtSecret);
     req.user = decoded;
 
     req.headers["X-Email"] = decoded.email ?? "";
     req.headers["X-Authenticated"] = "true";
 
-    const { data } = await axios.get("http://user-service:5000/validate", {
+    const { data } = await axios.get(`${environment.services.user}/validate`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

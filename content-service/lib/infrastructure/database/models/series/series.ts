@@ -29,10 +29,9 @@ const seriesSchema = new Schema<SeriesType>(
     isRelease:{type: Boolean, required: true,default:true},
     seasons: [{ type: Schema.Types.ObjectId, ref: "Season" }],
   },
-  { timestamps: true } // Automatically adds createdAt and updatedAt fields
+  { timestamps: true } 
 );
 
-// Create the Series model
 const SeriesModel = model<SeriesType>("Series", seriesSchema);
 
 export default SeriesModel;

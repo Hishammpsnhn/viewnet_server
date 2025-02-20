@@ -1,4 +1,3 @@
-// services/metricsService.js
 const client = require("prom-client");
 const responseTime = require("response-time");
 

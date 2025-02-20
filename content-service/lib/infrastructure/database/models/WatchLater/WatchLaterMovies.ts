@@ -1,6 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-// Define an interface for the WatchHistory document
 interface IWatchLaterMovies extends Document {
   profileId: mongoose.Types.ObjectId;
   videoCatalogId: mongoose.Types.ObjectId;

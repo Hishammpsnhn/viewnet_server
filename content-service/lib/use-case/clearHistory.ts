@@ -1,4 +1,3 @@
-import { WatchHistoryDTO } from "../infrastructure/data/WatchHistoryDto";
 import WatchHistoryRepository from "../infrastructure/repositories/WatchHistoryRepository";
 
 class GetWatchHistoryUseCase {

@@ -19,7 +19,6 @@ export class MovieCatalog {
     movieName: string,
     metadataId: string,
   ) {
-    // Validate ObjectId (optional)
     if (!mongoose.isValidObjectId(id)) {
       throw new Error(`Invalid ObjectId: ${id}`);
     }

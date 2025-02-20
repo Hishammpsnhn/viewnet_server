@@ -4,7 +4,8 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 require("dotenv").config();
 const authenticate = require("./authenticateMiddleware");
 const metricsService = require("./monitor/metricsService.js")
-const morgan = require('morgan')
+const morgan = require('morgan');
+const environment = require("./config/environment.js");
 
 const app = express();
 app.use(morgan('combined')); 
@@ -16,38 +17,30 @@ app.use(
 );
 
 metricsService.setup(app);
-const services = {
-  user: process.env.USER_SERVICE_URL,
-  subscription: process.env.SUBSCRIPTION_SERVICE_URL,
-  uploading: process.env.UPLOADING_SERVICE_URL,
-  content: process.env.CONTENT_SERVICE_URL,
-  liveStreaming: process.env.LIVE_STREAMING_SERVICE_URL,
-  notification: process.env.NOTIFICATION_SERVICE_URL
-};
 
 // Public routes (no auth required)
 const publicRoutes = [
   {
     context: "/api/user/public",
-    target: services.user,
+    target: environment.services.user,
     changeOrigin: true,
     cookieDomainRewrite: "localhost",
   },
   {
     context: "/api/subscription/public",
-    target: services.subscription,
+    target: environment.services.subscription,
     changeOrigin: true,
     cookieDomainRewrite: "localhost",
   },
   {
     context: "/api/content/public",
-    target: services.content,
+    target: environment.services.content,
     changeOrigin: true,
     cookieDomainRewrite: "localhost",
   },
   {
     context: "/api/live/public",
-    target: services.liveStreaming,
+    target: environment.services.liveStreaming,
     changeOrigin: true,
     cookieDomainRewrite: "localhost",
   },
@@ -58,7 +51,7 @@ const publicRoutes = [
 const protectedRoutes = [
   {
     context: "/api/user/admin",
-    target: services.user,
+    target: environment.services.user,
     changeOrigin: true,
     cookieDomainRewrite: "localhost",
     auth: true,
@@ -66,14 +59,14 @@ const protectedRoutes = [
   },
   {
     context: "/api/user",
-    target: services.user,
+    target: environment.services.user,
     changeOrigin: true,
     cookieDomainRewrite: "localhost",
     auth: true,
   },
   {
     context: "/api/subscription/admin",
-    target: services.subscription,
+    target: environment.services.subscription,
     changeOrigin: true,
     cookieDomainRewrite: "localhost",
     auth: true,
@@ -81,14 +74,14 @@ const protectedRoutes = [
   },
   {
     context: "/api/live/user",
-    target: services.liveStreaming,
+    target: environment.services.liveStreaming,
     changeOrigin: true,
     cookieDomainRewrite: "localhost",
     auth: true,
   },
   {
     context: "/api/live",
-    target: services.liveStreaming,
+    target: environment.services.liveStreaming,
     changeOrigin: true,
     cookieDomainRewrite: "localhost",
     auth: true,
@@ -96,21 +89,21 @@ const protectedRoutes = [
   },
   {
     context: "/api/notification",
-    target: services.notification,
+    target: environment.services.notification,
     changeOrigin: true,
     cookieDomainRewrite: "localhost",
     auth: true,
   },
   {
     context: "/api/subscription",
-    target: services.subscription,
+    target: environment.services.subscription,
     changeOrigin: true,
     auth: true,
     cookieDomainRewrite: "localhost",
   },
   {
     context: "/api/uploading",
-    target: services.uploading,
+    target: environment.services.uploading,
     changeOrigin: true,
     auth: true,
     isAdmin: true,

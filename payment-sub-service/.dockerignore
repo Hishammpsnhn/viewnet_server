@@ -1,6 +1,34 @@
-.git
-node_modules
-docker-compose.yml
+# Ignore node modules and dependencies
+node_modules/
+npm-debug.log
+yarn.lock
+package-lock.json
+
+# Ignore environment variables
+.env
+.env.local
+.env.development
+.env.production
+
+# Ignore logs
+logs/
+*.log
+
+# Ignore Docker-related files
 Dockerfile
-.gitignore
-README.md
+.dockerignore
+
+# Ignore build files
+dist/
+build/
+coverage/
+
+# Ignore OS and IDE-specific files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Ignore temporary and cache files
+*.tmp
+*.cache

@@ -8,17 +8,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - "4000:4000"
-    # volumes:
-    #   - ./gateway-dev:/app
-    environment:
-      - PORT=4000
-      - CLIENT_URL=http://localhost:5173
-      - USER_SERVICE_URL=http://user-service:5000
-      - SUBSCRIPTION_SERVICE_URL=http://payment-sub-service:5002
-      - UPLOADING_SERVICE_URL=http://uploading-service:5003
-      - CONTENT_SERVICE_URL=http://content-service:5004
-      - LIVE_STREAMING_SERVICE_URL=http://live-streaming-service:5005
-      - NOTIFICATION_SERVICE_URL=http://notification-service:5006
+    volumes:
+      - ./gateway-dev:/app
+    env_file:
+      - ./gateway-dev/.env
     networks:
       - app-network
 
@@ -51,8 +44,8 @@ services:
     image: rabbitmq:3-management
     hostname: my-rabbit
     ports:
-      - "15672:15672" # Management UI
-      - "5672:5672" # RabbitMQ protocol
+      - "15672:15672" 
+      - "5672:5672" 
     container_name: rabbitmq-container
     restart: unless-stopped
     networks:
