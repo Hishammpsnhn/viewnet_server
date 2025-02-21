@@ -17,9 +17,9 @@ spec:
           image: hishammpsn/view_net-content-service:latest
           ports:
             - containerPort: 5004
-          # envFrom:
-            # - secretRef:
-            #     name: app-secrets
+          envFrom:
+            - configMapRef:
+                name: content-config
 ---
 apiVersion: v1
 kind: Service

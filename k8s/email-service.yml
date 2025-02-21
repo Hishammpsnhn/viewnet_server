@@ -1,35 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-service
+  name: email-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: user-service
+      app: email-service
   template:
     metadata:
       labels:
-        app: user-service
+        app: email-service
     spec:
       containers:
-        - name: user-service
-          image: hishammpsn/view_net-user-service:latest
+        - name: email-service
+          image: hishammpsn/view_net-email-service:latest
           ports:
-            - containerPort: 5000
-
+            - containerPort: 5001
           envFrom:
             - configMapRef:
-                name: user-config
+                name: email-config
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: user-service
+  name: email-service
 spec:
   selector:
-    app: user-service
+    app: email-service
   ports:
     - protocol: TCP
-      port: 5000
-      targetPort: 5000
+      port: 5001
+      targetPort: 5001

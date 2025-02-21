@@ -17,9 +17,9 @@ spec:
           image: hishammpsn/view_net-payment-sub-service:latest
           ports:
             - containerPort: 5002
-          # envFrom:
-            # - secretRef:
-            #     name: app-secrets
+          envFrom:
+            - configMapRef:
+                name: payment-sub-config
 ---
 apiVersion: v1
 kind: Service

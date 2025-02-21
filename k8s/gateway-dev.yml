@@ -19,7 +19,7 @@ spec:
             - containerPort: 4000
           envFrom:
             - configMapRef:
-                name: app-config
+                name: gateway-config
  
 ---
 apiVersion: v1

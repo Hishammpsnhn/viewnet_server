@@ -17,9 +17,9 @@ spec:
           image: hishammpsn/view_net-live-streaming-service:latest
           ports:
             - containerPort: 5005
-          # envFrom:
-            # - secretRef:
-            #     name: app-secrets
+          envFrom:
+            - configMapRef:
+                name: live-config
 ---
 apiVersion: v1
 kind: Service

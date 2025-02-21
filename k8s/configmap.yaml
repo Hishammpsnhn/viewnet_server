@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: app-config
-data:
-  PORT: "4000"
-  AUTH_SERVICE_URL: "http://auth-service:5000"
-  POST_SERVICE_URL: "http://post-service:5001"
-  ANALYTICAL_SERVICE_URL: "http://analytical-service:40000"

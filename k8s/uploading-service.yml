@@ -17,9 +17,9 @@ spec:
           image: hishammpsn/view_net-uploading-service:latest
           ports:
             - containerPort: 5003
-          # envFrom:
-            # - secretRef:
-            #     name: app-secrets
+          envFrom:
+            - configMapRef:
+                name: uploading-config
 ---
 apiVersion: v1
 kind: Service

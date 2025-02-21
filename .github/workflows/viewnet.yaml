@@ -57,7 +57,7 @@ jobs:
 
       - name: Build and Push  email-service Image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/view_net-email-service:latest ./live-streaming-service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/view_net-email-service:latest ./email-service
           docker push ${{ secrets.DOCKER_USERNAME }}/view_net-email-service:latest
 
       
