@@ -44,30 +44,35 @@ services:
     image: rabbitmq:3-management
     hostname: my-rabbit
     ports:
-      - "15672:15672" 
-      - "5672:5672" 
+      - "15672:15672"
+      - "5672:5672"
     container_name: rabbitmq-container
     restart: unless-stopped
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # Notification Service
   email-service:
     build:
       context: ./email-service
       dockerfile: Dockerfile
+    restart: unless-stopped
     ports:
       - "5001:5001"
     volumes:
       - ./email-service:/app
-    environment:
-      - RABBITMQ_URL=amqp://rabbitmq:5672
-      - EMAIL_ID=hishammpsn@gmail.com
-      - PASS_KEY=ghmxhowpegsdumkf
+    env_file:
+      - ./email-service/.env
     networks:
       - app-network
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy 
 
   # Payment and Subscription Service
   payment-sub-service:
@@ -93,9 +98,8 @@ services:
     #   - ./uploading-service:/app
     env_file:
       - ./uploading-service/.env
-  
     volumes:
-        - ./uploading-service:/app/logs
+      - ./uploading-service:/app/logs
     networks:
       - app-network
   content-service:
@@ -111,8 +115,7 @@ services:
     command: npm run dev
     networks:
       - app-network
-    depends_on:
-      - loki
+
   live-streaming-service:
     build:
       context: ./live-streaming-service
@@ -142,46 +145,13 @@ services:
     depends_on:
       - rabbitmq
 
-
-  # elasticsearch:
-  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
-  #   ports:
-  #     - "9200:9200"
-  #   environment:
-  #     - discovery.type=single-node
-  #   networks:
-  #     - app-network
-
-  # kibana:
-  #   image: docker.elastic.co/kibana/kibana:7.15.0
-  #   ports:
-  #     - "5601:5601"
-  #   depends_on:
-  #     - elasticsearch
-  #   networks:
-  #     - app-network
-
-  # filebeat:
-  #   build:
-  #       context: ./filebeat
-  #   container_name: filebeat
-  #   command: filebeat -e -strict.perms=false
-  #   volumes:
-  #       - ./uploading-service/logs:/app/logs
-  #   depends_on:
-  #       - elasticsearch
-  #       - kibana
-  #   networks:
-  #     - app-network
-
-
   loki:
-    image: grafana/loki:2.8.0 
+    image: grafana/loki:2.8.0
     ports:
       - "3100:3100"
     volumes:
       - ./loki-config.yaml:/etc/loki/local-config.yaml
-      - ./wal:/wal 
+      - ./wal:/wal
     command: -config.file=/etc/loki/local-config.yaml
 
   grafana:
@@ -206,9 +176,3 @@ services:
 networks:
   app-network:
     driver: bridge
-
-
-
-# volumes:
-#     elasticsearch_data:
-#         driver: local

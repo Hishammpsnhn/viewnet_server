@@ -5,7 +5,6 @@ import { GetSeriesDetails } from "../../../use-case/getSeriesDetails";
 import { GetEpisodeDetails } from "../../../use-case/episodeDetails";
 import { EpisodeRepository } from "../../../infrastructure/repositories/series/EpisodeRepository";
 import { GetEpisodeCatalogDetails } from "../../../use-case/getEpisodeCatalog";
-import UpdateWatchHistoryUseCase from "../../../use-case/watchHistoryUseCase";
 import WatchHistoryRepository from "../../../infrastructure/repositories/WatchHistoryRepository";
 import { HttpStatus } from "../../HttpStatus";
 
@@ -33,7 +32,6 @@ export class SeriesController {
     try {
       const { id } = req.params;
       const profileId = req.query.profileId as string;
-      console.log("seriesDetails", id);
       const series = await seriesDetailsUseCase.execute(id, profileId);
       res.status(HttpStatus.OK).json({ success: true, data: series });
     } catch (error) {
@@ -44,7 +42,6 @@ export class SeriesController {
     try {
       const { id } = req.params;
       const profileId = req.query.profileId as string;
-      console.log("seriesDetails", id);
       const series = await episodeDetailsUseCase.execute(id, profileId);
       res.status(HttpStatus.OK).json({ success: true, data: series });
     } catch (error) {
@@ -55,7 +52,6 @@ export class SeriesController {
     try {
       const { id } = req.params;
       const profileId = req.query.profileId as string;
-      console.log("dfd", id);
       const series = await episodeCatalogDetailsUseCase.execute(id, profileId);
       res.status(HttpStatus.OK).json({ success: true, data: series });
     } catch (error) {

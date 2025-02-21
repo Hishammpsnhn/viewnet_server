@@ -15,11 +15,14 @@ export class SeriesRepository implements ISeriesRepository {
   private CACHE_EXPIRATION = 3600;
   async findLatest(limit: number = 10): Promise<SeriesEntity[]> {
     try {
-      const cachedSeries = await redisClient.get(this.CACHE_KEY);
-      if (cachedSeries) {
-        console.log("Cache Hit - Returning cached data");
-        return JSON.parse(cachedSeries);
+      if (redisClient.status === "ready") {
+        const cachedSeries = await redisClient.get(this.CACHE_KEY);
+        if (cachedSeries) {
+          console.log("Cache Hit - Returning cached data-series");
+          return JSON.parse(cachedSeries);
+        }
       }
+      console.log("fetch from db-series")
       const seriesData = await SeriesModel.find({
         isBlock: false,
         isRelease: true,
@@ -69,12 +72,14 @@ export class SeriesRepository implements ISeriesRepository {
           )
         );
       });
-      await redisClient.set(
-        this.CACHE_KEY,
-        JSON.stringify(series),
-        "EX",
-        this.CACHE_EXPIRATION
-      );
+      if (series && redisClient.status === "ready") {
+        await redisClient.set(
+          this.CACHE_KEY,
+          JSON.stringify(series),
+          "EX",
+          this.CACHE_EXPIRATION
+        );
+      }
       return series;
     } catch (error) {
       console.error("Error fetching latest series:", error);

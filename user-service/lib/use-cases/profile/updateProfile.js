@@ -7,8 +7,6 @@ class UpdateProfile {
 
   async execute(id,  updatedProfileData) {
     const updatedProfile = new Profile(updatedProfileData);
-    console.log(updatedProfile);
-    console.log(updatedProfileData)
     return await this.profileRepository.updateProfile(id,  updatedProfile);
   }
 }

@@ -1,7 +1,6 @@
 import cron from 'node-cron'
-import SubscriptionRepository from '../repository/userSubscription/userSubsciption.js' ;
+import SubscriptionRepository from '../repository/userSubscription/userSubscription.js' ;
 import updateSubscriptions from '../../use-cases/userSubscription/updateSubscription.js'
-console.log("cron update subscriptions")
 function subscriptionCron() {
     cron.schedule('0 * * * *', async () => {
         console.log('Cron Job: Checking subscription statuses...');

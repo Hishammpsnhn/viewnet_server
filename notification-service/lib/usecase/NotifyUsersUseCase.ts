@@ -40,16 +40,13 @@ export class NotifyUsersUseCase {
     }
 
     if (eventType === "movie_uploaded") {
-      console.log("new movie uploaded")
       try {
-        console.log("Fetching all users...");
-        const users = await this.userGateway.fetchUser(); // Fetch all users
+        const users = await this.userGateway.fetchUser(); 
         if (users && users.data && users.data.length > 0) {
-          console.log("Users fetched successfully:", users.data);
 
           // Send notification to all users
           for (const user of users.data) {
-            const userId = user.id || user._id; // Adjust based on user object structure
+            const userId = user.id || user._id; 
             const userEmail = user.email;
 
             console.log(

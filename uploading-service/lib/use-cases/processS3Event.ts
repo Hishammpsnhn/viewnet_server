@@ -5,20 +5,19 @@ import {
 } from "@aws-sdk/client-ecs";
 import { IEncodedFile, MovieCatalog } from "../domain/entities/VideoCatalog";
 import { ecsClient } from "../infrastructure/aws/ecsClient";
-import { MovieCatalogRepository } from "../infrastructure/repositories/MovieCatalog"; // Import the repository
+import { MovieCatalogRepository } from "../infrastructure/repositories/MovieCatalog"; 
 import { Types } from "mongoose";
 import { VideoMetadataRepository } from "../infrastructure/repositories/VideoMetadataRepository";
 import { UpdateTranscodingStatusUseCase } from "./updateMovieTranscodeStatus";
 import { logger } from "../infrastructure/logger/logger";
-import { MovieProducer } from "../infrastructure/queue/MovieProducer";
 import { VideoMetadata } from "../domain/entities/VideoMetadata";
+import env from '../infrastructure/config/environment'
 
 type TranscodingStatus = "pending" | "processing" | "completed" | "failed";
 
 const repository = new VideoMetadataRepository();
 const updateTranscode = new UpdateTranscodingStatusUseCase(repository);
 const movieCatalogRepository = new MovieCatalogRepository();
-const movieProducer = new MovieProducer();
 async function updateMovieTranscodingStatus(
   movieId: string,
   status: TranscodingStatus
@@ -81,12 +80,12 @@ export async function processS3Event(
 
     // Step 2: Monitor the status of the new task
     if (taskArn)
-      await monitorTaskStatus(taskArn, metaDataId, title, movieMetadata);
+      await monitorTaskStatus(taskArn, metaDataId, title);
   } else {
     console.error("Failed to launch task.");
   }
   console.log(`Triggered ECS task for file: ${key} in bucket: ${bucketName}`);
-  console.log("res from contaiern", res);
+
 }
 
 // Function to monitor ECS task status
@@ -94,7 +93,6 @@ async function monitorTaskStatus(
   taskArn: string,
   movieId: string,
   title: string,
-  movieMetadata: VideoMetadata
 ) {
   try {
     const describeTasksCommand = new DescribeTasksCommand({
@@ -112,13 +110,10 @@ async function monitorTaskStatus(
       const res: DescribeTasksCommandOutput = await ecsClient.send(
         describeTasksCommand
       );
-      console.log("res>>>>>>", res);
 
-      // Check if res.tasks is defined before accessing it
       const task = res.tasks?.[0];
       if (!task) {
         console.error("No task found in the response.");
-        //await movieCatalogRepository.updateMovieStatus(movieId, 'failed');
         return;
       }
       if (task.lastStatus) taskStatus = task.lastStatus;
@@ -138,31 +133,31 @@ async function monitorTaskStatus(
       const encodedFiles: IEncodedFile[] = [
         {
           encodingStatus: "completed",
-          fileUrl: `https://d1l6zjp27xxl39.cloudfront.net/hls/${title}/1080p/index.m3u8`,
+          fileUrl: `https://${env.CLOUDFRONT_KEY}.cloudfront.net/hls/${title}/1080p/index.m3u8`,
           format: "mp4",
           resolution: "1080p",
         },
         {
           encodingStatus: "completed",
-          fileUrl: `https://d1l6zjp27xxl39.cloudfront.net/hls/${title}/master.m3u8`,
+          fileUrl: `https://${env.CLOUDFRONT_KEY}.cloudfront.net/hls/${title}/master.m3u8`,
           format: "mp4",
           resolution: "auto",
         },
         {
           encodingStatus: "completed",
-          fileUrl: `https://d1l6zjp27xxl39.cloudfront.net/hls/${title}/720p/index.m3u8`,
+          fileUrl: `https://${env.CLOUDFRONT_KEY}.cloudfront.net/hls/${title}/720p/index.m3u8`,
           format: "mp4",
           resolution: "720p",
         },
         {
           encodingStatus: "completed",
-          fileUrl: `https://d1l6zjp27xxl39.cloudfront.net/hls/${title}/480p/index.m3u8`,
+          fileUrl: `https://${env.CLOUDFRONT_KEY}.cloudfront.net/hls/${title}/480p/index.m3u8`,
           format: "mp4",
           resolution: "480p",
         },
         {
           encodingStatus: "completed",
-          fileUrl: `https://d1l6zjp27xxl39.cloudfront.net/hls/${title}/360p/index.m3u8`,
+          fileUrl: `https://${env.CLOUDFRONT_KEY}.cloudfront.net/hls/${title}/360p/index.m3u8`,
           format: "mp4",
           resolution: "360p",
         },
@@ -176,14 +171,11 @@ async function monitorTaskStatus(
         movieId
       );
       await movieCatalogRepository.create(newCatalog);
-      // await movieProducer.sendMovie( movieMetadata);
       logger.info(`Created catalog entry for movie: ${title}`);
       
     }
   } catch (error) {
     console.error("Error monitoring ECS task:", error);
-    // Update movie status to "failed" if monitoring fails
     await updateMovieTranscodingStatus(movieId, "failed");
-    // await movieCatalogRepository.updateMovieStatus(movieId, 'failed');
   }
 }

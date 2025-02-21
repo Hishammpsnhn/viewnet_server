@@ -7,6 +7,5 @@ export default async ( { userPlanRepository }) => {
 
   const planCount = await userPlanRepository.SubscriptionCount();
 
-  //console.log("Plan Details",planDetail[0])
   return planCount
 };

@@ -48,7 +48,6 @@ export async function isAdminAuthenticated(req, res, next) {
       userRepository,
     });
 
-    console.log("user form autheniticated", user);
     if (!user.isAdmin) {
       return res.status(403).json({ message: "User is not an admin" });
     }

@@ -4,6 +4,7 @@ import { NotificationSender } from "../domain/interface/NotificationSender";
 import NotificationRepositoryImpl from "../infrastructure/repository/NotificationRepository";
 import UserGateway from "../gateway/userGateway";
 import axios from "axios";
+import environment from "./config/environment";
 
 const userGateway  = new UserGateway(axios);
 
@@ -17,7 +18,7 @@ export class RabbitMQConsumer {
 
   async consume(): Promise<void> {
     try {
-      const connection = await amqp.connect("amqp://rabbitmq:5672");
+      const connection = await amqp.connect(environment.RABBITMQ_URL as string);
       const channel = await connection.createChannel();
 
       const queues = ["movie_uploaded", "plan_purchased", "live_started"];

@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 import environment from "../../infrastructure/config/environment.js";
 import CreateNewUserSubscription from "../../use-cases/userSubscription/CreateNewUserSubscription.js";
-import UserNewPlanRepository from "../../infrastructure/repository/userSubscription/userSubsciption.js";
+import UserNewPlanRepository from "../../infrastructure/repository/userSubscription/userSubscription.js";
 import SubscriptionPlanRepository from "../../infrastructure/repository/subscriptionPlan/subscriptionPlanRepository.js";
 import LiveProducer from "../../infrastructure/queue/LiveStreamProducer.js";
 import TransactionRepository from "../../infrastructure/repository/Transaction/TransactionHistory.js";
@@ -37,8 +37,6 @@ const handleStripeWebhook = async (req, res) => {
       environment.STRIPE_WEBHOOK_KEY
     );
 
-    console.log("🔹 Stripe Event Received:", event.type);
-
     const session = event.data.object;
     let status = paymentStatus.pending;
 
@@ -65,14 +63,6 @@ const handleStripeWebhook = async (req, res) => {
       const transactionId = session.metadata?.transactionId || "N/A";
 
       console.log("✅ Transaction Status:", status);
-      console.log("🔹 Metadata:", {
-        userId,
-        planId,
-        planName,
-        planPrice,
-        email,
-        transactionId,
-      });
 
       liveProducer.sendLiveNotification({ userId, planName, planPrice });
 

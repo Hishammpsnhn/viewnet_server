@@ -36,49 +36,6 @@ class QrController {
     }
   }
 
-  // static async validateQr(req, res) {
-  //   try {
-  //     const { id } = req.params;
-  //     const verified = await otpUseCase.verifyKey(id);
-  //     console.log("verifies>...", verified);
-  //     if (verified == "false" || !verified) {
-  //       res.status(200).json({ message: "Not validate" });
-  //     } else {
-  //       console.log("veried",verified)
-  //       const payload = { email:verified };
-  //       const deviceId = 'Linux-Guest'
-  //       const accessToken = jwtAccessTokenManager.generate(payload, "1d");
-  //       const refreshToken = jwtAccessTokenManager.generate(payload, "7d");
-  //       const user = await userLogin.execute(verified, deviceId, refreshToken);
-  //       const accessOptions = {
-  //         maxAge: 15 * 60 * 1000, // 7 days
-  //         httpOnly: false,
-  //         secure: false,
-  //         sameSite: "Lax",
-  //         path: "/",
-  //       };
-  //       const refreshOptions = {
-  //         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-  //         httpOnly: false,
-  //         secure: false,
-  //         sameSite: "Lax",
-  //         path: "/",
-  //       };
-  //       res
-  //         .status(200)
-  //         .cookie("accessToken", accessToken, accessOptions)
-  //         .cookie("refreshToken", refreshToken, refreshOptions)
-  //         .json({
-  //           success: true,
-  //           accessToken,
-  //           refreshToken,
-  //           user,
-  //         });
-  //     }
-  //   } catch (error) {
-  //     res.status(400).json({ message: error.message });
-  //   }
-  // }
   static async validateQr(req, res) {
     try {
       const { id } = req.params;
@@ -99,7 +56,6 @@ class QrController {
           const verified = await otpUseCase.verifyKey(id);
 
           if (verified && verified !== "false") {
-            console.log("verfied: >>>>>>>>>>>" + verified);
             const deviceId = "Linux-Guest";
             const refreshToken = jwtAccessTokenManager.generate(
               { email: verified },
@@ -149,12 +105,11 @@ class QrController {
   }
   static async scanQr(req, res) {
     try {
-      console.log("api comming .........from", req.user);
       const { id } = req.params;
       const verified = await otpUseCase.updateVal(id, req.user?.email);
-      console.log(verified);
+
       if (verified) {
-        res.status(200).json({ success: true, message: "Auth succesful" });
+        res.status(200).json({ success: true, message: "Auth Success" });
       } else {
         res.status(200).json({ message: "Auth failed" });
       }

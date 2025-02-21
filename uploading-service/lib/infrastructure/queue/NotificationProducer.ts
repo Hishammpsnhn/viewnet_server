@@ -1,4 +1,5 @@
 import amqp from "amqplib";
+import environment from "../config/environment";
 
 interface Metadata {
   title: string;
@@ -12,7 +13,8 @@ export class LiveProducer {
     let channel;
 
     try {
-      connection = await amqp.connect("amqp://rabbitmq:5672");
+      if(!environment.RABBITMQ_URL) return;
+      connection = await amqp.connect(environment.RABBITMQ_URL);
       channel = await connection.createChannel();
       await channel.assertQueue(this.queueName, { durable: true });
 
@@ -24,7 +26,6 @@ export class LiveProducer {
 
       const bufferMessage = Buffer.from(JSON.stringify(message));
       channel.sendToQueue(this.queueName, bufferMessage, { persistent: true });
-      //   console.log(`Movie and catalog sent to queue: ${movieData.title}`);
     } catch (error) {
       console.error("Error in MovieProducer:", error);
     } finally {

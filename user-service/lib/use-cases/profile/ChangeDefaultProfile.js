@@ -4,7 +4,6 @@ class CreateProfile{
     }
   
     async execute(userId, profileId) {
-      console.log(userId, profileId)
       return await this.profileRepository.changeDefaultProfile(userId, profileId);
     }
   }

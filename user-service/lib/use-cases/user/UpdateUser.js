@@ -4,7 +4,6 @@ class UpdateUser {
   }
   
   async execute(id, data) {
-    console.log(id,data)
     const user = await this.userRepository.findById(id);
     if (!user) {
       throw new Error("User not found");

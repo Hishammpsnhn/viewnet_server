@@ -1,4 +1,4 @@
-// Gateway: External API communication (e.g., payment-sub-service via Gateway)
+import env from '../infrastructure/config/environment.js'
 class SubscriptionGateway {
   constructor(axios) {
     this.axios = axios;
@@ -7,9 +7,8 @@ class SubscriptionGateway {
   async fetchSubscriptionDetails(userId) {
     try {
       const response = await this.axios.get(
-        `http://payment-sub-service:5002/${userId}/active`
+        `${env.SUBSCRIPTION_SERVICE_URL}/${userId}/active`
       );
-      console.log(response.data)
       if (response.data?.userPlan.length) {
         return response.data.userPlan[0];
       } else {

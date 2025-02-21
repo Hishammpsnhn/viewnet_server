@@ -8,7 +8,7 @@ dotenv.config();
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_ID, // Environment variable for the email ID
+    user: process.env.EMAIL_ID, 
     pass: process.env.PASS_KEY,
   },
 });
@@ -21,7 +21,7 @@ const connectToRabbitMQ = async () => {
 
   while (retries) {
     try {
-      connection = await amqp.connect('amqp://rabbitmq:5672');
+      connection = await amqp.connect(process.env.RABBITMQ_URL);
       console.log("Connection established");
       const channel = await connection.createChannel();
 
@@ -72,10 +72,10 @@ const startConsuming = async () => {
         const emailData = JSON.parse(msg.content.toString());
         console.log('Received message:', emailData);
         sendNotification(emailData);
-        channel.ack(msg); // Acknowledge the message after processing
+        channel.ack(msg); 
       } catch (error) {
         console.error('Error processing message:', error);
-        channel.nack(msg); // Reject the message if there's an error
+        channel.nack(msg); 
       }
     }
   });

@@ -1,8 +1,7 @@
 import { VideoMetadataModel } from "../database/models/metaData";
 import { IVideoMetadataRepository } from "../../domain/interface/IVideoMetadataRepository";
 import { VideoMetadata } from "../../domain/entities/VideoMetadata";
-import mongoose, { ObjectId } from "mongoose";
-import { invalidateMovieCache, redisClient } from "../cache/RedisRepository";
+import mongoose from "mongoose";
 
 export class VideoMetadataRepository implements IVideoMetadataRepository {
   async create(data: VideoMetadata): Promise<VideoMetadata> {

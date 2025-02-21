@@ -22,7 +22,6 @@ export class SeriesUseCase {
 
   // Get all series
   async getAllSeries(): Promise<SeriesEntity[]> {
-    console.log("repository")
     return this.seriesRepository.findAll();
   }
 
@@ -34,7 +33,6 @@ export class SeriesUseCase {
 
   async releaseSeries(currentDate = new Date()){
     const series =await  this.seriesRepository.findSeriesToRelease(currentDate)
-    console.log("series gone for update",series)
     for(const videoData of series){
       if(videoData._id){
         await this.seriesRepository.update(videoData._id.toString(),{isRelease:true})

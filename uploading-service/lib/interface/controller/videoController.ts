@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { VideoService } from "../../infrastructure/service/VideoService";
 import { PresignedUrlParams } from "../../infrastructure/types/s3Types";
 import { GeneratePresignedUrlUseCase } from "../../use-cases/generatePresignedUrlUseCase";
 import { S3Service } from "../../infrastructure/service/s3Service";
@@ -7,14 +6,12 @@ import env from "../../infrastructure/config/environment";
 import { VideoMetadataRepository } from "../../infrastructure/repositories/VideoMetadataRepository";
 import { CreateVideoMetadata } from "../../use-cases/createVideoMetadata";
 import { UpdateVideoMetadataUseCase } from "../../use-cases/updateMetadata";
-import { MovieProducer } from "../../infrastructure/queue/MovieProducer";
 import { HttpStatus } from "../HttpStatus";
 
 const s3Service = new S3Service();
 const repository = new VideoMetadataRepository();
 
 const generatePresignedUrlUseCase = new GeneratePresignedUrlUseCase(s3Service);
-const movieProducer = new MovieProducer();
 const createVideoMetadata = new CreateVideoMetadata(repository);
 const updateVideoMetadata = new UpdateVideoMetadataUseCase(repository);
 export class VideoController {

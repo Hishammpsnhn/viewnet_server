@@ -3,7 +3,6 @@ import TransactionModel from "../../database/models/TransactionHistory.js";
 
 export default class TransactionRepository {
   async create(transactionData) {
-    console.log("data", transactionData);
     if (transactionData.transactionId) {
       const existingTransaction = await TransactionModel.findById(
         new mongoose.Types.ObjectId(transactionData.transactionId) 
@@ -14,7 +13,6 @@ export default class TransactionRepository {
         );
       }
 
-      console.log("update existing", existingTransaction);
       return await TransactionModel.findOneAndUpdate(
         { _id: existingTransaction._id },
         { $set: { status: transactionData.status } },

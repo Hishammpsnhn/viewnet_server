@@ -1,22 +1,33 @@
-import Redis from 'ioredis';
+import Redis from "ioredis";
+import environment from "../config/environment";
 
 const redisClient = new Redis({
-  host: "redis", 
-  port: 6379,
- 
+  host: "redis",
+  port: parseInt(environment.REDIS_PORT || "6379", 10),
+  connectTimeout: 5000,
+  retryStrategy: (times) => {
+    if (times >= 5) {
+      console.error("Redis connection failed after multiple attempts.");
+      return null;
+    }
+    console.error(
+      `Redis connection failed. Retrying in ${Math.min(times * 500, 5000)} ms.`
+    );
+    return Math.min(times * 500, 5000);
+  },
 });
 
-redisClient.on('connect', () => console.log('Connected to Redis'));
-redisClient.on('error', (err:any) => console.error('Redis Error:', err));
+redisClient.on("connect", () => console.log("Connected to Redis"));
 
-const invalidateMovieCache = async (movieId:string) => {
+const invalidateMovieCache = async (movieId: string) => {
   try {
-    //await redisClient.del(`movie_meta_${movieId}`); 
-    await redisClient.del('latest_series')
-    console.log(`Cache invalidated for movie ${movieId}`);
+    if (redisClient.status === "ready") {
+      await redisClient.del("latest_series");
+      console.log(`Cache invalidated for movie ${movieId}`);
+    }
   } catch (err) {
-    console.error('Error invalidating movie cache:', err);
+    console.error("Error invalidating movie cache:", err);
   }
 };
 
-export  {redisClient,invalidateMovieCache};
+export { redisClient, invalidateMovieCache };

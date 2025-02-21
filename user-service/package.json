@@ -23,6 +23,7 @@
     "ioredis": "^5.4.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.4",
+    "morgan": "^1.10.0",
     "nodemon": "^3.1.9",
     "prom-client": "^11.5.3",
     "response-time": "^2.3.3",

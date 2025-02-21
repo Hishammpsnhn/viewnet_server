@@ -6,18 +6,14 @@ import videoMetadataRoutes from "../../interface/routes/videoMetadataRoutes";
 import genreRoutes from "../../interface/routes/genreRoutes";
 import seriesRoutes from "../../interface/routes/seriesRoutes";
 import { consumeSqsMessages } from "../../interface/consumers/sqsConsumer";
+import morgan from 'morgan'
 
 dotenv.config();
 
 const createServer = async () => {
   const app = express();
-  const corsOptions = {
-    origin: ["http://localhost:4000", "http://localhost:5173"],
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true,
-  };
+  app.use(morgan("combined"))
 
-  app.use(cors(corsOptions));
   app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));

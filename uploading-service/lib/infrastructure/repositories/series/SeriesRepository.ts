@@ -12,7 +12,6 @@ export class SeriesRepository implements ISeriesRepository {
   }
 
   async findById(id: string): Promise<SeriesEntity | null> {
-    console.log("id from repo", id);
     const objectId = Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
 
     if (!objectId) {
@@ -26,15 +25,11 @@ export class SeriesRepository implements ISeriesRepository {
         path: "episodes",
       },
     });
-
-    console.log(series);
     return series;
   }
 
   async findAll(): Promise<SeriesEntity[]> {
-    console.log("find all")
     const series = await SeriesModel.find({});
-    console.log(series)
     return series;
   }
 
@@ -66,7 +61,6 @@ export class SeriesRepository implements ISeriesRepository {
         isRelease: false,
     });
 
-    console.log("Series found:", series);
 
     return series;
 }

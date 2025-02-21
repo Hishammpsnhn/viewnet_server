@@ -58,7 +58,6 @@ export class SeriesController {
 
   // Get all series
   async getAllSeries(req: Request, res: Response) {
-    console.log("get all series")
     try {
       const series = await seriesUseCase.getAllSeries();
       res.status(HttpStatus.OK).json({ success: true, data: series });

@@ -3,16 +3,11 @@ import {
   DescribeTasksCommandOutput,
   RunTaskCommand,
 } from "@aws-sdk/client-ecs";
-import { IEncodedFile, MovieCatalog } from "../domain/entities/VideoCatalog";
 import { ecsClient } from "../infrastructure/aws/ecsClient";
-import { MovieCatalogRepository } from "../infrastructure/repositories/MovieCatalog"; 
 import { EpisodeRepository } from "../infrastructure/repositories/series/EpisodeRepository"; 
-import { Types } from "mongoose";
 import { VideoMetadataRepository } from "../infrastructure/repositories/VideoMetadataRepository";
 import { UpdateTranscodingStatusUseCase } from "./updateMovieTranscodeStatus";
 import { logger } from "../infrastructure/logger/logger";
-import { MovieProducer } from "../infrastructure/queue/MovieProducer";
-import { VideoMetadata } from "../domain/entities/VideoMetadata";
 import { EpisodeEntity } from "../domain/entities/series/episodeEntity";
 import { EpisodeUseCase } from "./series/EpisodeUseCase";
 
@@ -90,16 +85,12 @@ export async function EpisodeProcessS3Event(
     console.error("Failed to launch task.");
   }
   console.log(`Triggered ECS task for file: ${key} in bucket: ${bucketName}`);
-  console.log("res from contaiern", res);
 }
 
 // Function to monitor ECS task status
 async function monitorTaskStatus(
   taskArn: string,
   episode: EpisodeEntity
-  // movieId: string,
-  // title: string,
-  // movieMetadata: VideoMetadata
 ) {
   try {
     const describeTasksCommand = new DescribeTasksCommand({
@@ -117,7 +108,6 @@ async function monitorTaskStatus(
       const res: DescribeTasksCommandOutput = await ecsClient.send(
         describeTasksCommand
       );
-      console.log("res>>>>>>", res);
 
       // Check if res.tasks is defined before accessing it
       const task = res.tasks?.[0];

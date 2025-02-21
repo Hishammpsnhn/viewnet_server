@@ -27,7 +27,6 @@ class OtpUseCase {
   async updateVal(key, value) {
     await this.otpRepository.saveOtp(key, value);
     const res = await this.otpRepository.getOtp(key);
-    console.log("storedval", res);
     if (res != "false") {
       return true;
     }

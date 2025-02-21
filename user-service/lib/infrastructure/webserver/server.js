@@ -4,19 +4,14 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import authRoutes from "../../interface/routes/authRoutes.js";
 import profileRoutes from '../../interface/routes/profileRoutes.js';
-
+import morgan from 'morgan'
 dotenv.config();
 
 const createServer = async (metricsService) => {
   const app = express();
-  const corsOptions = {
-    origin: ["http://localhost:4000", "http://localhost:5173"],
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true,
-  };
+  app.use(morgan('combined')); 
 
-  // Middleware setup
-  app.use(cors(corsOptions));
+
   app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));

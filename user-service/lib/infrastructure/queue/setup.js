@@ -1,8 +1,9 @@
 import amqp from 'amqplib';
+import environment from '../config/environment.js';
 
 const sendNotificationToQueue = async (email, subject, text) => {
   try {
-    const connection = await amqp.connect(process.env.RABBITMQ_URL);
+    const connection = await amqp.connect(environment.RABBITMQ_URL);
     const channel = await connection.createChannel();
 
     const queue = "user_notifications";

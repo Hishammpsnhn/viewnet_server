@@ -5,7 +5,6 @@ const liveProducer = new LiveProducer();
 
 export const createLiveStream = async (req: Request, res: Response) => {
   try {
-    console.log(req.body);
     const data = req.body.formData;
     const stream = await LiveStreamService.createStream(data);
     if (stream.metadata) {
@@ -55,7 +54,6 @@ export const listAllStreams = async (_req: Request, res: Response) => {
 };
 export const getAssets = async (req: Request, res: Response) => {
   const { page } = req.query;
-  console.log(req.query);
 
   try {
     const activeStreams = await LiveStreamService.getAssets(Number(page));
@@ -105,18 +103,4 @@ export const removeLiveStream = async (req: Request, res: Response) => {
       .json({ success: false, error: "Failed to delete the stream." });
   }
 };
-// export const webhookLiveStream = async (req: Request, res: Response) => {
-//   try {
-//     const signature = req.headers['mux-signature'];
-//     console.log("sinnature",signature)
-//     console.log("helllo.................. webhook");
-//     const data = req.body;
-//     console.log("data", data);
-//   } catch (error: any) {
-//     console.error("Error delete the stream:", error);
-//     res
-//       .status(500)
-//       .json({ success: false, error: "Failed to delete the stream." });
-//   }
-// };
 

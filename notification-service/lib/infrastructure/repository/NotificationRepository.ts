@@ -25,7 +25,6 @@ class NotificationRepositoryImpl implements NotificationRepositoryImpl {
     const res = await NotificationModel.deleteMany({
       recipient: recipientId,
     })
-    console.log(res)
 
     return true;
   }

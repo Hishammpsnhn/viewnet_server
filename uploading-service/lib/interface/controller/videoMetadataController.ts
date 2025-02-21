@@ -4,7 +4,6 @@ import { CreateVideoMetadata } from "../../use-cases/createVideoMetadata";
 import { GetAllVideoMetadata } from "../../use-cases/getAllVideoMetadata";
 import { GetVideoMetadata } from "../../use-cases/getMetaData";
 import { GetLatestVideoMetadata } from "../../use-cases/user/LatestMovies";
-import { MovieProducer } from "../../infrastructure/queue/MovieProducer";
 import { HttpStatus } from "../HttpStatus";
 
 const repository = new VideoMetadataRepository();
@@ -13,7 +12,6 @@ const getVideoMetadata = new GetVideoMetadata(repository);
 const createVideoMetadata = new CreateVideoMetadata(repository);
 const getAllVideoMetadata = new GetAllVideoMetadata(repository);
 const getLatestVideoMetadata = new GetLatestVideoMetadata(repository)
-const movieProducer = new MovieProducer();
 
 export class VideoMetadataController {
   static async createMetadata(req: Request, res: Response): Promise<void> {

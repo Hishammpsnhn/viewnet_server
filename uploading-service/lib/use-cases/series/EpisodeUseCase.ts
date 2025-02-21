@@ -1,7 +1,7 @@
 import { ResolutionEntity } from "../../domain/entities/series/episodeCatalog";
 import { EpisodeEntity } from "../../domain/entities/series/episodeEntity";
 import { IEpisodeRepository } from "../../domain/interface/series/IEpisodeRepository";
-
+import environment from "../../infrastructure/config/environment";
 export class EpisodeUseCase {
   private episodeRepository: IEpisodeRepository;
 
@@ -23,7 +23,7 @@ export class EpisodeUseCase {
     }
 
     const baseUrl =
-      "https://s3.us-east-1.amazonaws.com/production.viewnet.xyz/hls";
+      `https://s3.us-east-1.amazonaws.com/production.${environment.AWS_BUCKET_NAME}/hls`;
 
     const resolutions = (
       ["1080p", "720p", "480p", "360p", "auto"] as const

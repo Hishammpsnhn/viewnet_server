@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-
+import environment from "../infrastructure/config/environment";
 class UserGateway {
   private axios: AxiosInstance;
 
@@ -10,9 +10,8 @@ class UserGateway {
   async fetchUser(): Promise<any> {
     try {
       const { data }: AxiosResponse = await this.axios.get(
-        `http://user-service:5000/users?page=1&limit=20`
+        `${environment.USER_SERVICE_URL}/users?page=1&limit=20`
       );
-      console.log(data)
       if (data.success) {
         return data.users;
       }

@@ -25,7 +25,6 @@ class LoginUser {
 
     if (!user) {
       const neUser = new User({ email });
-      console.log(neUser);
       user = await this.userRepository.create(neUser);
     } else {
       if (user.isBlock) {

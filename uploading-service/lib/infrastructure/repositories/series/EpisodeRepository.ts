@@ -12,7 +12,6 @@ export class EpisodeRepository implements IEpisodeRepository {
     if (!season) {
       throw new Error("Season not found");
     }
-    console.log("episode season details", season);
     season?.episodes.push(episode.id);
     await episode.save();
     await season.save();
@@ -48,13 +47,11 @@ export class EpisodeRepository implements IEpisodeRepository {
     data: Partial<EpisodeEntity>
   ): Promise<EpisodeEntity | null> {
     const episodeDetail = await EpisodeModel.findOne({ key: key });
-    console.log("found using key", episodeDetail);
     const episode = await EpisodeModel.findByIdAndUpdate(
       episodeDetail?.id,
       data,
       { new: true }
     );
-    console.log("found using id", episode);
     return episode ? episode.toObject() : null;
   }
 

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: live-streaming-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: live-streaming-service
+  template:
+    metadata:
+      labels:
+        app: live-streaming-service
+    spec:
+      containers:
+        - name: live-streaming-service
+          image: hishammpsn/view_net-live-streaming-service:latest
+          ports:
+            - containerPort: 5005
+          # envFrom:
+            # - secretRef:
+            #     name: app-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: live-streaming-service
+spec:
+  selector:
+    app: live-streaming-service
+  ports:
+    - protocol: TCP
+      port: 5005
+      targetPort: 5005

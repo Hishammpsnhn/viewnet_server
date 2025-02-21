@@ -3,6 +3,7 @@ import { Server as HttpServer } from "http";
 import { NotificationSender } from "../domain/interface/NotificationSender";
 import WatchTimeService from "../domain/interface/IWatchTime";
 import ActiveUserController from "../interface/controller/ActiveUsersController";
+import environment from "./config/environment";
 
 const activeUserController = new ActiveUserController();
 interface WatchParty {
@@ -17,14 +18,13 @@ export class WebSocketServer implements NotificationSender {
 
   private emitActiveUsers() {
     const activeUsers = Array.from(this.connectedUsers.keys()).length; // Get all user IDs
-    console.log("activeusers: ", activeUsers);
-    this.io.emit("activeUsers", activeUsers); // Send to all admins
+    this.io.emit("activeUsers", activeUsers); 
   }
 
   constructor(httpServer: HttpServer) {
     this.io = new SocketServer(httpServer, {
       cors: {
-        origin: "http://localhost:5173",
+        origin: [environment.CLIENT_URL as string],
         methods: ["GET", "POST"],
         credentials: true,
       },
@@ -34,7 +34,6 @@ export class WebSocketServer implements NotificationSender {
       console.log("A user connected:", socket.id);
 
       socket.on("register", (userId: string) => {
-        console.log("on register");
         if (!this.connectedUsers.get(userId)) {
           activeUserController.updateActiveUsers(1);
         }
@@ -45,7 +44,6 @@ export class WebSocketServer implements NotificationSender {
       });
 
       socket.on("update_watch_time", async ({ profileId, watchTime }) => {
-        console.log("profile id", profileId, watchTime);
         await WatchTimeService.updateWatchTime(profileId, watchTime);
         socket.emit("watch_time_updated", { status: "success" });
       });
@@ -65,16 +63,13 @@ export class WebSocketServer implements NotificationSender {
           party.participants.push(profileId);
           this.watchParties.set(partyId, party);
         }
-        console.log("watch parteis", this.watchParties);
         this.io.to(partyId).emit("partyUpdate", this.watchParties.get(partyId));
       });
 
       socket.on("selectedMovie", ({ link, partyId }) => {
-        console.log("link", link, partyId);
         this.io.to(partyId).emit("selectedMovie", link);
       });
       socket.on("sync-action", ({ partyId, videoState, time }) => {
-        console.log("videioStateUpdate", partyId, videoState, time);
         const party = this.watchParties.get(partyId);
         if (party) {
           party.videoState = videoState;

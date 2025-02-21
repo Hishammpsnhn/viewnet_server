@@ -15,7 +15,6 @@ class ActiveUserImpl implements ActiveUserImpl {
   async getActiveUserCount(): Promise<any[]> {
     console.log("getActiveUserCount")
     const res = await ActiveSchema.find();
-    console.log(res)
     return res;
   }
 }

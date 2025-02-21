@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uploading-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uploading-service
+  template:
+    metadata:
+      labels:
+        app: uploading-service
+    spec:
+      containers:
+        - name: uploading-service
+          image: hishammpsn/view_net-uploading-service:latest
+          ports:
+            - containerPort: 5003
+          # envFrom:
+            # - secretRef:
+            #     name: app-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: uploading-service
+spec:
+  selector:
+    app: uploading-service
+  ports:
+    - protocol: TCP
+      port: 5003
+      targetPort: 5003

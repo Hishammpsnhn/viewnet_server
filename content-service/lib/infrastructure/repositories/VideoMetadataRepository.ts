@@ -12,17 +12,16 @@ export class MovieMetadataRepository implements IVideoMetadataRepository {
   async findLatest(page: number, limit: number = 5): Promise<Movie[]> {
     const offset = (page - 1) * limit;
 
-    // Check if the full dataset is cached
-    const cachedMovies = await redisClient.get(this.CACHE_KEY);
+    if (redisClient.status === "ready") {
+      const cachedMovies = await redisClient.get(this.CACHE_KEY);
 
-    if (cachedMovies) {
-      console.log("Cache Hit - Returning cached data");
-      const allMovies = JSON.parse(cachedMovies);
+      if (cachedMovies) {
+        console.log("Cache Hit - Returning cached data");
+        const allMovies = JSON.parse(cachedMovies);
 
-      // Paginate the cached data
-      return allMovies.slice(offset, offset + limit);
+        return allMovies.slice(offset, offset + limit);
+      }
     }
-
     console.log("Cache Miss - Fetching from DB");
 
     // Fetch all movies from the database (without pagination)
@@ -50,13 +49,14 @@ export class MovieMetadataRepository implements IVideoMetadataRepository {
         movie.updatedAt
       );
     });
-
-    await redisClient.set(
-      this.CACHE_KEY,
-      JSON.stringify(movies),
-      "EX",
-      this.CACHE_EXPIRATION
-    );
+    if (redisClient.status === "ready") {
+      await redisClient.set(
+        this.CACHE_KEY,
+        JSON.stringify(movies),
+        "EX",
+        this.CACHE_EXPIRATION
+      );
+    }
 
     return movies.slice(offset, offset + limit);
   }

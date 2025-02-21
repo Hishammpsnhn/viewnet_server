@@ -1,6 +1,5 @@
 class User {
   constructor({id, email, profiles, defaultProfile, isAdmin, isBlocked}) {
-    console.log("constructor",id,email,defaultProfile)
     this.id = id;
     this.email = email;
     this.profiles = profiles || [];

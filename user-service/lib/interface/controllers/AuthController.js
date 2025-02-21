@@ -39,14 +39,11 @@ const updateUser = new UpdateUser(userRepository);
 
 class UserController {
   static async getMe(req, res) {
-    console.log("get me")
     try {
-    //  console.log("req.user", req.user);
       if (!req.user) {
         return res.status(400).json({ message: "Token is required" });
       }
       const { user, planDetails } = await getUser.execute(req.user.email);
-      //console.log("user>>>>", user, planDetails);
 
       res.status(200).json({
         success: true,
@@ -58,14 +55,12 @@ class UserController {
     }
   }
   static async validate(req, res) {
-    console.log("validat")
     try {
-      console.log("req.user", req.user);
       if (!req.user) {
         return res.status(400).json({ message: "Token is required" });
       }
       const data = await getUser.getByEmail(req.user.email);
-      console.log("user>>>>",data);
+      
 
       res.status(200).json({
         success: true,
@@ -139,7 +134,7 @@ class UserController {
 
   static async getAllUsers(req, res) {
     const { page, limit, search,isBlock } = req.query;
-    console.log("reqparams", req.query);
+
     const numericLimit = parseInt(limit, 10);
     try {
       const users = await getAllUsers.execute(page, numericLimit, search,isBlock);
@@ -149,8 +144,6 @@ class UserController {
     }
   }
   static async getAllUsersBySearch(req, res) {
-    const { search } = req.query;
-    console.log("reqparams", req.query);
     try {
       const users = await getAllUsers.execute(page, limit);
       res.status(200).json({ success: true, users });

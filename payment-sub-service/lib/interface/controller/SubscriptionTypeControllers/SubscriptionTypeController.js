@@ -1,11 +1,10 @@
 import CreateNewSubPlan from "../../../use-cases/SubscriptionType/CreateNewSubPlan.js";
 import GetPlans from "../../../use-cases/SubscriptionType/GetPlans.js";
 import EditPlans from "../../../use-cases/SubscriptionType/EditPlans.js";
-import NewUserPlan from "../../../use-cases/userSubscription/CreateNewUserSubscription.js";
 import SubscriptionPlanRepository from "../../../infrastructure/repository/subscriptionPlan/subscriptionPlanRepository.js";
 import Payment from "../../../use-cases/SubscriptionType/Payment.js";
 import PaymentGateway from "../../../infrastructure/Stripe/paymentGateway.js";
-import UserNewPlanRepository from "../../../infrastructure/repository/userSubscription/userSubsciption.js";
+import UserNewPlanRepository from "../../../infrastructure/repository/userSubscription/userSubscription.js";
 
 const createNewPlanRepository = new UserNewPlanRepository();
 const subscriptionPlanRepository = new SubscriptionPlanRepository();
@@ -21,7 +20,6 @@ export async function GetAllPlans(req, res) {
   }
 }
 export async function CreateSubscriptionPlan(req, res) {
-  console.log(req.body)
   const {
     name,
     description,
@@ -70,7 +68,6 @@ export async function EditPlan(req, res) {
 
 export async function Plan_Payment(req, res) {
   const { planId, userId,email } = req.body;
-  console.log("payment", planId, userId);
   try {
     const plan = await Payment(planId, userId,email, {
       subscriptionPlanRepository,

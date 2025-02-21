@@ -7,7 +7,7 @@ import { LiveProducer } from "../../infrastructure/queue/NotificationProducer";
 const liveProducer = new LiveProducer();
 
 function movieReleaseCron() {
-  cron.schedule("* * * * *", async () => {
+  cron.schedule("0 0 * * *", async () => {
     console.log("Cron Job: Checking Release statuses...");
     const repo = new ReleaseMovie(new VideoMetadataRepository(),liveProducer);
     
@@ -16,7 +16,7 @@ function movieReleaseCron() {
     try {
       await repo.execute();
       await seriesUseCase.releaseSeries()
-      console.log("Cron Job: Relese status updates completed.");
+      console.log("Cron Job: Release status updates completed.");
     } catch (error) {
       console.error("Cron Job: Error updating Release statuses:", error);
     }

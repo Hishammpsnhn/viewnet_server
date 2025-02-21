@@ -11,7 +11,6 @@ class LoginUser {
   }
 
   async execute(email, deviceId, refreshToken) {
-    console.log(email, deviceId, refreshToken);
     const user = await this.userRepository.findByEmail(email);
     if (user.isBlock) {
       throw new Error("User is blocked.");
@@ -21,7 +20,6 @@ class LoginUser {
     const planDetails = await this.subscriptionGateway.fetchSubscriptionDetails(
       user._id
     );
-    console.log("dd",planDetails)
     const activeSessions = await this.sessionRepository.getSessionsByEmail(
       email
     );

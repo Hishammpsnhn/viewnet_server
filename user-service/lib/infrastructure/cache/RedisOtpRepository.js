@@ -1,40 +1,61 @@
 import Redis from "ioredis";
+import environment from "../config/environment.js";
 
 class RedisOtpRegistry {
   constructor() {
     this.client = new Redis({
       host: "redis",
-      port: 6379,
+      port: parseInt(environment.REDIS_PORT || '6379', 10),
+      connectTimeout: 5000,
+      retryStrategy: (times) => {
+        if (times >= 5) {
+          console.error("Redis connection failed after multiple attempts.");
+          return null;
+        }
+        console.error(
+          `Redis connection failed. Retrying in ${Math.min(times * 500, 5000)} ms.`
+        );
+        return Math.min(times * 500, 5000);
+      },
     });
 
-    this.client.on("error", (err) =>
-      console.error(`Error connecting to Redis: ${err}`)
-    );
+    this.isReady = false;
+
+    this.client.on("ready", () => {
+      console.log("Connected to Redis successfully.");
+      this.isReady = true;
+    });
+
+    this.client.on("error", (err) => {
+      console.error(`Error connecting to Redis: ${err}`);
+      this.isReady = false;
+    });
   }
 
   async saveOtp(key, otp) {
-    let res = await this.client.set(key, otp, "EX", 300);
-    const savedOtp = await this.client.get(key);
-    console.log("Saved OTP:", savedOtp);
+    if (!this.isReady) return console.error("Redis is not connected.");
+    await this.client.set(key, otp, "EX", 300);
   }
 
   async getOtp(key) {
+    if (!this.isReady) return console.error("Redis is not connected.");
     return await this.client.get(key);
   }
 
   async deleteOtp(key) {
+    if (!this.isReady) return console.error("Redis is not connected.");
     await this.client.del(key);
   }
 
-  // store subscriptions details
   async get(key) {
+    if (!this.isReady) return console.error("Redis is not connected.");
     const sub = await this.client.get(key);
-    console.log("cached",key,sub)
-    return JSON.parse(sub);
+    return sub ? JSON.parse(sub) : null;
   }
+
   async save(key, value) {
-   const plan =  await this.client.set(key, JSON.stringify(value), "EX", 3600);
-   console.log("cache added", key,value);
+    if (!this.isReady) return console.error("Redis is not connected.");
+    await this.client.set(key, JSON.stringify(value), "EX", 3600);
   }
 }
 

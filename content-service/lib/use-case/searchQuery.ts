@@ -15,7 +15,6 @@ export class GetSearchQuery {
   async execute(query: string) {
     const series = await this.seriesRepository.searchQuery(query);
     const movies = await this.repository.searchQuery(query);
-    console.log(movies, series);
     return [...series, ...movies];
   }
 }

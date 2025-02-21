@@ -1,9 +1,7 @@
 import bootstrap from "./infrastructure/config/bootstrap";
 import environment from "./infrastructure/config/environment";
 import createServer from "./infrastructure/webserver/server";
-// import bootstrap from "./lib/infrastructure/config/bootstrap.js";
-// import environment from "./lib/infrastructure/config/environment.js";
-// import metricsService from "./lib/infrastructure/monitor/metricsService.js";
+
 
 const start = async () => {
   try {

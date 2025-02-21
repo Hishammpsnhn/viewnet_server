@@ -2,67 +2,16 @@ import Stripe from "stripe";
 import dotenv from "dotenv";
 import CreateTransactionUseCase from "../../use-cases/Transaction/createTransaction.js";
 import TransactionRepository from "../repository/Transaction/TransactionHistory.js";
-
+import env from '../config/environment.js'
 dotenv.config();
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 const transactionRepository = new TransactionRepository();
 const createTransactionUseCase = new CreateTransactionUseCase(
   transactionRepository
 );
 
 export default class paymentGateway {
-  // async processPayment({ amount, currency, userId, planId }) {
-  
-  //   try {
-  //     const paymentIntent = await stripe.paymentIntents.create({
-  //       amount: amount * 100,
-  //       currency,
-  //       metadata: {
-  //         user_id: userId,
-  //         plan_id: planId,
-  //       },
-  //       automatic_payment_methods: { enabled: true },
-  //     });
 
-  //     return paymentIntent.client_secret;
-  //   } catch (error) {
-  //     console.error("Stripe payment error:", error);
-  //     throw new Error(error);
-  //   }
-  // }
-
-  // async createPaymentIntent({ amount, currency }) {
-  //   try {
-  //     const paymentIntent = await stripe.paymentIntents.create({
-  //       amount,
-  //       currency,
-  //     });
-
-  //     return paymentIntent.client_secret;
-  //   } catch (error) {
-  //     console.error("Stripe create payment intent error:", error);
-  //     return {
-  //       success: false,
-  //       error: error.message,
-  //     };
-  //   }
-  // }
-
-  // async retrievePaymentIntent(paymentIntentId) {
-  //   try {
-  //     const paymentIntent = await stripe.paymentIntents.retrieve(
-  //       paymentIntentId
-  //     );
-
-  //     return paymentIntent;
-  //   } catch (error) {
-  //     console.error("Stripe retrieve payment intent error:", error);
-  //     return {
-  //       success: false,
-  //       error: error.message,
-  //     };
-  //   }
-  // }
 
   async productGateway(userId, plan, email) {
   
@@ -111,8 +60,8 @@ export default class paymentGateway {
           },
         ],
         mode: "payment", // Use "payment" for one-time purchase
-        success_url: `http://localhost:5173/payment-success?session_id={CHECKOUT_SESSION_ID}&amount=${plan.price}`,
-        cancel_url: `http://localhost:5173/cancel`,
+        success_url: `${env.FRONTEND_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}&amount=${plan.price}`,
+        cancel_url: `${env.FRONTEND_URL}`,
         metadata: {
           userId: userId,
           transactionId: transaction._id.toString(),

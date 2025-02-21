@@ -27,7 +27,6 @@ async function authenticate(req, res, next) {
       },
     });
 
-    console.log("User service response:", data);
     if (data?.data?.isBlock) {
       console.log("User is blocked");
       return res.status(403).json({ message: "User is blocked" });

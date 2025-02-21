@@ -18,7 +18,6 @@ export default class UserSubscriptionPlanRepository extends IUserSubscriptionPla
       endDate: subscriptionEntity.endDate,
     });
     await mongooseUserSubscription.save();
-    console.log(mongooseUserSubscription);
 
     return mapToUserSubscriptionEntity(mongooseUserSubscription);
   }

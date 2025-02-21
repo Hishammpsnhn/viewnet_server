@@ -7,6 +7,5 @@ export default async (userId, { userPlanRepository }) => {
 
   const planDetail = await userPlanRepository.findByUserId(userId);
 
-  console.log("Plan Details",planDetail)
   return planDetail
 };

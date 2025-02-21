@@ -6,7 +6,7 @@ const start = async () => {
   try {
     await bootstrap.init();
 
-    const server = await createServer(); // Get the HTTP server
+    const server = await createServer(); 
     const port = environment.PORT || 5005;
 
     server.listen(port, () => {

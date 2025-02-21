@@ -1,15 +1,19 @@
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import notificationRoute from '../../interface/routes/NotificationRoutes'
-import watchTimeRoute from '../../interface/routes/WatchTimeRoute'
+import notificationRoute from "../../interface/routes/NotificationRoutes";
+import watchTimeRoute from "../../interface/routes/WatchTimeRoute";
 import cors from "cors";
+import environment from "../config/environment";
 dotenv.config();
 
 const createServer = async () => {
   const app = express();
   const corsOptions = {
-    origin: ["http://localhost:4000", "http://localhost:5173"],
+    origin: [
+      environment.CLIENT_URL as string,
+      environment.GATEWAY_URL as string,
+    ],
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   };
@@ -25,8 +29,6 @@ const createServer = async () => {
   }
 
   main().catch((error) => console.error("Error in application:", error));
-
- 
 
   return app;
 };

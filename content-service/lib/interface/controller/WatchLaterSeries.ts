@@ -37,8 +37,6 @@ export class WatchLaterSeriesController {
   async getWatchLater(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
 
-    console.log("calling get watch later ",id)
-
     try {
       const movies = await getWatchLaterUseCase.execute(id);
       res.status(HttpStatus.OK).json({ success: true, data: movies });

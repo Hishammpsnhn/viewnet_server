@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-sub-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-sub-service
+  template:
+    metadata:
+      labels:
+        app: payment-sub-service
+    spec:
+      containers:
+        - name: payment-sub-service
+          image: hishammpsn/view_net-payment-sub-service:latest
+          ports:
+            - containerPort: 5002
+          # envFrom:
+            # - secretRef:
+            #     name: app-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-sub-service
+spec:
+  selector:
+    app: payment-sub-service
+  ports:
+    - protocol: TCP
+      port: 5002
+      targetPort: 5002

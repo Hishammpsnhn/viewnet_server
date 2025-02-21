@@ -23,15 +23,16 @@ class GetUser {
     let planDetails = await this.cacheRepository.get(`plan_${user._id}`);
 
     if (!planDetails) {
-
       planDetails = await this.subscriptionGateway.fetchSubscriptionDetails(
         user._id
       );
       if (planDetails) {
         await this.cacheRepository.save(`plan_${user._id}`, planDetails, 3600); // Cache for 1 hour
       }
+      return { user, planDetails };
+    } else {
+      return { user, planDetails };
     }
-    return { user, planDetails };
   }
   async getByEmail(email) {
     return await this.userRepository.findByEmail(email);

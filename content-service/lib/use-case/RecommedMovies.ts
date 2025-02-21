@@ -28,7 +28,6 @@ export class GetRecommendedMoviesUseCase {
       const movies = await this.videoMetadataRepository.recommendedMovies(
         genres
       );
-      console.log("movies: ", movies);
       return movies;
     } catch (error) {
       console.error(

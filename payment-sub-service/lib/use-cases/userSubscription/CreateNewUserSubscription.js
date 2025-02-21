@@ -5,12 +5,6 @@ export default async (
   planId,
   { createNewPlanRepository, subscriptionPlanRepository }
 ) => {
-  console.log(
-    createNewPlanRepository,
-    subscriptionPlanRepository,
-    userId,
-    planId
-  );
   if (!createNewPlanRepository || !subscriptionPlanRepository) {
     throw new Error("Missing  repository");
   }

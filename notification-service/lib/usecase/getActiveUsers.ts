@@ -8,7 +8,6 @@ class GetActiveUser {
   }
 
   async execute(): Promise<any[]> {
-    console.log("Executing in GetActiveUser");
     const res = await this.activeUserRepository.getActiveUserCount();
     return res;
   }

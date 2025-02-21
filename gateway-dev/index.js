@@ -3,12 +3,17 @@ const cors = require("cors");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 require("dotenv").config();
 const authenticate = require("./authenticateMiddleware");
-const metricsService = require("./monitor/metricsService.js")
-const morgan = require('morgan');
+const metricsService = require("./monitor/metricsService.js");
+const morgan = require("morgan");
 const environment = require("./config/environment.js");
 
 const app = express();
-app.use(morgan('combined')); 
+app.use(
+  morgan("combined", {
+    skip: (req) => req.path === "/metrics",
+  })
+);
+
 app.use(
   cors({
     origin: [process.env.CLIENT_URL],
@@ -44,7 +49,6 @@ const publicRoutes = [
     changeOrigin: true,
     cookieDomainRewrite: "localhost",
   },
- 
 ];
 
 // Protected routes (authentication required)
@@ -109,7 +113,6 @@ const protectedRoutes = [
     isAdmin: true,
     cookieDomainRewrite: "localhost",
   },
-
 ];
 
 // public
@@ -128,7 +131,7 @@ publicRoutes.forEach((route) => {
 protectedRoutes.forEach((route) => {
   app.use(
     route.context,
-    authenticate, 
+    authenticate,
     (req, res, next) => {
       if (route.auth) {
         if (!req.user) {

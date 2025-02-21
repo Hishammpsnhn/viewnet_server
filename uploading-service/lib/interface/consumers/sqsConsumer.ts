@@ -6,23 +6,20 @@ import { sqsClient } from "../../infrastructure/aws/sqsClient";
 import { parseS3Event } from "../../infrastructure/aws/s3EventParser";
 import { processS3Event } from "../../use-cases/processS3Event";
 import { EpisodeProcessS3Event } from "../../use-cases/EpisodeProcessS3Event";
-import { IEncodedFile, MovieCatalog } from "../../domain/entities/VideoCatalog";
-import mongoose, { Types } from "mongoose";
-import { MovieCatalogRepository } from "../../infrastructure/repositories/MovieCatalog";
+import mongoose from "mongoose";
 import { GetVideoMetadata } from "../../use-cases/getMetaData";
 import { UpdateTranscodingStatusUseCase } from "../../use-cases/updateMovieTranscodeStatus";
 import { VideoMetadataRepository } from "../../infrastructure/repositories/VideoMetadataRepository";
-import { format } from "path";
-import { logger } from "../../infrastructure/logger/logger"; // Assuming a logger is set up
+import { logger } from "../../infrastructure/logger/logger"; 
 import { EpisodeUseCase } from "../../use-cases/series/EpisodeUseCase";
 import { EpisodeRepository } from "../../infrastructure/repositories/series/EpisodeRepository";
 import { EpisodeEntity } from "../../domain/entities/series/episodeEntity";
+import environment from "../../infrastructure/config/environment";
 
-const QUEUE_URL = "https://sqs.us-east-1.amazonaws.com/235494819343/tempQueeu";
+const QUEUE_URL = environment.SQS_QUEUE_URL
 type TranscodingStatus = "pending" | "processing" | "completed" | "failed";
 
 const repository = new VideoMetadataRepository();
-const movieCatalogRepository = new MovieCatalogRepository();
 const getMovieMetadata = new GetVideoMetadata(repository);
 const updateTranscode = new UpdateTranscodingStatusUseCase(repository);
 const episodeUseCase = new EpisodeUseCase(new EpisodeRepository());
@@ -77,7 +74,6 @@ async function handleS3Event(record: any) {
 
   if (movieId) {
     if (mongoose.Types.ObjectId.isValid(movieId)) {
-      console.log("Valid MongoDB ObjectId");
       const movieMetadata = await getMovieMetadata.execute(movieId);
       if (!movieMetadata || !movieMetadata._id || !movieMetadata) {
         logger.info(`Movie not found: ${movieId}`);
@@ -103,9 +99,7 @@ async function handleS3Event(record: any) {
         );
       }
     } else {
-      console.log("Not valid MongoDB ObjectId so it is episode");
       const episode = await episodeUseCase.getEpisodeByKey(movieId);
-      console.log(episode);
       if (!episode) {
         logger.info(`Movie not found: ${movieId}`);
         return;
@@ -119,8 +113,6 @@ async function handleS3Event(record: any) {
           `uploads/${movieId}_video.mp4`,
           movieId,
           episode
-          // movieMetadata._id.toString(),
-          // movieMetadata
         );
       } catch (error: any) {
         logger.error(
