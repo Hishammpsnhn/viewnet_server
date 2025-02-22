@@ -8,7 +8,7 @@ const start = async () => {
     await bootstrap.init();
 
     const app = await createServer(metricsService);
-    const port = environment.PORT || 5001;
+    const port = environment.PORT || 5000;
     app.listen(port, () => {
       console.log("██╗   ██╗███████╗███████╗██████╗                    ");
       console.log("██║   ██║██╔════╝██╔════╝██╔══██╗                   ");
