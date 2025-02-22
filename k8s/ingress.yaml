@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-gateway
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api.viewnet.cfd
+      http:
+        paths:
+          - path: /api/user
+            pathType: Prefix
+            backend:
+              service:
+                name: user-service
+                port:
+                  number: 80
+          - path: /api/subscription
+            pathType: Prefix
+            backend:
+              service:
+                name: subscription-service
+                port:
+                  number: 80
+          - path: /api/live
+            pathType: Prefix
+            backend:
+              service:
+                name: live-service
+                port:
+                  number: 80
+          - path: /api/content
+            pathType: Prefix
+            backend:
+              service:
+                name: content-service
+                port:
+                  number: 80

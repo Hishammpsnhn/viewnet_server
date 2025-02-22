@@ -21,7 +21,7 @@ const start = async () => {
     
     httpServer.listen(port, () => {
       console.log(
-        `[ SERVICE :: NOTIFICATION SERVICE ] Content Service is listening on http://localhost:${port}`
+        `[ SERVICE :: NOTIFICATION SERVICE ] Notification Service is listening on http://localhost:${port}`
       );
     });
   } catch (err) {

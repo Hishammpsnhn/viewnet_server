@@ -9,6 +9,12 @@ dotenv.config();
 
 const createServer = async (metricsService) => {
   const app = express();
+
+  app.use(cors({
+    origin: ["http://localhost:4000", "http://viewnet.cfd"],
+    methods: "GET,POST,PUT,DELETE,OPTIONS",
+    credentials: true, 
+  }));
   app.use(morgan('combined')); 
 
 
