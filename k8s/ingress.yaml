@@ -20,7 +20,7 @@ spec:
               service:
                 name: user-service
                 port:
-                  number: 4000
+                  number: 80
           - path: /api/subscription
             pathType: Prefix
             backend:
