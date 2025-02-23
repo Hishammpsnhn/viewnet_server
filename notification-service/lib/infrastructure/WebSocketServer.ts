@@ -23,7 +23,6 @@ export class WebSocketServer implements NotificationSender {
 
   constructor(httpServer: HttpServer) {
     this.io = new SocketServer(httpServer, {
-      path: '/notification-socket/socket.io',
       cors: {
         origin: [environment.CLIENT_URL as string],
         
