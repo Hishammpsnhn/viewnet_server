@@ -31,6 +31,9 @@ const handleStripeWebhook = async (req, res) => {
 
   try {
     // Verify Stripe event
+    console.log("unq",environment.STRIPE_WEBHOOK_KEY)
+    console.log("unq",sig)
+    console.log("unq>>>>>",req.body)
     const event = stripe.webhooks.constructEvent(
       req.body,
       sig,

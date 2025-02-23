@@ -15,6 +15,10 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
     nginx.ingress.kubernetes.io/proxy-buffering: "off"
 
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "16k"
+    nginx.ingress.kubernetes.io/proxy-buffers: "4 16k"
+    nginx.ingress.kubernetes.io/proxy-busy-buffers-size: "16k"
+
 spec:
   ingressClassName: nginx
   rules:
@@ -42,3 +46,10 @@ spec:
                 name: live-streaming-service
                 port:
                   number: 5005
+          - path: /webhook
+            pathType: Prefix
+            backend:
+              service:
+                name: payment-sub-service
+                port:
+                  number: 5002
