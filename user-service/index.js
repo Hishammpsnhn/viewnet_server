@@ -9,7 +9,7 @@ const start = async () => {
 
     const app = await createServer(metricsService);
     const port = environment.PORT || 5000;
-    app.listen(port, () => {
+    app.listen(port, '0.0.0.0', () => {
       console.log("██╗   ██╗███████╗███████╗██████╗                    ");
       console.log("██║   ██║██╔════╝██╔════╝██╔══██╗                   ");
       console.log("██║   ██║███████╗█████╗  ██████╔╝                   ");
