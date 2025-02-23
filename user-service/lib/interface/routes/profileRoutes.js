@@ -6,7 +6,7 @@ const router = express.Router();
 
 const profileController = new ProfileController();
 
-router.patch(
+router.post(
   "/profile/:id",
   isAuthenticated,
   profileController.changeDefaultProfile

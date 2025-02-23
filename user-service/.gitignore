@@ -31,6 +31,7 @@ docker/
 # Kubernetes-related files
 k8s-secrets.yaml  # Avoid committing Kubernetes Secrets!
 k8s-configs.yaml
+k8s-aws-auth.yaml
 
 # IDE/editor-specific files
 .vscode/
