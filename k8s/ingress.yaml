@@ -13,31 +13,10 @@ spec:
     - host: api.viewnet.cfd
       http:
         paths:
-          - path: /api/user
+          - path: /api
             pathType: Prefix
             backend:
               service:
                 name: api-gateway
-                port:
-                  number: 80
-          - path: /api/payment
-            pathType: Prefix
-            backend:
-              service:
-                name: payment-sub-service
-                port:
-                  number: 80
-          - path: /api/content
-            pathType: Prefix
-            backend:
-              service:
-                name: content-service
-                port:
-                  number: 80
-          - path: /api/uploading
-            pathType: Prefix
-            backend:
-              service:
-                name: uploading-service
                 port:
                   number: 80

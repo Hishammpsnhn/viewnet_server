@@ -31,6 +31,7 @@ const createServer = async (metricsService) => {
   
   // Mount routes without the /api/user prefix
   app.use("/", authRoutes);
+  app.use('/',profileRoutes)
   
   // Add catch-all route for debugging
   app.use('*', (req, res) => {

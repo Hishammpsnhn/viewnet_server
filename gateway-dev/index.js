@@ -96,7 +96,6 @@ const protectedRoutes = [
     target: environment.services.notification,
     changeOrigin: true,
     cookieDomainRewrite: "localhost",
-    ws:true,
     auth: true,
   },
   {
