@@ -19,6 +19,10 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-buffers: "4 16k"
     nginx.ingress.kubernetes.io/proxy-busy-buffers-size: "16k"
 
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+
+
 spec:
   ingressClassName: nginx
   rules:

@@ -24,7 +24,7 @@ router.get("/transactions", transactionController.getAllTransactions);
 router.put("/:id", EditPlan);
 router.post("/payment", Plan_Payment);
 router.post("/", CreateSubscriptionPlan);
-router.post("/webhook", webhookController.handleStripeWebhook);
+router.post("/webhook", express.raw({ type: 'application/json' }),webhookController.handleStripeWebhook);
 
 
 export default router;
