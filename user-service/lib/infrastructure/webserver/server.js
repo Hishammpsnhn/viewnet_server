@@ -30,7 +30,7 @@ const createServer = async (metricsService) => {
   app.use(express.json());
   
   // Mount routes without the /api/user prefix
-  app.use("/", authRoutes);
+  app.use("/api/user", authRoutes);
   
   // Add catch-all route for debugging
   app.use('*', (req, res) => {
