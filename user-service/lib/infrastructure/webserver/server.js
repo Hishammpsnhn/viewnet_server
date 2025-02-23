@@ -27,6 +27,9 @@ const createServer = async (metricsService) => {
   //metricsService.setup(app);
 
   // Routes
+  app.get('/api/user/test-server', (req, res) => {
+    res.json({ message: 'Server test route working' });
+  });
 
   app.use("/api/user", authRoutes);
   // app.use("/api/user", profileRoutes);
