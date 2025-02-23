@@ -9,7 +9,7 @@ import {
 const router = express.Router();
 
 // Public Routes (No authentication required)
-router.get("/", (req, res) => {
+router.get("", (req, res) => {
   res.json({ message: " empty test is working" });
 });
 router.get("/test", (req, res) => {
