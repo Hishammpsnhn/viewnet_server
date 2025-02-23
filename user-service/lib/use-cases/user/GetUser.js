@@ -12,12 +12,9 @@ class GetUser {
   }
 
   async execute(email) {
-    let user = await this.cacheRepository.get(email);
-    if (!user) {
-      user = await this.userRepository.findByEmail(email);
-      if (user) {
-        await this.cacheRepository.save(user.email, user, 3600); // Cache for 1 hour
-      }
+    let user = await this.userRepository.findByEmail(email);
+    if(!user){
+      throw new Error("User not found.");
     }
 
     let planDetails = await this.cacheRepository.get(`plan_${user._id}`);
