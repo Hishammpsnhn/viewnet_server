@@ -25,7 +25,7 @@ const start = async () => {
       console.log("╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚═╝ ╚═════╝╚══════╝");
 
       console.log(
-        `[ SERVICE :: USER SERVICE ] User Service is listening on http://localhost:${port}`
+        `[ SERVICE : USER SERVICE ] User Service is listening on http://localhost:${port}`
       );
     });
   } catch (err) {
