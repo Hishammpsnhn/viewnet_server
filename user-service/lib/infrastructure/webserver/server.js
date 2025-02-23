@@ -20,8 +20,8 @@ const createServer = async (metricsService) => {
   app.use(morgan("combined"));
 
   app.use(cookieParser());
-  app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
 
   // Metrics setup
   //metricsService.setup(app);

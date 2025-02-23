@@ -21,18 +21,11 @@ spec:
                 name: user-service
                 port:
                   number: 80
-          - path: /api/subscription
+          - path: /api/payment
             pathType: Prefix
             backend:
               service:
-                name: subscription-service
-                port:
-                  number: 80
-          - path: /api/live
-            pathType: Prefix
-            backend:
-              service:
-                name: live-service
+                name: payment-sub-service
                 port:
                   number: 80
           - path: /api/content
@@ -40,5 +33,12 @@ spec:
             backend:
               service:
                 name: content-service
+                port:
+                  number: 80
+          - path: /api/uploading
+            pathType: Prefix
+            backend:
+              service:
+                name: uploading-service
                 port:
                   number: 80

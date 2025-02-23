@@ -17,7 +17,6 @@ spec:
           image: hishammpsn/view_net-user-service:latest
           ports:
             - containerPort: 5000
-
           envFrom:
             - configMapRef:
                 name: user-config

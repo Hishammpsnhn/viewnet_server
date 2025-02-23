@@ -30,5 +30,5 @@ spec:
     app: uploading-service
   ports:
     - protocol: TCP
-      port: 5003
+      port: 80
       targetPort: 5003
