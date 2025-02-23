@@ -5,6 +5,7 @@ import notificationRoute from "../../interface/routes/NotificationRoutes";
 import watchTimeRoute from "../../interface/routes/WatchTimeRoute";
 import cors from "cors";
 import environment from "../config/environment";
+import morgan from 'morgan'
 dotenv.config();
 
 const createServer = async () => {
@@ -17,6 +18,8 @@ const createServer = async () => {
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   };
+
+  app.use(morgan("combined"))
 
   app.use(cors(corsOptions));
   app.use(cookieParser());
