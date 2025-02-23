@@ -35,6 +35,7 @@ const createServer = async () => {
 
   // Initialize Socket.IO
   const io = new SocketIOServer(httpServer, {
+    path: "/live-stream/",
     cors: {
       origin: [
         environment.CLIENT_URL as string,
