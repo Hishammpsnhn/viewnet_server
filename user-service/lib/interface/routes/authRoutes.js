@@ -28,7 +28,7 @@ router.get("/validate", isAuthenticated, AuthController.validate);
 router.get("/logout/:token", isAuthenticated, AuthController.logOut);
 
 // Admin Routes
-router.get("/users", AuthController.getAllUsers);
-router.patch("/:id", isAdminAuthenticated, AuthController.UpdateUser);
+router.get("/users",isAdminAuthenticated, AuthController.getAllUsers);
+router.post("/:id", isAdminAuthenticated, AuthController.UpdateUser);
 
 export default router;
