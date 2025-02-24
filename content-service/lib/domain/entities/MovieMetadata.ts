@@ -14,6 +14,7 @@ export class Movie {
     public uploadDate: Date,
     public createdAt: Date,
     public updatedAt: Date,
-    public posterImage?: string
+    public posterImage?: string,
+    public isMovie?:boolean
   ) {}
 }

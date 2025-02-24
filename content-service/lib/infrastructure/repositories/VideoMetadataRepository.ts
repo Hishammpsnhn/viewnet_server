@@ -83,7 +83,9 @@ export class MovieMetadataRepository implements IVideoMetadataRepository {
         movie.isRelease,
         movie.uploadDate,
         movie.createdAt,
-        movie.updatedAt
+        movie.updatedAt,
+        undefined,
+        true,
       );
     });
 

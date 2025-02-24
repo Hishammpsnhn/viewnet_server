@@ -21,10 +21,15 @@ metadata:
 
     nginx.ingress.kubernetes.io/proxy-body-size: "10m"
     nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
-
+    
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - api.viewnet.cfd
+      secretName: api-gateway-tls
   rules:
     - host: api.viewnet.cfd
       http:
