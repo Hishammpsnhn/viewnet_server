@@ -7,11 +7,10 @@ const router = express.Router();
 const profileController = new ProfileController();
 
 router.post(
-  "/profile/:id",
-  isAuthenticated,
+  "/:id",
   profileController.changeDefaultProfile
 );
-router.put("/profile/:id", isAuthenticated, profileController.updateProfile);
-router.post("/profile", isAuthenticated, profileController.createProfile);
+router.put("/:id", profileController.updateProfile);
+router.post("/", profileController.createProfile);
 
 export default router;
