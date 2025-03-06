@@ -1,5 +1,6 @@
 import { IVideoMetadataRepository } from "../domain/interface/IVideoMetadataRepository";
 import { VideoMetadata } from "../domain/entities/VideoMetadata";
+import { TranscodingProducer } from "../infrastructure/queue/TranscodingProducer";
 
 export class UpdateVideoMetadataUseCase {
   constructor(private videoMetadataRepository: IVideoMetadataRepository) {}
@@ -20,6 +21,9 @@ export class UpdateVideoMetadataUseCase {
     if (!updatedMetadata) {
       throw new Error("Video metadata not found or update failed.");
     }
+    // if (updatedMetadata.transcoding?.status === "pending") {
+    //   this.transcodingProducer.TriggerTranscoding(updatedMetadata);
+    // }
 
     return updatedMetadata;
   }

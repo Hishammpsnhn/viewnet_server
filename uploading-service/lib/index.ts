@@ -1,8 +1,6 @@
 import bootstrap from "./infrastructure/config/bootstrap";
 import environment from "./infrastructure/config/environment";
 import createServer from "./infrastructure/webserver/server";
-
-
 const start = async () => {
   try {
     await bootstrap.init();
@@ -14,6 +12,7 @@ const start = async () => {
         `[ SERVICE :: UPLOADING SERVICE ] Uploading Service is listening on http://localhost:${port}`
       );
     });
+
   } catch (err) {
     console.error(err);
     process.exit(1);

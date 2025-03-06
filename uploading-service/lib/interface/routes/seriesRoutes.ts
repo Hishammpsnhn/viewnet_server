@@ -25,6 +25,7 @@ router.post("/seasons/:seriesId", seasonController.createSeason);//using
 
 // Episode Routes
 router.get("/episode/catalog/:id",episodeController.getEpisodeCatalogById);
+// router.get("/episode/transcoding/:id",episodeController.transcodeEpisode);
 router.post("/episode/generateSignedUrl",episodeController.generateSignedUrl);
 router.post("/episode/catalog",episodeController.createEpisodeCatalog);
 

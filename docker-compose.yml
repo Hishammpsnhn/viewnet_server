@@ -145,6 +145,24 @@ services:
     depends_on:
       - rabbitmq
 
+  # transcoding-service:
+  #     build:
+  #       context: ./transcoding-service
+  #       dockerfile: Dockerfile
+  #     restart: unless-stopped
+  #     ports:
+  #       - "5007:5007"
+  #     volumes:
+  #       - ./transcoding-service:/app
+  #     env_file:
+  #       - ./transcoding-service/.env
+  #     networks:
+  #       - app-network
+  #     depends_on:
+  #       rabbitmq:
+  #         condition: service_healthy 
+
+
   loki:
     image: grafana/loki:2.8.0
     ports:

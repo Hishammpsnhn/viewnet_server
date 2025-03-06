@@ -7,15 +7,17 @@ import { PresignedUrlParams } from "../../../infrastructure/types/s3Types";
 import { GeneratePresignedUrlUseCase } from "../../../use-cases/generatePresignedUrlUseCase";
 import { S3Service } from "../../../infrastructure/service/s3Service";
 import { HttpStatus } from "../../HttpStatus";
+// import { TranscodingProducer } from "../../../infrastructure/queue/TranscodingProducer";
 
 const s3Service = new S3Service();
+// const transcodingProducer = new TranscodingProducer();
 const episodeUseCase = new EpisodeUseCase(new EpisodeRepository());
 const generatePresignedUrlUseCase = new GeneratePresignedUrlUseCase(s3Service);
 
 export class EpisodeController {
   async createEpisodeCatalog(req: Request, res: Response) {
     const { key, episodeId, format } = req.body;
-   
+
     try {
       const episodeCatalog = await episodeUseCase.createEpisodeCatalog(
         episodeId,
@@ -65,7 +67,13 @@ export class EpisodeController {
       );
       res
         .status(HttpStatus.OK)
-        .json({ success: true, episode,key, movieSignedUrl, thumbnailSignedUrl });
+        .json({
+          success: true,
+          episode,
+          key,
+          movieSignedUrl,
+          thumbnailSignedUrl,
+        });
     } catch (error: any) {
       res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
@@ -79,7 +87,9 @@ export class EpisodeController {
       if (episode) {
         res.status(HttpStatus.OK).json({ success: true, episode });
       } else {
-        res.status(HttpStatus.BadRequest).json({ message: "Episode not found" });
+        res
+          .status(HttpStatus.BadRequest)
+          .json({ message: "Episode not found" });
       }
     } catch (error: any) {
       res.status(HttpStatus.InternalServerError).json({ error: error.message });
@@ -92,7 +102,9 @@ export class EpisodeController {
       if (episode) {
         res.status(HttpStatus.OK).json({ success: true, episode });
       } else {
-        res.status(HttpStatus.BadRequest).json({ message: "Episode not found" });
+        res
+          .status(HttpStatus.BadRequest)
+          .json({ message: "Episode not found" });
       }
     } catch (error: any) {
       res.status(HttpStatus.InternalServerError).json({ error: error.message });
@@ -122,10 +134,32 @@ export class EpisodeController {
       if (updatedEpisode) {
         res.status(HttpStatus.OK).json({ success: true, updatedEpisode });
       } else {
-        res.status(HttpStatus.BadRequest).json({ message: "Episode not found" });
+        res
+          .status(HttpStatus.BadRequest)
+          .json({ message: "Episode not found" });
       }
     } catch (error: any) {
       res.status(HttpStatus.InternalServerError).json({ error: error.message });
     }
   }
+  // async transcodeEpisode(req: Request, res: Response) {
+  //   try {
+  //     const { id } = req.params;
+  //     const episode = await episodeUseCase.getEpisodeById(id);
+  //     console.log(episode);
+  //     if (episode) {
+  //       transcodingProducer.TriggerTranscoding({
+  //         _id:episode.key,
+          
+  //       })
+  //       res.status(HttpStatus.OK).json({ success: true, episode });
+  //     } else {
+  //       res
+  //         .status(HttpStatus.BadRequest)
+  //         .json({ message: "Episode not found" });
+  //     }
+  //   } catch (error: any) {
+  //     res.status(HttpStatus.InternalServerError).json({ error: error.message });
+  //   }
+  // }
 }
