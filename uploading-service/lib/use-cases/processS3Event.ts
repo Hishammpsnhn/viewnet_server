@@ -43,17 +43,17 @@ export async function processS3Event(
 ) {
   const runTaskCommand = new RunTaskCommand({
     taskDefinition:
-      "arn:aws:ecs:us-east-1:235494819343:task-definition/video-transcoder",
-    cluster: "arn:aws:ecs:us-east-1:235494819343:cluster/dev",
+      "arn:aws:ecs:eu-north-1:423623873639:task-definition/video-transcoder",
+    cluster: "arn:aws:ecs:eu-north-1:423623873639:cluster/dev_cluster",
     launchType: "FARGATE",
     networkConfiguration: {
       awsvpcConfiguration: {
         assignPublicIp: "ENABLED",
-        securityGroups: ["sg-03b8fd0d9bf339e10"],
+        securityGroups: ["sg-05eed8e4e6078a76c"],
         subnets: [
-          "subnet-040d48e683ba019e8",
-          "subnet-0b676c58d4ed22f87",
-          "subnet-02f426aca9479f966",
+          "subnet-0188ff1191607015a",
+          "subnet-0f7b1d9ab621a5ada",
+          "subnet-0805caf60cd292fad",
         ],
       },
     },
@@ -96,7 +96,7 @@ async function monitorTaskStatus(
 ) {
   try {
     const describeTasksCommand = new DescribeTasksCommand({
-      cluster: "arn:aws:ecs:us-east-1:235494819343:cluster/dev",
+      cluster: "arn:aws:ecs:eu-north-1:423623873639:cluster/dev_cluster",
       tasks: [taskArn],
     });
 

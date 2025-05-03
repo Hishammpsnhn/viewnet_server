@@ -36,7 +36,7 @@ export class EpisodeController {
       const thumbnailKey = `uploads/thumbnail/${req.body.title
         .replace(/\s+/g, " ")
         .trim()}_thumbnail.jpg`;
-      const thumbnailUrl = `https://s3.us-east-1.amazonaws.com/${environment.AWS_BUCKET_NAME}/${thumbnailKey}`;
+      const thumbnailUrl = `https://s3.eu-north-1.amazonaws.com/${environment.AWS_BUCKET_NAME}/${thumbnailKey}`;
       const episodeData = req.body;
       const episode = await episodeUseCase.createEpisode({
         ...episodeData,

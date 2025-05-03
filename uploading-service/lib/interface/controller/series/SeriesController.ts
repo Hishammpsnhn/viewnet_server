@@ -20,7 +20,7 @@ export class SeriesController {
       const thumbnailKey = `uploads/thumbnail/${req.body.title
         .replace(/\s+/g, " ")
         .trim()}_thumbnail.jpg`;
-      const thumbnailUrl = `https://s3.us-east-1.amazonaws.com/${environment.AWS_BUCKET_NAME}/${thumbnailKey}`;
+      const thumbnailUrl = `https://s3.eu-north-1.amazonaws.com/${environment.AWS_BUCKET_NAME}/${thumbnailKey}`;
       const expiresIn = 60 * 5;
       const paramsThumbnail: PresignedUrlParams = {
         Bucket: environment.AWS_BUCKET_NAME as string,

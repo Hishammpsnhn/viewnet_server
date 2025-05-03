@@ -4,7 +4,7 @@ import {
   RunTaskCommand,
 } from "@aws-sdk/client-ecs";
 import { ecsClient } from "../infrastructure/aws/ecsClient";
-import { EpisodeRepository } from "../infrastructure/repositories/series/EpisodeRepository"; 
+import { EpisodeRepository } from "../infrastructure/repositories/series/EpisodeRepository";
 import { VideoMetadataRepository } from "../infrastructure/repositories/VideoMetadataRepository";
 import { UpdateTranscodingStatusUseCase } from "./updateMovieTranscodeStatus";
 import { logger } from "../infrastructure/logger/logger";
@@ -42,17 +42,17 @@ export async function EpisodeProcessS3Event(
 ) {
   const runTaskCommand = new RunTaskCommand({
     taskDefinition:
-      "arn:aws:ecs:us-east-1:235494819343:task-definition/video-transcoder",
-    cluster: "arn:aws:ecs:us-east-1:235494819343:cluster/dev",
+      "arn:aws:ecs:eu-north-1:423623873639:task-definition/video-transcoder",
+    cluster: "arn:aws:ecs:eu-north-1:423623873639:cluster/dev_cluster",
     launchType: "FARGATE",
     networkConfiguration: {
       awsvpcConfiguration: {
         assignPublicIp: "ENABLED",
-        securityGroups: ["sg-03b8fd0d9bf339e10"],
+        securityGroups: ["sg-05eed8e4e6078a76c"],
         subnets: [
-          "subnet-040d48e683ba019e8",
-          "subnet-0b676c58d4ed22f87",
-          "subnet-02f426aca9479f966",
+          "subnet-0188ff1191607015a",
+          "subnet-0f7b1d9ab621a5ada",
+          "subnet-0805caf60cd292fad",
         ],
       },
     },
@@ -88,13 +88,10 @@ export async function EpisodeProcessS3Event(
 }
 
 // Function to monitor ECS task status
-async function monitorTaskStatus(
-  taskArn: string,
-  episode: EpisodeEntity
-) {
+async function monitorTaskStatus(taskArn: string, episode: EpisodeEntity) {
   try {
     const describeTasksCommand = new DescribeTasksCommand({
-      cluster: "arn:aws:ecs:us-east-1:235494819343:cluster/dev",
+      cluster: "arn:aws:ecs:eu-north-1:423623873639:cluster/dev_cluster",
       tasks: [taskArn],
     });
 
@@ -129,13 +126,11 @@ async function monitorTaskStatus(
       taskStatus === "DEPROVISIONING"
     ) {
       console.log(`Task completed successfully: ${taskArn}`);
-     
-      updateEpisodeTranscodingStatus(episode.key,{transcoding:"completed"})
-      
+
+      updateEpisodeTranscodingStatus(episode.key, { transcoding: "completed" });
     }
   } catch (error) {
     console.error("Error monitoring ECS task:", error);
-    updateEpisodeTranscodingStatus(episode.key,{transcoding:"failed"})
-
+    updateEpisodeTranscodingStatus(episode.key, { transcoding: "failed" });
   }
 }

@@ -21,7 +21,7 @@ export class VideoController {
   ): Promise<void> {
     try {
       const thumbnailKey = `uploads/thumbnail/${req.body.title.replace(/\s+/g, " ").trim()}_thumbnail.jpg`;
-      const thumbnailUrl = `https://s3.us-east-1.amazonaws.com/${env.AWS_BUCKET_NAME}/${thumbnailKey}`;
+      const thumbnailUrl = `https://s3.eu-north-1.amazonaws.com/${env.AWS_BUCKET_NAME}/${thumbnailKey}`;
       const metaData = await createVideoMetadata.execute({
         ...req.body,
         thumbnailUrl,
@@ -81,7 +81,7 @@ export class VideoController {
       );
 
       // Update the movie metadata with the new thumbnail URL
-      const newThumbnailUrl = `https://s3.us-east-1.amazonaws.com/${env.AWS_BUCKET_NAME}/${thumbnailKey}`;
+      const newThumbnailUrl = `https://s3.eu-north-1.amazonaws.com/${env.AWS_BUCKET_NAME}/${thumbnailKey}`;
       const updatedVideo = await updateVideoMetadata.execute(id, {
         thumbnailUrl: newThumbnailUrl, 
       });
