@@ -23,7 +23,7 @@ export class EpisodeUseCase {
     }
 
     const baseUrl =
-      `https://eu-north-1.amazonaws.com/production.${environment.AWS_BUCKET_NAME}/hls`;
+      `https://s3.eu-north-1.amazonaws.com/production.${environment.AWS_BUCKET_NAME}/hls`;
 
     const resolutions = (
       ["1080p", "720p", "480p", "360p", "auto"] as const
